@@ -5,7 +5,6 @@ import 'package:acadia/src/validations/mixin_validation.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
-
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -81,17 +80,23 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
                                               textAlign: TextAlign.center,
                                             ),
                                             const SizedBox(height: 20),
-                                            const Row(
+                                             Row(
                                               children: <Widget>[
                                                 Expanded(
-                                                  child: Divider(),
+                                                  child: Divider(
+                                                    color: ColorSchemeManagerClass.colorPrimary,
+                                                  )
                                                 ),
-                                                Padding(
+                                                const Padding(
                                                   padding: EdgeInsets.all(8.0),
-                                                  child: Text("Entar"),
+                                                  child: Text("Entar", style: TextStyle(
+                                                    fontWeight: FontWeight.w700
+                                                  ),),
                                                 ),
                                                 Expanded(
-                                                  child: Divider(),
+                                                  child: Divider(      
+                                                    color: ColorSchemeManagerClass.colorPrimary,
+                                                  ),
                                                 ),
                                               ],
                                             ),
