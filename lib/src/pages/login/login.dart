@@ -2,6 +2,7 @@ import 'package:acadia/src/components/textformfields/field_component.dart';
 import 'package:acadia/src/responsive/display_responsive.dart';
 import 'package:acadia/src/theme/theme_colors.dart';
 import 'package:acadia/src/validations/mixin_validation.dart';
+import 'package:animate_do/animate_do.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
@@ -63,96 +64,126 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
                                             Padding(
                                               padding:
                                                   const EdgeInsets.all(25.0),
-                                              child: Image.asset(
-                                                'assets/images/a_logo.png',
-                                                width: 150,
+                                              child: FadeInDown(
+                                                duration: const Duration(milliseconds: 600),
+                                                child: Image.asset(
+                                                  'assets/images/a_logo.png',
+                                                  width: 150,
+                                                ),
                                               ),
                                             ),
-                                            const Text(
-                                              'Bem-vindo(a) à Acadia',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 18),
+                                            FadeInUp(
+                                              duration: const Duration(
+                                                  milliseconds: 600),
+                                              child: const Text(
+                                                'Bem-vindo(a) à Acadia',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 18),
+                                              ),
                                             ),
                                             const SizedBox(height: 20),
-                                            const Text(
-                                              'Sua nova plataforma de aprendizado e gerenciamento acadêmico.',
-                                              textAlign: TextAlign.center,
+                                            FadeInUp(
+                                              duration: const Duration(
+                                                  milliseconds: 400),
+                                              child: const Text(
+                                                'Sua nova plataforma de aprendizado e gerenciamento acadêmico.',
+                                                textAlign: TextAlign.center,
+                                              ),
                                             ),
                                             const SizedBox(height: 20),
-                                             Row(
-                                              children: <Widget>[
-                                                Expanded(
-                                                  child: Divider(
-                                                    color: ColorSchemeManagerClass.colorPrimary,
-                                                  )
-                                                ),
-                                                const Padding(
-                                                  padding: EdgeInsets.all(8.0),
-                                                  child: Text("Entar", style: TextStyle(
-                                                    fontWeight: FontWeight.w700
-                                                  ),),
-                                                ),
-                                                Expanded(
-                                                  child: Divider(      
-                                                    color: ColorSchemeManagerClass.colorPrimary,
+                                            FadeInUp(
+                                              duration: const Duration(milliseconds: 450),
+                                              child: Row(
+                                                children: <Widget>[
+                                                  Expanded(
+                                                      child: Divider(
+                                                    color: ColorSchemeManagerClass
+                                                        .colorPrimary,
+                                                  )),
+                                                  const Padding(
+                                                    padding: EdgeInsets.all(8.0),
+                                                    child: Text(
+                                                      "Entar",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w700),
+                                                    ),
                                                   ),
-                                                ),
-                                              ],
+                                                  Expanded(
+                                                    child: Divider(
+                                                      color:
+                                                          ColorSchemeManagerClass
+                                                              .colorPrimary,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                             const SizedBox(height: 10),
-                                            TextFormFieldComponent(
-                                              obscure: false,
-                                              controller: emailController,
-                                              inputType:
-                                                  TextInputType.emailAddress,
-                                              labelText: 'Email',
-                                              validator: (value) =>
-                                                  EmailValidator.validate(
-                                                          value.toString())
-                                                      ? null
-                                                      : "Email inválido",
+                                            FadeInUp(
+                                              duration: const Duration(milliseconds: 500),
+                                              child: TextFormFieldComponent(
+                                                obscure: false,
+                                                controller: emailController,
+                                                inputType:
+                                                    TextInputType.emailAddress,
+                                                labelText: 'Email',
+                                                validator: (value) =>
+                                                    EmailValidator.validate(
+                                                            value.toString())
+                                                        ? null
+                                                        : "Email inválido",
+                                              ),
                                             ),
                                             const SizedBox(height: 15),
-                                            TextFormFieldComponent(
-                                              controller: passwordController,
-                                              inputType: TextInputType.text,
-                                              labelText: 'Senha',
-                                              validator: (value) => combine([
-                                                () => isNotEmpyt(value),
-                                                () => hasSixChars(value),
-                                              ]),
-                                              obscure: true,
+                                            FadeInUp(
+                                              duration: const Duration(milliseconds: 600),
+                                              child: TextFormFieldComponent(
+                                                controller: passwordController,
+                                                inputType: TextInputType.text,
+                                                labelText: 'Senha',
+                                                validator: (value) => combine([
+                                                  () => isNotEmpyt(value),
+                                                  () => hasSixChars(value),
+                                                ]),
+                                                obscure: true,
+                                              ),
                                             ),
                                             const SizedBox(height: 35),
-                                            SizedBox(
-                                              width: double.infinity,
-                                              child: ElevatedButton(
-                                                onPressed: () async {},
-                                                style: ElevatedButton.styleFrom(
-                                                  elevation: 0.0,
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                    vertical: 20,
-                                                    horizontal: 10,
-                                                  ),
-                                                  backgroundColor:
-                                                      ColorSchemeManagerClass
-                                                          .colorPrimary,
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5),
-                                                  ),
-                                                ),
-                                                child: Text(
-                                                  'Conectar',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 16,
-                                                    color:
+                                            FadeInUp(
+                                              child: SizedBox(
+                                                width: double.infinity,
+                                                child: ElevatedButton(
+                                                  onPressed: () async {},
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    elevation: 0.0,
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                      vertical: 20,
+                                                      horizontal: 10,
+                                                    ),
+                                                    backgroundColor:
                                                         ColorSchemeManagerClass
-                                                            .colorWhite,
+                                                            .colorPrimary,
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                    ),
+                                                  ),
+                                                  child: Text(
+                                                    'Conectar',
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 16,
+                                                      color:
+                                                          ColorSchemeManagerClass
+                                                              .colorWhite,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
