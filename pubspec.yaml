@@ -38,7 +38,23 @@ dependencies:
   email_validator: ^3.0.0
   supabase_flutter: ^2.6.0
   google_fonts: ^6.2.1
-  bitsdojo_window: ^0.1.6
+  window_manager: ^0.4.2
+  flutter_launcher_icons: ^0.13.1
+
+flutter_icons:
+  image_path: "assets/images/a_logo.png"
+  ios: false
+  adaptive_icon_background: "#ffffff"
+  adaptive_icon_foreground: "assets/images/a_logo.png"
+  web:
+    generate: false
+  windows:
+    generate: true
+    image_path: "assets/images/a_logo.png"
+    icon_size: 48 # min:48, max:256, default: 48
+  macos:
+    generate: true
+    image_path: "assets/images/a_logo.png"
 
 dev_dependencies:
   flutter_test:
