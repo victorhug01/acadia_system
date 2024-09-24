@@ -5,6 +5,7 @@ import 'package:acadia/src/validations/mixin_validation.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -17,6 +18,16 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
   final GlobalKey<FormState> _keyForm = GlobalKey();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final client = Supabase.instance.client;
+
+  Future<String?> userLogin({
+    required final String email,
+    required final String password,
+  }) async {
+    final response = await client.auth.signInWithPassword(password: password, email: email);
+    final user = response.user;
+    return user?.id;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,13 +90,13 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
                                                 'Bem-vindo(a) à Acadia',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
-                                                    fontSize: 18),
+                                                    fontSize: 18,),
                                               ),
                                             ),
                                             const SizedBox(height: 20),
                                             FadeInUp(
                                               duration: const Duration(
-                                                  milliseconds: 400),
+                                                  milliseconds: 400,),
                                               child: const Text(
                                                 'Sua nova plataforma de aprendizado e gerenciamento acadêmico.',
                                                 textAlign: TextAlign.center,
@@ -100,14 +111,14 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
                                                       child: Divider(
                                                     color: ColorSchemeManagerClass
                                                         .colorPrimary,
-                                                  )),
+                                                  ),),
                                                   const Padding(
                                                     padding: EdgeInsets.all(8.0),
                                                     child: Text(
                                                       "Entar",
                                                       style: TextStyle(
                                                           fontWeight:
-                                                              FontWeight.w700),
+                                                              FontWeight.w700,),
                                                     ),
                                                   ),
                                                   Expanded(
@@ -155,7 +166,22 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
                                               child: SizedBox(
                                                 width: double.infinity,
                                                 child: ElevatedButton(
-                                                  onPressed: () async {},
+                                                  onPressed: () async {
+                                                    if(_keyForm.currentState!.validate()){
+                                                      dynamic loginValue = await userLogin(
+                                                      email: emailController.value.text,
+                                                      password: passwordController.value.text,
+                                                    );
+
+                                                    if(loginValue != null){
+                                                      Navigator.pushReplacementNamed(context, '/home');
+                                                    }else{
+                                                      ScaffoldMessenger.of(context).showSnackBar(
+                                                        SnackBar(content: Text('Erro: ' + loginValue)),
+                                                      );
+                                                    }
+                                                    }
+                                                  },
                                                   style:
                                                       ElevatedButton.styleFrom(
                                                     elevation: 0.0,
@@ -219,7 +245,7 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
             ],
           ),
         );
-      }),
+      },),
     );
   }
 }
