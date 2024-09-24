@@ -20,6 +20,9 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
   final TextEditingController passwordController = TextEditingController();
   final client = Supabase.instance.client;
 
+  // Variável para controlar a visibilidade da senha
+  bool _isPasswordVisible = false;
+
   @override
   Widget build(BuildContext context) {
     final responsive = Responsive(context);
@@ -62,13 +65,9 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
                                             children: [
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.all(25.0),
-                                                child: FadeInDown(
-                                                  duration: const Duration(milliseconds: 600),
-                                                  child: Image.asset('assets/images/a_logo.png',width: 150),
-                                                ),
+                                              FadeInDown(
+                                                duration: const Duration(milliseconds: 600),
+                                                child: Image.asset('assets/images/a_logo.png', width: 150),
                                               ),
                                               FadeInUp(
                                                 duration: const Duration(milliseconds: 600),
@@ -103,7 +102,7 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
                                                       child: Text(
                                                         "Entrar",
                                                         style: TextStyle(
-                                                          fontWeight:FontWeight.w700,
+                                                          fontWeight: FontWeight.w700,
                                                         ),
                                                       ),
                                                     ),
@@ -134,12 +133,25 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
                                                   controller: passwordController,
                                                   inputType: TextInputType.text,
                                                   labelText: 'Senha',
+                                                  iconSuffix: IconButton(
+                                                    onPressed: () {
+                                                      // Alterna a visibilidade da senha
+                                                      setState(() {
+                                                        _isPasswordVisible = !_isPasswordVisible;
+                                                      });
+                                                    },
+                                                    icon: Icon(
+                                                      _isPasswordVisible
+                                                          ? Icons.visibility
+                                                          : Icons.visibility_off,
+                                                    ),
+                                                  ),
                                                   validator: (value) =>
                                                       combine([
                                                     () => isNotEmpyt(value),
                                                     () => hasSixChars(value),
                                                   ]),
-                                                  obscure: true,
+                                                  obscure: !_isPasswordVisible,
                                                 ),
                                               ),
                                               const SizedBox(height: 35),
@@ -149,7 +161,7 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
                                                   child: ElevatedButton(
                                                     onPressed: () async {
                                                       if (_keyForm.currentState!.validate()) {
-                                                        final sm = ScaffoldMessenger .of(context);
+                                                        final sm = ScaffoldMessenger.of(context);
                                                         final navigation = Navigator.of(context);
                                                         showDialog(
                                                           context: context,
@@ -162,14 +174,14 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
                                                         );
                                                         try {
                                                           final response = await client.auth.signInWithPassword(
-                                                                  password:passwordController.value.text,
-                                                                  email: emailController.value.text);
-                                                          if (response.user !=null) {
+                                                              password: passwordController.value.text,
+                                                              email: emailController.value.text);
+                                                          if (response.user != null) {
                                                             sm.showSnackBar(
                                                               SnackBar(
-                                                                backgroundColor:ColorSchemeManagerClass.colorCorrect,
+                                                                backgroundColor: ColorSchemeManagerClass.colorCorrect,
                                                                 content: const Text('Login concluído!'),
-                                                                duration: const Duration(seconds:3),
+                                                                duration: const Duration(seconds: 3),
                                                               ),
                                                             );
                                                             await navigation.pushReplacementNamed('/home');
@@ -177,10 +189,9 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
                                                         } catch (e) {
                                                           sm.showSnackBar(
                                                             SnackBar(
-                                                              backgroundColor:ColorSchemeManagerClass.colorDanger,
-                                                              // content: Text('Erro ao fazer login: $e'),
+                                                              backgroundColor: ColorSchemeManagerClass.colorDanger,
                                                               content: const Text('Email ou senha Inválidos!'),
-                                                              duration:const Duration(seconds:3),
+                                                              duration: const Duration(seconds: 3),
                                                             ),
                                                           );
                                                         } finally {
@@ -191,19 +202,18 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
                                                     },
                                                     style: ElevatedButton.styleFrom(
                                                       elevation: 0.0,
-                                                      padding: const EdgeInsets.symmetric(vertical: 20,horizontal: 10),
+                                                      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
                                                       backgroundColor: ColorSchemeManagerClass.colorPrimary,
                                                       shape: RoundedRectangleBorder(
-                                                        borderRadius:BorderRadius.circular(5),
+                                                        borderRadius: BorderRadius.circular(5),
                                                       ),
                                                     ),
                                                     child: Text(
                                                       'Conectar',
                                                       style: TextStyle(
-                                                        fontWeight:FontWeight.bold,
+                                                        fontWeight: FontWeight.bold,
                                                         fontSize: 16,
-                                                        color:
-                                                            ColorSchemeManagerClass.colorWhite,
+                                                        color: ColorSchemeManagerClass.colorWhite,
                                                       ),
                                                     ),
                                                   ),
@@ -244,47 +254,4 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
       ),
     );
   }
-
-  // Future userLogin({
-  //   required final String email,
-  //   required final String password,
-  // }) async {
-  //   final sm = ScaffoldMessenger.of(context);
-  //   final navigation = Navigator.of(context);
-  //   showDialog(
-  //     context: context,
-  //     barrierDismissible: false,
-  //     builder: (BuildContext context) {
-  //       return const Center(
-  //         child: CircularProgressIndicator(),
-  //       );
-  //     },
-  //   );
-  //   try {
-  //     final response = await client.auth.signInWithPassword(password: password, email: email);
-  //     final user = response.user;
-  //     if (response.user != null) {
-  //       sm.showSnackBar(
-  //         SnackBar(
-  //           backgroundColor: ColorSchemeManagerClass.colorCorrect,
-  //           content: const Text('Login concluído!'),
-  //           duration: const Duration(seconds: 3),
-  //         ),
-  //       );
-  //     }
-  //     return user?.id;
-  //   } catch (e) {
-  //     sm.showSnackBar(
-  //       SnackBar(
-  //         backgroundColor: ColorSchemeManagerClass.colorDanger,
-  //         content: Text('Erro ao fazer login: $e'),
-  //         duration: const Duration(seconds: 3),
-  //       ),
-  //     );
-  //   } finally {
-  //     navigation.pop();
-  //   }
-  //   _keyForm.currentState!.reset();
-  //    navigation.pushReplacementNamed('/home');
-  // }
 }
