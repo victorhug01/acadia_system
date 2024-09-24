@@ -16,7 +16,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         fontFamily: GoogleFonts.lato().fontFamily,
         colorScheme: ColorScheme.fromSeed(
-            seedColor: ColorSchemeManagerClass.colorPrimary),
+          seedColor: ColorSchemeManagerClass.colorPrimary,
+        ),
         useMaterial3: true,
       ),
       initialRoute: client.auth.currentSession != null ? '/home' : '/login',
