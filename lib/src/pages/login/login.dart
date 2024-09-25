@@ -54,11 +54,23 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
                                   responsive.isTabletLarge)
                               ? const SizedBox.shrink()
                               : Expanded(
-                                  child: SizedBox(
+                                  child: Container(
+                                    width: constraints.maxWidth,
+                                    height: constraints.maxHeight,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          ColorSchemeManagerClass.colorBlack,
+                                          const Color(0xff4c1a78)
+                                        ],
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                      ),
+                                    ),
                                     child: Image.asset(
-                                      'assets/images/fundo.jpg',
-                                      fit: BoxFit.cover,
-                                      height: constraints.maxHeight,
+                                      'assets/images/brand_acadia.png',
+                                      width: responsive.width / 3,
                                     ),
                                   ),
                                 ),
@@ -88,27 +100,9 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
                                               children: [
                                                 FadeInDown(
                                                   duration: const Duration(milliseconds: 600),
-                                                  child: Image.asset('assets/images/a_logo.png', width: 150),
+                                                  child: Image.asset('assets/images/acadia_write.png', width: 150),
                                                 ),
-                                                FadeInUp(
-                                                  duration: const Duration(milliseconds: 600),
-                                                  child: const Text(
-                                                    'Bem-vindo(a) à Acadia',
-                                                    style: TextStyle(
-                                                      fontWeight: FontWeight.bold,
-                                                      fontSize: 18,
-                                                    ),
-                                                  ),
-                                                ),
-                                                const SizedBox(height: 20),
-                                                FadeInUp(
-                                                  duration: const Duration(milliseconds: 400),
-                                                  child: const Text(
-                                                    'Sua nova plataforma de aprendizado e gerenciamento acadêmico.',
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                ),
-                                                const SizedBox(height: 20),
+                                                const SizedBox(height: 60),
                                                 FadeInUp(
                                                   duration: const Duration(milliseconds: 450),
                                                   child: Row(
@@ -118,11 +112,12 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
                                                           color: ColorSchemeManagerClass.colorPrimary,
                                                         ),
                                                       ),
-                                                      const Padding(
-                                                        padding: EdgeInsets.all(8.0),
+                                                      Padding(
+                                                        padding: const EdgeInsets.all(8.0),
                                                         child: Text(
                                                           "Entrar",
                                                           style: TextStyle(
+                                                            color: ColorSchemeManagerClass.colorPrimary,
                                                             fontWeight: FontWeight.w700,
                                                           ),
                                                         ),
