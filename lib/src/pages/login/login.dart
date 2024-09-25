@@ -153,7 +153,6 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
                                                     labelText: 'Senha',
                                                     iconSuffix: IconButton(
                                                       onPressed: () {
-                                                        // Alterna a visibilidade da senha
                                                         setState(() {
                                                           _isPasswordVisible = !_isPasswordVisible;
                                                         });
@@ -227,7 +226,7 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
                                                     child: ElevatedButton(
                                                       onPressed: () async {
                                                         await signIn();
-                                                        _keyForm.currentState!.reset();
+                                                         _keyForm.currentState!.reset();
                                                       },
                                                       style: ElevatedButton.styleFrom(
                                                         elevation: 0.0,
