@@ -15,9 +15,9 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: Center(
         child: ElevatedButton(
-          onPressed: () {
-            client.auth.signOut();
-            Navigator.pushNamedAndRemoveUntil(
+          onPressed: () async{
+            await client.auth.signOut();
+            await Navigator.pushNamedAndRemoveUntil(
               context, '/', (router) => false
             );
           },

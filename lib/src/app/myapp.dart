@@ -13,6 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final client = Supabase.instance.client;
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Acadia',
       theme: ThemeData(
         fontFamily: GoogleFonts.lato().fontFamily,
