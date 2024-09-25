@@ -226,7 +226,6 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
                                                     child: ElevatedButton(
                                                       onPressed: () async {
                                                         await signIn();
-                                                         _keyForm.currentState!.reset();
                                                       },
                                                       style: ElevatedButton.styleFrom(
                                                         elevation: 0.0,
@@ -307,6 +306,7 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
           );
         } finally {
           navigation.pop();
+          _keyForm.currentState!.reset();
         }
         _keyForm.currentState!.reset();
       }
