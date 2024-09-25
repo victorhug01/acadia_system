@@ -139,6 +139,7 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
                                                 FadeInUp(
                                                   duration: const Duration(milliseconds: 500),
                                                   child: TextFormFieldComponent(
+                                                    autofocus: true,
                                                     obscure: false,
                                                     controller: emailController,
                                                     inputType: TextInputType.emailAddress,
@@ -151,6 +152,7 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
                                                 FadeInUp(
                                                   duration: const Duration(milliseconds: 600),
                                                   child: TextFormFieldComponent(
+                                                    autofocus: true,
                                                     controller: passwordController,
                                                     inputType: TextInputType.text,
                                                     labelText: 'Senha',
@@ -180,12 +182,10 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
                                                   child: FadeInUp(
                                                     duration: const Duration(milliseconds: 600),
                                                     child: TextButton(
-                                                      onPressed: (){
+                                                      onPressed: () {
                                                         QuickAlert.show(
                                                           context: context, 
                                                           type: QuickAlertType.custom,
-                                                          headerBackgroundColor: ColorSchemeManagerClass.colorPrimary,
-                                                          animType: QuickAlertAnimType.scale,
                                                           customAsset: 'assets/images/background.jpg',
                                                           title: 'Recuperação de senha',
                                                           text: 'Digite o email registrado para enviar uma recuperação?',
@@ -202,6 +202,7 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
                                                           widget: Padding(
                                                             padding: const EdgeInsets.symmetric(vertical: 30.0),
                                                             child: TextFormFieldComponent(
+                                                              autofocus: true,
                                                               iconPrefix: const Icon(Icons.email),
                                                               controller: emailRecoveryController, 
                                                               labelText: 'Email registrado', 
@@ -231,6 +232,7 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
                                                     child: ElevatedButton(
                                                       onPressed: () async {
                                                         await signIn();
+                                                        _keyForm.currentState!.reset();
                                                       },
                                                       style: ElevatedButton.styleFrom(
                                                         elevation: 0.0,
