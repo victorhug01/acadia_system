@@ -189,7 +189,6 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
                                                           onConfirmBtnTap: (){
                                                             client.auth.resetPasswordForEmail(
                                                               emailRecoveryController.value.text,
-                                                              redirectTo: ''
                                                             );
                                                           },
                                                           confirmBtnColor: ColorSchemeManagerClass.colorPrimary,
