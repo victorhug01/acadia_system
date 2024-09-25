@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class TextFormFieldComponent extends StatefulWidget {
   final String labelText;
-  final IconButton? iconPrefix;
+  final Widget? iconPrefix;
   final IconButton? iconSuffix;
   final bool obscure;
   final String? Function(String?)? validator;

@@ -5,6 +5,7 @@ import 'package:acadia/src/validations/mixin_validation.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:quickalert/quickalert.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LoginPage extends StatefulWidget {
@@ -18,6 +19,7 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
   final GlobalKey<FormState> _keyForm = GlobalKey();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController emailRecoveryController = TextEditingController();
   final client = Supabase.instance.client;
 
   // Variável para controlar a visibilidade da senha
@@ -152,6 +154,52 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
                                                     () => hasSixChars(value),
                                                   ]),
                                                   obscure: !_isPasswordVisible,
+                                                ),
+                                              ),
+                                              Container(
+                                                alignment: Alignment.centerRight,
+                                                child: FadeInUp(
+                                                  duration: const Duration(milliseconds: 600),
+                                                  child: TextButton(
+                                                    onPressed: (){
+                                                      QuickAlert.show(
+                                                        context: context, 
+                                                        type: QuickAlertType.info,
+                                                        title: 'Recuperação de senha',
+                                                        text: 'Digite o email registrado para enviar uma recuperação?',
+                                                        cancelBtnText: 'Cancelar',
+                                                        showCancelBtn: true,
+                                                        confirmBtnText: 'Confirmar',
+                                                        onConfirmBtnTap: (){
+                                                          client.auth.resetPasswordForEmail(
+                                                            emailRecoveryController.value.text,
+                                                            redirectTo: ''
+                                                          );
+                                                        },
+                                                        confirmBtnColor: ColorSchemeManagerClass.colorPrimary,
+                                                        widget: Padding(
+                                                          padding: const EdgeInsets.symmetric(vertical: 30.0),
+                                                          child: TextFormFieldComponent(
+                                                            iconPrefix: const Icon(Icons.email),
+                                                            controller: emailRecoveryController, 
+                                                            labelText: 'Email registrado', 
+                                                            inputType: TextInputType.emailAddress, 
+                                                            obscure: false
+                                                          ),
+                                                        )
+                                                      );
+                                                    },
+                                                    style: const ButtonStyle(
+                                                      padding: WidgetStatePropertyAll(EdgeInsets.zero)
+                                                    ),
+                                                    child: const Text(
+                                                      'Esqueci minha senha',
+                                                      style: TextStyle(
+                                                        decoration: TextDecoration.underline,
+                                                        fontWeight: FontWeight.w500
+                                                      ),
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
                                               const SizedBox(height: 35),

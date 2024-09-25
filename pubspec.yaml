@@ -41,6 +41,7 @@ dependencies:
   window_manager: ^0.4.2
   flutter_launcher_icons: ^0.13.1
   animate_do: ^3.3.4
+  quickalert: ^1.1.0
 
 flutter_icons:
   image_path: "assets/images/a_logo.png"

@@ -1,3 +1,4 @@
+import 'package:acadia/src/pages/forgotPassword/forgot_password.dart';
 import 'package:acadia/src/pages/home/home.dart';
 import 'package:acadia/src/pages/login/login.dart';
 import 'package:acadia/src/theme/theme_colors.dart';
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => const LoginPage(),
         '/login': (context) => const LoginPage(),
         '/home': (context) => const HomePage(),
+        '/forgotpassword': (context) => const ForgotPasswordPage(),
       },
     );
   }
