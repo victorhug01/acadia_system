@@ -186,9 +186,9 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
                                                           cancelBtnText: 'Cancelar',
                                                           showCancelBtn: true,
                                                           confirmBtnText: 'Confirmar',
-                                                          onConfirmBtnTap: (){
-                                                            client.auth.resetPasswordForEmail(
-                                                              emailRecoveryController.value.text,
+                                                          onConfirmBtnTap: ()async{
+                                                            await client.auth.resetPasswordForEmail(
+                                                              emailRecoveryController.text,
                                                             );
                                                           },
                                                           confirmBtnColor: ColorSchemeManagerClass.colorPrimary,
