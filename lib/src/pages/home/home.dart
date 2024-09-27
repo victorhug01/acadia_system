@@ -11,35 +11,63 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String? _imageUrl;
-  
+  String? userName;
+  bool isLoading = true;
+
   @override
   void initState() {
     super.initState();
-    _loadAvatar();
+    _loadUserData(); // Atualizar o método para carregar os dados do usuário
   }
-  
-  Future<void> _loadAvatar() async {
+
+  Future<void> _loadUserData() async {
     final client = Supabase.instance.client;
-    final userId = client.auth.currentUser!.id;
-    final response = await client.from('secretaria').select('avatar').eq('id', userId).single();
-    
-    setState(() {
-      _imageUrl = response['avatar'];
-    });
+    final userId = client.auth.currentUser?.id;
+
+    if (userId != null) {
+      try {
+        // Seleciona o nome e o avatar
+        final response = await client
+            .from('secretaria')
+            .select('nome, avatar')
+            .eq('id', userId)
+            .single();
+
+        setState(() {
+          userName = response['nome'] ?? 'Nome não encontrado';
+          _imageUrl = response['avatar'] ?? null; // Carrega a URL do avatar
+          isLoading = false;
+        });
+      } catch (e) {
+        setState(() {
+          userName = 'Erro ao carregar os dados';
+          isLoading = false;
+        });
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final client = Supabase.instance.client;
+
     return Scaffold(
       drawer: DrawerComponent(
-        imageUrl: _imageUrl,
+        imageUrl: _imageUrl, // Passa a URL da imagem carregada
+        userName: userName,
+        isLoading: isLoading,
         onUpload: (imageUrl) async {
           setState(() {
-            _imageUrl = imageUrl;
+            _imageUrl = imageUrl; // Atualiza a URL da imagem no estado
           });
-          final userId = client.auth.currentUser!.id;
-          await client.from('secretaria').update({'avatar': imageUrl}).eq('id', userId);
+
+          final userId = client.auth.currentUser?.id;
+          if (userId != null) {
+            await client
+                .from('secretaria')
+                .update({'avatar': imageUrl}) // Atualiza o avatar no banco de dados
+                .eq('id', userId);
+          }
         },
       ),
       appBar: AppBar(
