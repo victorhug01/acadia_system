@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:acadia/src/theme/theme_colors.dart';
 
 class DrawerComponent extends StatefulWidget {
-  const DrawerComponent({super.key});
+  final String? imageUrl;
+  final void Function(String imageUrl) onUpload;
+  const DrawerComponent({super.key, this.imageUrl, required this.onUpload});
 
   @override
   State<DrawerComponent> createState() => _DrawerComponentState();
@@ -60,15 +63,59 @@ class _DrawerComponentState extends State<DrawerComponent> {
           SizedBox(
             height: 250,
             child: DrawerHeader(
-              // decoration: const BoxDecoration(
-              //   color: Colors.blue,
-              // ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const CircleAvatar(
-                    radius: 70.0,
-                    backgroundImage: AssetImage('assets/images/background.jpg'),
+                  Stack(
+                    children: [
+                      CircleAvatar(
+                        radius: 70.0,
+                        backgroundImage: widget.imageUrl != null
+                            ? NetworkImage(widget.imageUrl!)
+                            : null,
+                      ),
+                      Positioned(
+                        bottom: 5,
+                        right: 5,
+                        child: CircleAvatar(
+                          child: CircleAvatar(
+                            backgroundColor:
+                                ColorSchemeManagerClass.colorPrimary,
+                            child: IconButton(
+                              onPressed: () async {
+                                final ImagePicker picker = ImagePicker();
+                                final XFile? image = await picker.pickImage(
+                                    source: ImageSource.gallery);
+                                if (image == null) {
+                                  return;
+                                }
+                                final imageExtension = image.path.split('.').last.toLowerCase();
+                                final imagesBytes = await image.readAsBytes();
+                                final userId = client.auth.currentUser!.id;
+                                final imagePath = '/$userId/profile';
+                                await client.storage
+                                    .from('profiles')
+                                    .uploadBinary(
+                                      imagePath,
+                                      imagesBytes,
+                                      fileOptions: FileOptions(
+                                        upsert: true,
+                                        contentType: 'image/$imageExtension'
+                                      ),
+                                    );
+                                String imageUrl = client.storage.from('profiles').getPublicUrl(imagePath);
+                                imageUrl = Uri.parse(imageUrl).replace(queryParameters: {'t': DateTime.now().millisecondsSinceEpoch.toString()}).toString();
+                                widget.onUpload(imageUrl);
+                              },
+                              icon: Icon(
+                                Icons.edit,
+                                color: ColorSchemeManagerClass.colorWhite,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(
                     height: 20,
@@ -110,7 +157,9 @@ class _DrawerComponentState extends State<DrawerComponent> {
             },
           ),
           ExpansionTile(
-            childrenPadding: const EdgeInsets.symmetric(horizontal: 20.0,),
+            childrenPadding: const EdgeInsets.symmetric(
+              horizontal: 20.0,
+            ),
             title: const Text('Cadastrar'),
             children: <Widget>[
               ListTile(

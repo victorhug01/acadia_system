@@ -42,7 +42,7 @@ dependencies:
   flutter_launcher_icons: ^0.13.1
   animate_do: ^3.3.4
   quickalert: ^1.1.0
-  flutter_expanded_tile: ^0.4.0
+  image_picker: ^1.1.2
 
 flutter_icons:
   image_path: "assets/images/a_logo.png"
