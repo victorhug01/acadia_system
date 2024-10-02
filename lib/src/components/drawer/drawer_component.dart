@@ -1,5 +1,6 @@
 import 'package:acadia/src/theme/theme_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -48,7 +49,8 @@ class _DrawerComponentState extends State<DrawerComponent> {
       await client.storage.from('profiles').uploadBinary(
             imagePath,
             imagesBytes,
-            fileOptions: FileOptions(upsert: true, contentType: 'image/$imageExtension'),
+            fileOptions:
+                FileOptions(upsert: true, contentType: 'image/$imageExtension'),
           );
 
       String imageUrl = client.storage.from('profiles').getPublicUrl(imagePath);
@@ -56,7 +58,8 @@ class _DrawerComponentState extends State<DrawerComponent> {
         't': DateTime.now().millisecondsSinceEpoch.toString()
       }).toString();
 
-      widget.onUpload(imageUrl); // Chama o callback passando a nova URL da imagem
+      widget
+          .onUpload(imageUrl); // Chama o callback passando a nova URL da imagem
     } catch (e) {
       sm.showSnackBar(SnackBar(
         backgroundColor: ColorSchemeManagerClass.colorDanger,
@@ -73,7 +76,7 @@ class _DrawerComponentState extends State<DrawerComponent> {
   @override
   Widget build(BuildContext context) {
     final client = Supabase.instance.client;
-
+    final navigation = Navigator.of(context);
     return Drawer(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
       surfaceTintColor: ColorSchemeManagerClass.colorWhite,
@@ -89,7 +92,8 @@ class _DrawerComponentState extends State<DrawerComponent> {
                   Stack(
                     children: [
                       CircleAvatar(
-                        radius: 70.0,
+                        radius: 65.0,
+                        backgroundColor: ColorSchemeManagerClass.colorGrey,
                         backgroundImage: widget.imageUrl != null && !isUploading
                             ? NetworkImage(widget.imageUrl!)
                             : null,
@@ -108,9 +112,11 @@ class _DrawerComponentState extends State<DrawerComponent> {
                         right: 5,
                         child: CircleAvatar(
                           child: CircleAvatar(
-                            backgroundColor: ColorSchemeManagerClass.colorPrimary,
+                            backgroundColor:
+                                ColorSchemeManagerClass.colorPrimary,
                             child: IconButton(
-                              onPressed: _uploadImage, // Função que faz o upload da imagem
+                              onPressed:
+                                  _uploadImage, // Função que faz o upload da imagem
                               icon: Icon(
                                 Icons.edit,
                                 color: ColorSchemeManagerClass.colorWhite,
@@ -129,15 +135,15 @@ class _DrawerComponentState extends State<DrawerComponent> {
                       widget.userName ?? 'Nome não disponível',
                       style: TextStyle(
                         fontSize: 14,
-                        color: ColorSchemeManagerClass.colorPrimary,
+                        color: ColorSchemeManagerClass.colorBlack,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   Text(
                     (client.auth.currentUser!.email).toString(),
                     style: TextStyle(
-                      fontSize: 14,
-                      color: ColorSchemeManagerClass.colorPrimary,
+                      fontSize: 12.5,
+                      color: ColorSchemeManagerClass.colorGrey,
                     ),
                   ),
                 ],
@@ -145,54 +151,83 @@ class _DrawerComponentState extends State<DrawerComponent> {
             ),
           ),
           ListTile(
-            title: const Text('Home'),
+            splashColor: Colors.transparent,
+            hoverColor: Colors.transparent,
+            leading: const Icon(HugeIcons.strokeRoundedHome10),
+            title: const Text(
+              'Home',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
             onTap: () {
               Navigator.pop(context);
             },
           ),
           ExpansionTile(
-            childrenPadding: const EdgeInsets.symmetric(horizontal: 20.0),
-            title: const Text('Cadastrar'),
+            leading: const Icon(HugeIcons.strokeRoundedAssignments),
+            childrenPadding: const EdgeInsets.only(left: 40.0, bottom: 20.0),
+            title: const Text(
+              'Cadastrar',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
             children: <Widget>[
-              ListTile(
-                title: const Text('aluno'),
+              ListTileComponent(
+                title: 'Aluno',
                 onTap: () {
-                  Navigator.pop(context);
+                  navigation.pushNamed('/home_student');
                 },
               ),
-              ListTile(
-                title: const Text('professor'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
+              ListTileComponent(
+                title: 'Professor',
+                onTap: () {},
               ),
-              ListTile(
-                title: const Text('matéria'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
+              ListTileComponent(
+                title: 'Matéria',
+                onTap: () {},
               ),
-              ListTile(
-                title: const Text('escola'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
+              ListTileComponent(
+                title: 'Escola',
+                onTap: () {},
               ),
-              ListTile(
-                title: const Text('série'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
+              ListTileComponent(
+                title: 'Série',
+                onTap: () {},
               ),
-              ListTile(
-                title: const Text('turma'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
+              ListTileComponent(
+                title: 'Turma',
+                onTap: () {},
               ),
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+class ListTileComponent extends StatelessWidget {
+  final String? title;
+  final VoidCallback? onTap;
+  const ListTileComponent({super.key, this.title, this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 37.0,
+      child: ListTile(
+        title: Text(
+          title.toString(),
+          style: TextStyle(
+            color: ColorSchemeManagerClass.colorGrey,
+          ),
+        ),
+        trailing: const Icon(HugeIcons.strokeRoundedArrowRight01),
+        onTap: onTap,
       ),
     );
   }

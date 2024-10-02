@@ -6,4 +6,5 @@ abstract class ColorSchemeManagerClass{
   static Color colorBlack = const Color(0xff000000);
   static Color colorDanger = const Color.fromARGB(255, 210, 50, 50);
   static Color colorCorrect = const Color.fromARGB(255, 33, 153, 6);
+  static Color colorGrey = const Color.fromARGB(255, 73, 71, 71);
 }

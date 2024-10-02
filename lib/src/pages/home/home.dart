@@ -1,3 +1,4 @@
+import 'package:acadia/src/components/appbar/appbar_component.dart';
 import 'package:acadia/src/components/drawer/drawer_component.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -35,7 +36,7 @@ class _HomePageState extends State<HomePage> {
 
         setState(() {
           userName = response['nome'] ?? 'Nome não encontrado';
-          _imageUrl = response['avatar'] ?? null; // Carrega a URL do avatar
+          _imageUrl = response['avatar']; // Carrega a URL do avatar
           isLoading = false;
         });
       } catch (e) {
@@ -63,26 +64,22 @@ class _HomePageState extends State<HomePage> {
 
           final userId = client.auth.currentUser?.id;
           if (userId != null) {
-            await client
-                .from('secretaria')
-                .update({'avatar': imageUrl}) // Atualiza o avatar no banco de dados
+            await client.from('secretaria').update(
+                    {'avatar': imageUrl}) // Atualiza o avatar no banco de dados
                 .eq('id', userId);
           }
         },
       ),
-      appBar: AppBar(
-        centerTitle: true,
-        title: Image.asset(
-          'assets/images/acadia_write.png',
-          width: 150,
-          height: 30,
-        ),
+      appBar: const PreferredSize(
+        preferredSize: Size.fromHeight(60.0),
+        child: AppBarComponent(),
       ),
       body: Center(
         child: ElevatedButton(
           onPressed: () async {
+            final navigation = Navigator.of(context);
             await client.auth.signOut();
-            await Navigator.pushNamedAndRemoveUntil(context, '/', (router) => false);
+            await navigation.pushNamedAndRemoveUntil('/', (router) => false);
           },
           child: const Text('Sair'),
         ),
