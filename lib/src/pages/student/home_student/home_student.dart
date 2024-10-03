@@ -88,7 +88,7 @@ class _HomeStudentState extends State<HomeStudent> {
                     ),
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ),

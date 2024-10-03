@@ -118,7 +118,7 @@ class _DrawerComponentState extends State<DrawerComponent> {
                               onPressed:
                                   _uploadImage, // Função que faz o upload da imagem
                               icon: Icon(
-                                Icons.edit,
+                                HugeIcons.strokeRoundedPencilEdit01,
                                 color: ColorSchemeManagerClass.colorWhite,
                               ),
                             ),
@@ -226,7 +226,7 @@ class ListTileComponent extends StatelessWidget {
             color: ColorSchemeManagerClass.colorGrey,
           ),
         ),
-        trailing: const Icon(HugeIcons.strokeRoundedArrowRight01),
+        trailing: const Icon(HugeIcons.strokeRoundedArrowRight02),
         onTap: onTap,
       ),
     );
