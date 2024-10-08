@@ -74,14 +74,16 @@ class _HomePageState extends State<HomePage> {
         preferredSize: Size.fromHeight(60.0),
         child: AppBarComponent(),
       ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () async {
-            final navigation = Navigator.of(context);
-            await client.auth.signOut();
-            await navigation.pushNamedAndRemoveUntil('/', (router) => false);
-          },
-          child: const Text('Sair'),
+      body: SafeArea(
+        child: Center(
+          child: ElevatedButton(
+            onPressed: () async {
+              final navigation = Navigator.of(context);
+              await client.auth.signOut();
+              await navigation.pushNamedAndRemoveUntil('/', (router) => false);
+            },
+            child: const Text('Sair'),
+          ),
         ),
       ),
     );

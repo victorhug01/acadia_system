@@ -67,7 +67,9 @@ class _HomeStudentState extends State<HomeStudent> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/register_student');
+                      },
                       child: Row(
                         children: [
                           Icon(

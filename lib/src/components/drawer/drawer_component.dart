@@ -19,7 +19,7 @@ class DrawerComponent extends StatefulWidget {
   });
 
   @override
-  _DrawerComponentState createState() => _DrawerComponentState();
+  State<DrawerComponent> createState() => _DrawerComponentState();
 }
 
 class _DrawerComponentState extends State<DrawerComponent> {
@@ -169,7 +169,7 @@ class _DrawerComponentState extends State<DrawerComponent> {
             leading: const Icon(HugeIcons.strokeRoundedAssignments),
             childrenPadding: const EdgeInsets.only(left: 40.0, bottom: 20.0),
             title: const Text(
-              'Cadastrar',
+              'Cadastro',
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
