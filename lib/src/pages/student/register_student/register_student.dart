@@ -1,4 +1,5 @@
 import 'package:acadia/src/components/appbar/appbar_component.dart';
+import 'package:acadia/src/pages/student/components/responsible/responsible_component.dart';
 import 'package:acadia/src/theme/theme_colors.dart';
 import 'package:flutter/material.dart';
 
@@ -9,9 +10,9 @@ class RegisterStudentPage extends StatefulWidget {
   State<RegisterStudentPage> createState() => _RegisterStudentPageState();
 }
 
-class _RegisterStudentPageState extends State<RegisterStudentPage>
-    with SingleTickerProviderStateMixin {
+class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  final TextEditingController controller = TextEditingController();
 
   @override
   void initState() {
@@ -31,6 +32,12 @@ class _RegisterStudentPageState extends State<RegisterStudentPage>
   void _nextTab() {
     if (_tabController.index < 3) {
       _tabController.animateTo(_tabController.index + 1);
+    }
+  }
+
+  void _previousTab() {
+    if (_tabController.index > 0) {
+      _tabController.animateTo(_tabController.index - 1);
     }
   }
 
@@ -57,6 +64,9 @@ class _RegisterStudentPageState extends State<RegisterStudentPage>
               padding: const EdgeInsets.symmetric(vertical: 20.0),
               tabAlignment: TabAlignment.center,
               dividerColor: Colors.transparent,
+              labelStyle: const TextStyle(
+                fontWeight: FontWeight.w600,
+              ),
               tabs: const [
                 Tab(text: 'Responsável'),
                 Tab(text: 'Aluno'),
@@ -67,23 +77,64 @@ class _RegisterStudentPageState extends State<RegisterStudentPage>
             Expanded(
               child: TabBarView(
                 controller: _tabController,
-                children: const [
-                  Icon(Icons.directions_car),
-                  Icon(Icons.directions_transit),
-                  Icon(Icons.directions_bike),
-                  Icon(Icons.menu),
+                children:  [
+                  ResponsibleComponent(controller: controller),
+                  const Icon(Icons.directions_transit),
+                  const Icon(Icons.directions_bike),
+                  const Icon(Icons.menu),
                 ],
               ),
             ),
           ],
         ),
       ),
-      floatingActionButton: Builder(builder: (context) {
-        return FloatingActionButton(
-          onPressed: _nextTab,
-          child: const Icon(Icons.arrow_forward),
-        );
-      }),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _tabController.index == 0
+                ? const SizedBox.shrink()
+                : ButtonComponent(
+                    onpress: () {
+                      _previousTab();
+                    },
+                    text: 'Anterior',
+                  ),
+            ButtonComponent(
+              onpress: () {
+                _nextTab();
+              },
+              text: _tabController.index == 3 ? 'Gerar contrato e finalizar' : 'Avançar',
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ButtonComponent extends StatelessWidget {
+  final VoidCallback onpress;
+  final String text;
+  const ButtonComponent({super.key, required this.onpress, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        foregroundColor: ColorSchemeManagerClass.colorWhite,
+        backgroundColor: ColorSchemeManagerClass.colorPrimary,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5.0),
+        ),
+      ),
+      onPressed: onpress,
+      child: Row(
+        children: [
+          Text(text.toString()),
+        ],
+      ),
     );
   }
 }
