@@ -14,6 +14,7 @@ class TextFormFieldComponent extends StatefulWidget {
   final double sizeInputBorder;
   final Color? colorBorderInput;
   final double? paddingLeftInput;
+
   const TextFormFieldComponent({
     super.key,
     required this.controller,
@@ -26,7 +27,8 @@ class TextFormFieldComponent extends StatefulWidget {
     required this.autofocus,
     required this.inputBorderType,
     required this.sizeInputBorder,
-    this.colorBorderInput, this.paddingLeftInput,
+    this.colorBorderInput,
+    this.paddingLeftInput,
   });
 
   @override
@@ -36,6 +38,12 @@ class TextFormFieldComponent extends StatefulWidget {
 class _TextFormFieldComponentState extends State<TextFormFieldComponent> {
   @override
   Widget build(BuildContext context) {
+    final borderSideStyle = widget.inputBorderType.copyWith(
+      borderSide: BorderSide(
+        color: widget.colorBorderInput ?? ColorSchemeManagerClass.colorPrimary,
+        width: widget.sizeInputBorder,
+      ),
+    );
     return TextFormField(
       autofocus: widget.autofocus,
       keyboardType: widget.inputType,
@@ -45,36 +53,13 @@ class _TextFormFieldComponentState extends State<TextFormFieldComponent> {
         prefixIcon: widget.iconPrefix,
         suffixIcon: widget.iconSuffix,
         labelText: widget.labelText,
-        isDense:  true,
-        contentPadding: EdgeInsets.only(top: 0, left: widget.paddingLeftInput ?? 00.0, bottom: 5, right: 5),
+        contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: widget.paddingLeftInput ?? 0.0),
         labelStyle: const TextStyle(
           fontWeight: FontWeight.w500,
         ),
-        enabledBorder: widget.inputBorderType.copyWith(
-          borderSide: BorderSide(
-            color: widget.colorBorderInput ?? ColorSchemeManagerClass.colorGrey,
-            width: widget.sizeInputBorder,
-          ),
-        ),
-        focusedBorder: widget.inputBorderType.copyWith(
-          borderSide: BorderSide(
-            color:
-                widget.colorBorderInput ?? ColorSchemeManagerClass.colorPrimary,
-            width: widget.sizeInputBorder,
-          ),
-        ),
-        errorBorder: widget.inputBorderType.copyWith(
-          borderSide: BorderSide(
-            color: ColorSchemeManagerClass.colorDanger,
-            width: widget.sizeInputBorder,
-          ),
-        ),
-        focusedErrorBorder: widget.inputBorderType.copyWith(
-          borderSide: BorderSide(
-            color: ColorSchemeManagerClass.colorDanger,
-            width: widget.sizeInputBorder,
-          ),
-        ),
+        enabledBorder: borderSideStyle,
+        focusedBorder: borderSideStyle,
+        border: borderSideStyle,
       ),
       validator: widget.validator,
     );

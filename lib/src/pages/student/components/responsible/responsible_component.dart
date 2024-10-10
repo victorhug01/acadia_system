@@ -50,7 +50,7 @@ class ResponsibleComponent extends StatelessWidget with ValidationMixinClass {
             ),
           ),
           SizedBox(
-            height: 35,
+            height: 40,
             child: TextFormFieldComponent(
               paddingLeftInput: 8.0,
               colorBorderInput: ColorSchemeManagerClass.colorPrimary,
@@ -93,13 +93,13 @@ class ResponsibleComponent extends StatelessWidget with ValidationMixinClass {
               {'label': 'Nome completo', 'controller': nameController},
               {'label': 'Email', 'controller': emailController},
             ]),
-            const SizedBox(height: 10),
+            const SizedBox(height: 7),
             buildRow([
               {'label': 'CPF', 'controller': cpfController},
               {'label': 'RG', 'controller': rgController},
               {'label': 'Celular', 'controller': celularController},
             ]),
-            const SizedBox(height: 10),
+            const SizedBox(height: 7),
             buildRow([
               {
                 'label': 'Endereço',
@@ -109,7 +109,7 @@ class ResponsibleComponent extends StatelessWidget with ValidationMixinClass {
               {'label': 'Número', 'controller': numeroController},
               {'label': 'Cep', 'controller': cepController},
             ]),
-            const SizedBox(height: 10),
+            const SizedBox(height: 7),
             buildRow([
               {'label': 'Bairro', 'controller': bairroController},
               {'label': 'Cidade', 'controller': cidadeController},
