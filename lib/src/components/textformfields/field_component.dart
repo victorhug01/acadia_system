@@ -2,7 +2,7 @@ import 'package:acadia/src/theme/theme_colors.dart';
 import 'package:flutter/material.dart';
 
 class TextFormFieldComponent extends StatefulWidget {
-  final String labelText;
+  final String? labelText;
   final Widget? iconPrefix;
   final IconButton? iconSuffix;
   final bool obscure;
@@ -10,16 +10,23 @@ class TextFormFieldComponent extends StatefulWidget {
   final String? Function(String?)? validator;
   final TextInputType inputType;
   final TextEditingController controller;
+  final InputBorder inputBorderType;
+  final double sizeInputBorder;
+  final Color? colorBorderInput;
+  final double? paddingLeftInput;
   const TextFormFieldComponent({
     super.key,
     required this.controller,
-    required this.labelText,
+    this.labelText,
     this.validator,
     required this.inputType,
     required this.obscure,
     this.iconPrefix,
     this.iconSuffix,
     required this.autofocus,
+    required this.inputBorderType,
+    required this.sizeInputBorder,
+    this.colorBorderInput, this.paddingLeftInput,
   });
 
   @override
@@ -37,15 +44,37 @@ class _TextFormFieldComponentState extends State<TextFormFieldComponent> {
       decoration: InputDecoration(
         prefixIcon: widget.iconPrefix,
         suffixIcon: widget.iconSuffix,
-        border: const UnderlineInputBorder(),
-        errorBorder: UnderlineInputBorder(
+        labelText: widget.labelText,
+        isDense:  true,
+        contentPadding: EdgeInsets.only(top: 0, left: widget.paddingLeftInput ?? 00.0, bottom: 5, right: 5),
+        labelStyle: const TextStyle(
+          fontWeight: FontWeight.w500,
+        ),
+        enabledBorder: widget.inputBorderType.copyWith(
           borderSide: BorderSide(
-            color: ColorSchemeManagerClass.colorDanger,
-            width: 2,
+            color: widget.colorBorderInput ?? ColorSchemeManagerClass.colorGrey,
+            width: widget.sizeInputBorder,
           ),
         ),
-        labelText: widget.labelText,
-        labelStyle: const TextStyle(fontWeight: FontWeight.w500),
+        focusedBorder: widget.inputBorderType.copyWith(
+          borderSide: BorderSide(
+            color:
+                widget.colorBorderInput ?? ColorSchemeManagerClass.colorPrimary,
+            width: widget.sizeInputBorder,
+          ),
+        ),
+        errorBorder: widget.inputBorderType.copyWith(
+          borderSide: BorderSide(
+            color: ColorSchemeManagerClass.colorDanger,
+            width: widget.sizeInputBorder,
+          ),
+        ),
+        focusedErrorBorder: widget.inputBorderType.copyWith(
+          borderSide: BorderSide(
+            color: ColorSchemeManagerClass.colorDanger,
+            width: widget.sizeInputBorder,
+          ),
+        ),
       ),
       validator: widget.validator,
     );

@@ -30,8 +30,9 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
     return Scaffold(
       body: KeyboardListener(
         focusNode: FocusNode(),
-        onKeyEvent: (KeyEvent event){
-          if(event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.enter) {
+        onKeyEvent: (KeyEvent event) {
+          if (event is KeyDownEvent &&
+              event.logicalKey == LogicalKeyboardKey.enter) {
             signIn();
           }
         },
@@ -88,19 +89,21 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
                                   shrinkWrap: true,
                                   children: [
                                     Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         SizedBox(
-                                          width: responsive.isMobile ? double.infinity : 450,
+                                          width: responsive.isMobile
+                                              ? double.infinity
+                                              : 450,
                                           child: Form(
                                             key: _keyForm,
                                             child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
+                                              mainAxisAlignment:MainAxisAlignment.center,
                                               children: [
                                                 FadeInDown(
                                                   duration: const Duration(milliseconds: 600),
-                                                  child: Image.asset('assets/images/acadia_write.png', width: 150),
+                                                  child: Image.asset('assets/images/acadia_write.png',width: 150),
                                                 ),
                                                 const SizedBox(height: 60),
                                                 FadeInUp(
@@ -109,22 +112,23 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
                                                     children: <Widget>[
                                                       Expanded(
                                                         child: Divider(
-                                                          color: ColorSchemeManagerClass.colorPrimary,
+                                                          color:ColorSchemeManagerClass.colorPrimary,
                                                         ),
                                                       ),
                                                       Padding(
-                                                        padding: const EdgeInsets.all(8.0),
+                                                        padding:const EdgeInsets.all(8.0),
                                                         child: Text(
                                                           "Entrar",
                                                           style: TextStyle(
-                                                            color: ColorSchemeManagerClass.colorPrimary,
-                                                            fontWeight: FontWeight.w700,
+                                                            color:ColorSchemeManagerClass.colorPrimary,
+                                                            fontWeight:
+                                                                FontWeight.w700,
                                                           ),
                                                         ),
                                                       ),
                                                       Expanded(
                                                         child: Divider(
-                                                          color: ColorSchemeManagerClass.colorPrimary,
+                                                          color:ColorSchemeManagerClass.colorPrimary,
                                                         ),
                                                       ),
                                                     ],
@@ -134,22 +138,28 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
                                                 FadeInUp(
                                                   duration: const Duration(milliseconds: 500),
                                                   child: TextFormFieldComponent(
+                                                    inputBorderType: const UnderlineInputBorder(),
+                                                    sizeInputBorder: 2.0,
                                                     autofocus: true,
                                                     obscure: false,
                                                     controller: emailController,
                                                     inputType: TextInputType.emailAddress,
                                                     labelText: 'Email',
                                                     validator: (value) =>
-                                                        EmailValidator.validate(value.toString()) ? null : "Email inválido",
+                                                        EmailValidator.validate(value.toString())
+                                                            ? null
+                                                            : "Email inválido",
                                                   ),
                                                 ),
                                                 const SizedBox(height: 15),
                                                 FadeInUp(
                                                   duration: const Duration(milliseconds: 600),
                                                   child: TextFormFieldComponent(
+                                                    inputBorderType: const UnderlineInputBorder(),
+                                                    sizeInputBorder: 2.0,
                                                     autofocus: true,
-                                                    controller: passwordController,
-                                                    inputType: TextInputType.text,
+                                                    controller:passwordController,
+                                                    inputType:TextInputType.text,
                                                     labelText: 'Senha',
                                                     iconSuffix: IconButton(
                                                       onPressed: () {
@@ -168,52 +178,53 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
                                                       () => isNotEmpyt(value),
                                                       () => hasSixChars(value),
                                                     ]),
-                                                    obscure: !_isPasswordVisible,
+                                                    obscure:
+                                                        !_isPasswordVisible,
                                                   ),
                                                 ),
                                                 Container(
-                                                  alignment: Alignment.centerRight,
+                                                  alignment:Alignment.centerRight,
                                                   child: FadeInUp(
                                                     duration: const Duration(milliseconds: 600),
                                                     child: TextButton(
                                                       onPressed: () {
                                                         QuickAlert.show(
-                                                          context: context, 
-                                                          type: QuickAlertType.custom,
-                                                          customAsset: 'assets/images/background.jpg',
-                                                          title: 'Recuperação de senha',
-                                                          text: 'Digite o email registrado para enviar uma recuperação?',
-                                                          cancelBtnText: 'Cancelar',
-                                                          showCancelBtn: true,
-                                                          confirmBtnText: 'Confirmar',
-                                                          onConfirmBtnTap: ()async{
-                                                            await client.auth.resetPasswordForEmail(
-                                                              emailRecoveryController.text,
-                                                            );
-                                                          },
-                                                          confirmBtnColor: ColorSchemeManagerClass.colorPrimary,
-                                                          widget: Padding(
-                                                            padding: const EdgeInsets.symmetric(vertical: 30.0),
-                                                            child: TextFormFieldComponent(
-                                                              autofocus: true,
-                                                              iconPrefix: const Icon(Icons.email),
-                                                              controller: emailRecoveryController, 
-                                                              labelText: 'Email registrado', 
-                                                              inputType: TextInputType.emailAddress, 
-                                                              obscure: false
+                                                            context: context,
+                                                            type: QuickAlertType.custom,
+                                                            customAsset:'assets/images/background.jpg',
+                                                            title:'Recuperação de senha',
+                                                            text:'Digite o email registrado para enviar uma recuperação?',
+                                                            cancelBtnText:'Cancelar',
+                                                            showCancelBtn: true,
+                                                            confirmBtnText:'Confirmar',
+                                                            onConfirmBtnTap:() async {
+                                                              await client.auth.resetPasswordForEmail(emailRecoveryController.text,
+                                                              );
+                                                            },
+                                                            confirmBtnColor: ColorSchemeManagerClass.colorPrimary,
+                                                            widget: Padding(
+                                                              padding: const EdgeInsets.symmetric(vertical:30.0),
+                                                              child: TextFormFieldComponent(
+                                                                 inputBorderType: const UnderlineInputBorder(),
+                                                                 sizeInputBorder: 2.0,
+                                                                  autofocus: true,
+                                                                  iconPrefix: const Icon(Icons.email),
+                                                                  controller:emailRecoveryController,
+                                                                  labelText:'Email registrado',
+                                                                  inputType:TextInputType.emailAddress,
+                                                                  obscure:false
+                                                              ),
                                                             ),
-                                                          )
                                                         );
                                                       },
                                                       style: const ButtonStyle(
-                                                        padding: WidgetStatePropertyAll(EdgeInsets.zero)
-                                                      ),
+                                                          padding:
+                                                              WidgetStatePropertyAll(EdgeInsets.zero)),
                                                       child: const Text(
                                                         'Esqueci minha senha',
                                                         style: TextStyle(
-                                                          decoration: TextDecoration.underline,
-                                                          fontWeight: FontWeight.w500
-                                                        ),
+                                                            decoration:TextDecoration.underline,
+                                                            fontWeight:FontWeight.w500),
                                                       ),
                                                     ),
                                                   ),
@@ -228,16 +239,16 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
                                                       },
                                                       style: ElevatedButton.styleFrom(
                                                         elevation: 0.0,
-                                                        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                                                        padding:
+                                                            const EdgeInsets.symmetric(vertical: 20,horizontal: 10),
                                                         backgroundColor: ColorSchemeManagerClass.colorPrimary,
-                                                        shape: RoundedRectangleBorder(
-                                                          borderRadius: BorderRadius.circular(5),
+                                                        shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(5),
                                                         ),
                                                       ),
                                                       child: Text(
                                                         'Conectar',
                                                         style: TextStyle(
-                                                          fontWeight: FontWeight.bold,
+                                                          fontWeight:FontWeight.bold,
                                                           fontSize: 16,
                                                           color: ColorSchemeManagerClass.colorWhite,
                                                         ),
@@ -268,46 +279,47 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
       ),
     );
   }
-  Future signIn( )async{
+
+  Future signIn() async {
     if (_keyForm.currentState!.validate()) {
-        final sm = ScaffoldMessenger.of(context);
-        final navigation = Navigator.of(context);
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          },
-        );
-        try {
-          final response = await client.auth.signInWithPassword(
-              password: passwordController.value.text,
-              email: emailController.value.text);
-          if (response.user != null) {
-            sm.showSnackBar(
-              SnackBar(
-                backgroundColor: ColorSchemeManagerClass.colorCorrect,
-                content: const Text('Login concluído!'),
-                duration: const Duration(seconds: 3),
-              ),
-            );
-            await navigation.pushReplacementNamed('/home');
-          }
-        } catch (e) {
+      final sm = ScaffoldMessenger.of(context);
+      final navigation = Navigator.of(context);
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      );
+      try {
+        final response = await client.auth.signInWithPassword(
+            password: passwordController.value.text,
+            email: emailController.value.text);
+        if (response.user != null) {
           sm.showSnackBar(
             SnackBar(
-              backgroundColor: ColorSchemeManagerClass.colorDanger,
-              content: const Text('Email ou senha Inválidos!'),
+              backgroundColor: ColorSchemeManagerClass.colorCorrect,
+              content: const Text('Login concluído!'),
               duration: const Duration(seconds: 3),
             ),
           );
-        } finally {
-          navigation.pop();
-          _keyForm.currentState!.reset();
+          await navigation.pushReplacementNamed('/home');
         }
+      } catch (e) {
+        sm.showSnackBar(
+          SnackBar(
+            backgroundColor: ColorSchemeManagerClass.colorDanger,
+            content: const Text('Email ou senha Inválidos!'),
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      } finally {
+        navigation.pop();
         _keyForm.currentState!.reset();
       }
+      _keyForm.currentState!.reset();
+    }
   }
 }

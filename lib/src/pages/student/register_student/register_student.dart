@@ -12,7 +12,21 @@ class RegisterStudentPage extends StatefulWidget {
 
 class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  final TextEditingController controller = TextEditingController();
+
+  // Controladores para os campos do ResponsibleComponent
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController cpfController = TextEditingController();
+  final TextEditingController rgController = TextEditingController();
+  final TextEditingController celularController = TextEditingController();
+  final TextEditingController enderecoController = TextEditingController();
+  final TextEditingController numeroController = TextEditingController();
+  final TextEditingController cepController = TextEditingController();
+  final TextEditingController bairroController = TextEditingController();
+  final TextEditingController cidadeController = TextEditingController();
+  final TextEditingController ufController = TextEditingController();
+  final TextEditingController complementoController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -25,7 +39,20 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
 
   @override
   void dispose() {
+    // Dispose de todos os controladores ao finalizar a página
     _tabController.dispose();
+    nameController.dispose();
+    emailController.dispose();
+    cpfController.dispose();
+    rgController.dispose();
+    celularController.dispose();
+    enderecoController.dispose();
+    numeroController.dispose();
+    cepController.dispose();
+    bairroController.dispose();
+    cidadeController.dispose();
+    ufController.dispose();
+    complementoController.dispose();
     super.dispose();
   }
 
@@ -77,8 +104,22 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
             Expanded(
               child: TabBarView(
                 controller: _tabController,
-                children:  [
-                  ResponsibleComponent(controller: controller),
+                children: [
+                  ResponsibleComponent(
+                    formKey: _formKey,
+                    nameController: nameController,
+                    emailController: emailController,
+                    cpfController: cpfController,
+                    rgController: rgController,
+                    celularController: celularController,
+                    enderecoController: enderecoController,
+                    numeroController: numeroController,
+                    cepController: cepController,
+                    bairroController: bairroController,
+                    cidadeController: cidadeController,
+                    ufController: ufController,
+                    complementoController: complementoController,
+                  ),
                   const Icon(Icons.directions_transit),
                   const Icon(Icons.directions_bike),
                   const Icon(Icons.menu),
@@ -103,7 +144,9 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
                   ),
             ButtonComponent(
               onpress: () {
-                _nextTab();
+                if(_formKey.currentState!.validate()){
+                  _nextTab();
+                }
               },
               text: _tabController.index == 3 ? 'Gerar contrato e finalizar' : 'Avançar',
             ),
@@ -132,7 +175,7 @@ class ButtonComponent extends StatelessWidget {
       onPressed: onpress,
       child: Row(
         children: [
-          Text(text.toString()),
+          Text(text),
         ],
       ),
     );
