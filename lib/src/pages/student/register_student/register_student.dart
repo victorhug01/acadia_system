@@ -10,7 +10,8 @@ class RegisterStudentPage extends StatefulWidget {
   State<RegisterStudentPage> createState() => _RegisterStudentPageState();
 }
 
-class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTickerProviderStateMixin {
+class _RegisterStudentPageState extends State<RegisterStudentPage>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   // Controladores para os campos do ResponsibleComponent
@@ -74,6 +75,12 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
         child: AppBarComponent(
+          leading: IconButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            icon: Icon(Icons.adaptive.arrow_back),
+          ),
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(6),
             child: Container(
@@ -86,6 +93,7 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
       body: SafeArea(
         child: Column(
           children: [
+            // ignore pointer use to disable tabs
             TabBar(
               controller: _tabController,
               padding: const EdgeInsets.symmetric(vertical: 20.0),
@@ -144,11 +152,13 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
                   ),
             ButtonComponent(
               onpress: () {
-                if(_formKey.currentState!.validate()){
+                if (_formKey.currentState!.validate()) {
                   _nextTab();
                 }
               },
-              text: _tabController.index == 3 ? 'Gerar contrato e finalizar' : 'Avançar',
+              text: _tabController.index == 3
+                  ? 'Gerar contrato e finalizar'
+                  : 'Avançar',
             ),
           ],
         ),

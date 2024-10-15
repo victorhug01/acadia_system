@@ -53,13 +53,15 @@ class _TextFormFieldComponentState extends State<TextFormFieldComponent> {
         prefixIcon: widget.iconPrefix,
         suffixIcon: widget.iconSuffix,
         labelText: widget.labelText,
-        contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: widget.paddingLeftInput ?? 0.0),
+        contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: widget.paddingLeftInput ?? 0.0),
         labelStyle: const TextStyle(
           fontWeight: FontWeight.w500,
         ),
         enabledBorder: borderSideStyle,
         focusedBorder: borderSideStyle,
         border: borderSideStyle,
+        errorStyle: const TextStyle(height: 1.1),
+        helperText: ' '
       ),
       validator: widget.validator,
     );

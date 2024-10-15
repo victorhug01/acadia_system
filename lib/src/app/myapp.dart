@@ -1,5 +1,6 @@
 import 'package:acadia/src/pages/home/home.dart';
 import 'package:acadia/src/pages/login/login.dart';
+import 'package:acadia/src/pages/school/register_school/register_school.dart';
 import 'package:acadia/src/pages/student/home_student/home_student.dart';
 import 'package:acadia/src/pages/student/register_student/register_student.dart';
 import 'package:acadia/src/theme/theme_colors.dart';
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: ColorSchemeManagerClass.colorWhite,
         appBarTheme: AppBarTheme(
           backgroundColor: ColorSchemeManagerClass.colorWhite,
+          surfaceTintColor: ColorSchemeManagerClass.colorWhite,
           elevation: 0
         ),
         useMaterial3: true,
@@ -35,6 +37,7 @@ class MyApp extends StatelessWidget {
         '/home': (context) => const HomePage(),
         '/home_student': (context) => const HomeStudent(),
         '/register_student': (context) => const RegisterStudentPage(),
+        '/register_school': (context) => const RegisterSchool(),
       },
     );
   }

@@ -192,7 +192,9 @@ class _DrawerComponentState extends State<DrawerComponent> {
               ),
               ListTileComponent(
                 title: 'Escola',
-                onTap: () {},
+                onTap: () {
+                  navigation.pushNamed('/register_school');
+                },
               ),
               ListTileComponent(
                 title: 'Série',

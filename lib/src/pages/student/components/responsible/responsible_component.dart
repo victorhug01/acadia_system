@@ -49,8 +49,9 @@ class ResponsibleComponent extends StatelessWidget with ValidationMixinClass {
               fontWeight: FontWeight.w700,
             ),
           ),
-          SizedBox(
-            height: 40,
+          Container(
+            height: 45,
+            constraints: const BoxConstraints(minHeight: 55, maxHeight: 56),
             child: TextFormFieldComponent(
               paddingLeftInput: 8.0,
               colorBorderInput: ColorSchemeManagerClass.colorPrimary,
@@ -85,37 +86,40 @@ class ResponsibleComponent extends StatelessWidget with ValidationMixinClass {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(25.0),
-      child: Form(
-        key: formKey,
+      child: SingleChildScrollView(
         child: Column(
           children: [
-            buildRow([
-              {'label': 'Nome completo', 'controller': nameController},
-              {'label': 'Email', 'controller': emailController},
-            ]),
-            const SizedBox(height: 7),
-            buildRow([
-              {'label': 'CPF', 'controller': cpfController},
-              {'label': 'RG', 'controller': rgController},
-              {'label': 'Celular', 'controller': celularController},
-            ]),
-            const SizedBox(height: 7),
-            buildRow([
-              {
-                'label': 'Endereço',
-                'controller': enderecoController,
-                'flex': 4
-              },
-              {'label': 'Número', 'controller': numeroController},
-              {'label': 'Cep', 'controller': cepController},
-            ]),
-            const SizedBox(height: 7),
-            buildRow([
-              {'label': 'Bairro', 'controller': bairroController},
-              {'label': 'Cidade', 'controller': cidadeController},
-              {'label': 'Uf', 'controller': ufController},
-              {'label': 'Complemento', 'controller': complementoController},
-            ]),
+            Form(
+              key: formKey,
+              child: Column(
+                children: [
+                  buildRow([
+                    {'label': 'Nome completo', 'controller': nameController},
+                    {'label': 'Email', 'controller': emailController},
+                  ]),
+                  buildRow([
+                    {'label': 'CPF', 'controller': cpfController},
+                    {'label': 'RG', 'controller': rgController},
+                    {'label': 'Celular', 'controller': celularController},
+                  ]),
+                  buildRow([
+                    {
+                      'label': 'Endereço',
+                      'controller': enderecoController,
+                      'flex': 4
+                    },
+                    {'label': 'Número', 'controller': numeroController},
+                    {'label': 'Cep', 'controller': cepController},
+                  ]),
+                  buildRow([
+                    {'label': 'Bairro', 'controller': bairroController},
+                    {'label': 'Cidade', 'controller': cidadeController},
+                    {'label': 'Uf', 'controller': ufController},
+                    {'label': 'Complemento', 'controller': complementoController},
+                  ]),
+                ],
+              ),
+            ),
           ],
         ),
       ),
