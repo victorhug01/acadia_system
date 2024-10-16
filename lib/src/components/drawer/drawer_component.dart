@@ -24,6 +24,7 @@ class DrawerComponent extends StatefulWidget {
 
 class _DrawerComponentState extends State<DrawerComponent> {
   bool isUploading = false; // Estado para controlar o upload da imagem
+  final userClient = Supabase.instance.client.auth.currentUser;
 
   Future<void> _uploadImage() async {
     final sm = ScaffoldMessenger.of(context);
@@ -81,7 +82,7 @@ class _DrawerComponentState extends State<DrawerComponent> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
       surfaceTintColor: ColorSchemeManagerClass.colorWhite,
       backgroundColor: ColorSchemeManagerClass.colorWhite,
-      child: ListView(
+      child: Column(
         children: [
           SizedBox(
             height: 250,
@@ -182,29 +183,44 @@ class _DrawerComponentState extends State<DrawerComponent> {
                   navigation.pushNamed('/home_student');
                 },
               ),
-              ListTileComponent(
-                title: 'Professor',
+              userClient!.id == 'cb7fd182-9255-402c-a601-c41f824c9df1'
+              ? ListTileComponent(
+                title: 'Secratário(a)',
                 onTap: () {},
-              ),
-              ListTileComponent(
-                title: 'Matéria',
-                onTap: () {},
-              ),
-              ListTileComponent(
-                title: 'Escola',
-                onTap: () {
-                  navigation.pushNamed('/register_school');
-                },
-              ),
-              ListTileComponent(
-                title: 'Série',
-                onTap: () {},
-              ),
-              ListTileComponent(
-                title: 'Turma',
-                onTap: () {},
-              ),
+              )
+              : const SizedBox.shrink()
             ],
+          ),
+          const Spacer(),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: InkWell(
+              onTap: () async {
+                final navigation = Navigator.of(context);
+                await client.auth.signOut();
+                await navigation.pushNamedAndRemoveUntil(
+                    '/', (router) => false);
+              },
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.exit_to_app,
+                    color: ColorSchemeManagerClass.colorPrimary,
+                    size: 17.0,
+                  ),
+                  const SizedBox(width: 4.0),
+                  Text(
+                    'Sair',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w300,
+                      fontSize: 16.0,
+                      color: ColorSchemeManagerClass.colorPrimary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),
