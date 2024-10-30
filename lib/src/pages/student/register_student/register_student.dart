@@ -1,5 +1,7 @@
 import 'package:acadia/src/components/appbar/appbar_component.dart';
+import 'package:acadia/src/pages/student/components/anamnese/anamnese_componente.dart';
 import 'package:acadia/src/pages/student/components/responsible/responsible_component.dart';
+import 'package:acadia/src/pages/student/components/student/student_component.dart';
 import 'package:acadia/src/theme/theme_colors.dart';
 import 'package:flutter/material.dart';
 
@@ -27,7 +29,25 @@ class _RegisterStudentPageState extends State<RegisterStudentPage>
   final TextEditingController cidadeController = TextEditingController();
   final TextEditingController ufController = TextEditingController();
   final TextEditingController complementoController = TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  //aluno
+  final TextEditingController nameStudentController = TextEditingController();
+  final TextEditingController emailStudentController = TextEditingController();
+  final TextEditingController cpfStudentController = TextEditingController();
+  final TextEditingController rgStudentController = TextEditingController();
+  final TextEditingController celularStudentController = TextEditingController();
+  final TextEditingController enderecoStudentController = TextEditingController();
+  final TextEditingController numeroStudentController = TextEditingController();
+  final TextEditingController cepStudentController = TextEditingController();
+  final TextEditingController bairroStudentController = TextEditingController();
+  final TextEditingController cidadeStudentController = TextEditingController();
+  final TextEditingController ufStudentController = TextEditingController();
+  final TextEditingController complementoStudentController = TextEditingController();
+  final TextEditingController dataNacimentoStudentController = TextEditingController();
+  final TextEditingController raStudentController = TextEditingController();
+  final TextEditingController escolaAnteriorController = TextEditingController();
+  final TextEditingController sexoStudentController = TextEditingController();
+  final GlobalKey<FormState> _formKeyR = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKeyS = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -114,7 +134,7 @@ class _RegisterStudentPageState extends State<RegisterStudentPage>
                 controller: _tabController,
                 children: [
                   ResponsibleComponent(
-                    formKey: _formKey,
+                    formKey: _formKeyR,
                     nameController: nameController,
                     emailController: emailController,
                     cpfController: cpfController,
@@ -128,8 +148,28 @@ class _RegisterStudentPageState extends State<RegisterStudentPage>
                     ufController: ufController,
                     complementoController: complementoController,
                   ),
-                  const Icon(Icons.directions_transit),
-                  const Icon(Icons.directions_bike),
+                  StudentComponent(
+                    formKey: _formKeyS,
+                    nameStudentController: nameStudentController,
+                    emailStudentController: emailStudentController,
+                    cpfStudentController: cpfStudentController,
+                    rgStudentController: rgStudentController,
+                    celularStudentController: celularStudentController,
+                    enderecoStudentController: enderecoStudentController,
+                    numeroStudentController: numeroStudentController,
+                    cepStudentController: cepStudentController,
+                    bairroStudentController: bairroStudentController,
+                    cidadeStudentController: cidadeStudentController,
+                    ufStudentController: ufStudentController,
+                    complementoStudentController: complementoStudentController,
+                    dataNacimentoStudentController: dataNacimentoStudentController,
+                    escolaAnteriorController: escolaAnteriorController,
+                    raStudentController: raStudentController,
+                    sexoStudentController: sexoStudentController,
+                    cpfResponsavelController: cpfController,
+                    nomeResponsavelController: nameController,
+                  ),
+                  HealthFormComponent(),
                   const Icon(Icons.menu),
                 ],
               ),
@@ -152,7 +192,7 @@ class _RegisterStudentPageState extends State<RegisterStudentPage>
                   ),
             ButtonComponent(
               onpress: () {
-                if (_formKey.currentState!.validate()) {
+                if (_formKeyR.currentState!.validate()) {
                   _nextTab();
                 }
               },
