@@ -3,7 +3,7 @@ import 'package:acadia/src/theme/theme_colors.dart';
 import 'package:acadia/src/validations/mixin_validation.dart';
 import 'package:flutter/material.dart';
 
-class StudentComponent extends StatelessWidget with ValidationMixinClass {
+class StudentComponent extends StatefulWidget {
   final GlobalKey<FormState> formKey;
   final TextEditingController nameStudentController;
   final TextEditingController emailStudentController;
@@ -48,8 +48,13 @@ class StudentComponent extends StatelessWidget with ValidationMixinClass {
     required this.cpfResponsavelController,
   });
 
+  @override
+  State<StudentComponent> createState() => _StudentComponentState();
+}
+
+class _StudentComponentState extends State<StudentComponent> with ValidationMixinClass {
   Widget buildField(String label, TextEditingController controller,
-      {int flex = 1}) {
+    {int flex = 1}) {
     return Expanded(
       flex: flex,
       child: Column(
@@ -95,24 +100,27 @@ class StudentComponent extends StatelessWidget with ValidationMixinClass {
     );
   }
 
+  List<String> list = <String>['Selecionar','One', 'Two', 'Three', 'Four'];
+
   @override
   Widget build(BuildContext context) {
+    String dropdownValue = list.first;
     return Padding(
       padding: const EdgeInsets.all(25.0),
       child: SingleChildScrollView(
         child: Column(
           children: [
             Form(
-              key: formKey,
+              key: widget.formKey,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  InkWell(
-                    onTap: () => print('asfasf'),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      InkWell(
+                        onTap: () => print('qidjwqdn'),
+                        child: Container(
                           width: 180,
                           height: 220,
                           decoration: BoxDecoration(
@@ -133,8 +141,51 @@ class StudentComponent extends StatelessWidget with ValidationMixinClass {
                             ],
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(height: 5.0),
+                      Container(
+                        width: 180,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5.0),
+                          color: ColorSchemeManagerClass.colorPrimary,
+                        ),
+                        child: DropdownMenu<String>(
+                          enableSearch: false,
+                          enableFilter: false,
+                          width: 187,
+                          initialSelection: dropdownValue,
+                          onSelected: (String? value) {
+                            setState(() {
+                              dropdownValue = value!;
+                            });
+                          },
+                          dropdownMenuEntries: list.map<DropdownMenuEntry<String>>((String value) {
+                            return DropdownMenuEntry<String>(
+                              value: value, 
+                              label: value,
+                              style: MenuItemButton.styleFrom(
+                                foregroundColor: ColorSchemeManagerClass.colorWhite
+                              )
+                            );
+                          }).toList(),
+                          textStyle: TextStyle(
+                            color: ColorSchemeManagerClass.colorWhite,
+                          ),
+                          selectedTrailingIcon: Icon(
+                            Icons.arrow_drop_down, 
+                            color: ColorSchemeManagerClass.colorWhite,
+                          ),
+                          trailingIcon: Icon(
+                            Icons.arrow_drop_down, 
+                            color: ColorSchemeManagerClass.colorWhite,
+                          ),
+                          menuStyle: MenuStyle(
+                            backgroundColor: WidgetStatePropertyAll(ColorSchemeManagerClass.colorPrimary),
+                          ),
+                        ),
+                      ),
+                      
+                    ],
                   ),
                   const SizedBox(width: 10),
                   Expanded(
@@ -142,38 +193,38 @@ class StudentComponent extends StatelessWidget with ValidationMixinClass {
                       children: [
                         //https://pub.dev/packages/multi_dropdown/example
                         buildRow([
-                          {'label': 'Nome completo', 'controller': nameStudentController},
-                          {'label': 'Email', 'controller': emailStudentController},
+                          {'label': 'Nome completo', 'controller': widget.nameStudentController},
+                          {'label': 'Email', 'controller': widget.emailStudentController},
                         ]),
                         buildRow([
-                          {'label': 'Data nascimento', 'controller': dataNacimentoStudentController},
-                          {'label': 'RG', 'controller': rgStudentController},
-                          {'label': 'CPF', 'controller': cpfStudentController},
-                          {'label': 'RA', 'controller': raStudentController},
+                          {'label': 'Data nascimento', 'controller': widget.dataNacimentoStudentController},
+                          {'label': 'RG', 'controller': widget.rgStudentController},
+                          {'label': 'CPF', 'controller': widget.cpfStudentController},
+                          {'label': 'RA', 'controller': widget.raStudentController},
                         ]),
                         buildRow([
-                          {'label': 'Celular', 'controller': celularStudentController},
-                          {'label': 'Sexo', 'controller': sexoStudentController},
+                          {'label': 'Celular', 'controller': widget.celularStudentController},
+                          {'label': 'Sexo', 'controller': widget.sexoStudentController},
                           {
                             'label': 'Escola anterior',
-                            'controller': escolaAnteriorController,
+                            'controller': widget.escolaAnteriorController,
                             'flex': 4
                           },
                         ]),
                         buildRow([
-                          {'label': 'Nome Responsável', 'controller': nomeResponsavelController, 'flex': 2},
-                          {'label': 'CPF do responsável', 'controller': cpfResponsavelController},
+                          {'label': 'Nome Responsável', 'controller': widget.nomeResponsavelController, 'flex': 2},
+                          {'label': 'CPF do responsável', 'controller': widget.cpfResponsavelController},
                         ]),
                         buildRow([
-                          {'label': 'CEP', 'controller': cepStudentController},
-                          {'label': 'Endereço', 'controller': enderecoStudentController, 'flex': 2},
-                          {'label': 'Bairro', 'controller': bairroStudentController},
+                          {'label': 'CEP', 'controller': widget.cepStudentController},
+                          {'label': 'Endereço', 'controller': widget.enderecoStudentController, 'flex': 2},
+                          {'label': 'Bairro', 'controller': widget.bairroStudentController},
                         ]),
                         buildRow([
-                          {'label': 'Complemento', 'controller': complementoStudentController},
-                          {'label': 'Número', 'controller': numeroStudentController},
-                          {'label': 'Cidade', 'controller': cidadeStudentController},
-                          {'label': 'Uf', 'controller': ufStudentController},
+                          {'label': 'Complemento', 'controller': widget.complementoStudentController},
+                          {'label': 'Número', 'controller': widget.numeroStudentController},
+                          {'label': 'Cidade', 'controller': widget.cidadeStudentController},
+                          {'label': 'Uf', 'controller': widget.ufStudentController},
                         ]),
                       ],
                     ),
