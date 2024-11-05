@@ -169,7 +169,7 @@ class _RegisterStudentPageState extends State<RegisterStudentPage>
                     cpfResponsavelController: cpfController,
                     nomeResponsavelController: nameController,
                   ),
-                  HealthFormComponent(),
+                  const HealthFormComponent(),
                   const Icon(Icons.menu),
                 ],
               ),
@@ -178,7 +178,7 @@ class _RegisterStudentPageState extends State<RegisterStudentPage>
         ),
       ),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

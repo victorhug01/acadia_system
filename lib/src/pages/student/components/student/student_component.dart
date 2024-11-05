@@ -104,43 +104,80 @@ class StudentComponent extends StatelessWidget with ValidationMixinClass {
           children: [
             Form(
               key: formKey,
-              child: Column(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  buildRow([
-                    {'label': 'Nome completo', 'controller': nameStudentController},
-                    {'label': 'Email', 'controller': emailStudentController},
-                  ]),
-                  buildRow([
-                    {'label': 'Data nascimento', 'controller': dataNacimentoStudentController},
-                    {'label': 'RG', 'controller': rgStudentController},
-                    {'label': 'CPF', 'controller': cpfStudentController},
-                    {'label': 'RA', 'controller': raStudentController},
-                  ]),
-                  buildRow([
-                    {'label': 'Celular', 'controller': celularStudentController},
-                    {'label': 'Sexo', 'controller': sexoStudentController},
-                    {
-                      'label': 'Escola anterior',
-                      'controller': escolaAnteriorController,
-                      'flex': 4
-                    },
-                  ]),
-                  buildRow([
-                    {'label': 'Nome Responsável', 'controller': nomeResponsavelController, 'flex': 2},
-                    {'label': 'CPF do responsável', 'controller': cpfResponsavelController},
-                  ]),
-                  buildRow([
-                    {'label': 'CEP', 'controller': cepStudentController},
-                    {'label': 'Endereço', 'controller': enderecoStudentController, 'flex': 2},
-                    {'label': 'Bairro', 'controller': bairroStudentController},
-                  ]),
-                  buildRow([
-                    {'label': 'Complemento', 'controller': complementoStudentController},
-                    {'label': 'Número', 'controller': numeroStudentController},
-                    {'label': 'Cidade', 'controller': cidadeStudentController},
-                    {'label': 'Uf', 'controller': ufStudentController},
-                    
-                  ]),
+                  InkWell(
+                    onTap: () => print('asfasf'),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 180,
+                          height: 220,
+                          decoration: BoxDecoration(
+                            color: ColorSchemeManagerClass.colorPrimary,
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          child:   Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.add_a_photo_outlined,size: 55, color: ColorSchemeManagerClass.colorWhite),
+                              const SizedBox(height: 15.0),
+                              Text(
+                                'Adicionar uma foto', 
+                                style: TextStyle(
+                                  color: ColorSchemeManagerClass.colorWhite
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        //https://pub.dev/packages/multi_dropdown/example
+                        buildRow([
+                          {'label': 'Nome completo', 'controller': nameStudentController},
+                          {'label': 'Email', 'controller': emailStudentController},
+                        ]),
+                        buildRow([
+                          {'label': 'Data nascimento', 'controller': dataNacimentoStudentController},
+                          {'label': 'RG', 'controller': rgStudentController},
+                          {'label': 'CPF', 'controller': cpfStudentController},
+                          {'label': 'RA', 'controller': raStudentController},
+                        ]),
+                        buildRow([
+                          {'label': 'Celular', 'controller': celularStudentController},
+                          {'label': 'Sexo', 'controller': sexoStudentController},
+                          {
+                            'label': 'Escola anterior',
+                            'controller': escolaAnteriorController,
+                            'flex': 4
+                          },
+                        ]),
+                        buildRow([
+                          {'label': 'Nome Responsável', 'controller': nomeResponsavelController, 'flex': 2},
+                          {'label': 'CPF do responsável', 'controller': cpfResponsavelController},
+                        ]),
+                        buildRow([
+                          {'label': 'CEP', 'controller': cepStudentController},
+                          {'label': 'Endereço', 'controller': enderecoStudentController, 'flex': 2},
+                          {'label': 'Bairro', 'controller': bairroStudentController},
+                        ]),
+                        buildRow([
+                          {'label': 'Complemento', 'controller': complementoStudentController},
+                          {'label': 'Número', 'controller': numeroStudentController},
+                          {'label': 'Cidade', 'controller': cidadeStudentController},
+                          {'label': 'Uf', 'controller': ufStudentController},
+                        ]),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),

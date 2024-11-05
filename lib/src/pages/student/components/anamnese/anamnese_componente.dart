@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 class HealthFormComponent extends StatefulWidget {
+  const HealthFormComponent({super.key});
+
   @override
-  _HealthFormComponentState createState() => _HealthFormComponentState();
+  State<HealthFormComponent> createState() => _HealthFormComponentState();
 }
 
 class _HealthFormComponentState extends State<HealthFormComponent> {

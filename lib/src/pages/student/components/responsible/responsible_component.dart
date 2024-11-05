@@ -103,13 +103,13 @@ class ResponsibleComponent extends StatelessWidget with ValidationMixinClass {
                     {'label': 'Celular', 'controller': celularController},
                   ]),
                   buildRow([
+                    {'label': 'Cep', 'controller': cepController},
+                    {'label': 'Número', 'controller': numeroController},
                     {
                       'label': 'Endereço',
                       'controller': enderecoController,
                       'flex': 4
                     },
-                    {'label': 'Número', 'controller': numeroController},
-                    {'label': 'Cep', 'controller': cepController},
                   ]),
                   buildRow([
                     {'label': 'Bairro', 'controller': bairroController},

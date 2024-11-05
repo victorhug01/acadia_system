@@ -1,4 +1,12 @@
 mixin ValidationMixinClass{
+  String? combine(List<String? Function()> validators){
+    for (final func in validators){
+      final validations = func();
+      if(validations != null) return validations;
+    }
+    return null;
+  }
+
   String? isNotEmpyt(String? value, [String? message]){
     if(value!.isEmpty) return message ?? "Campo em Branco!";
     return null;
@@ -9,11 +17,9 @@ mixin ValidationMixinClass{
     return null;
   }
 
-  String? combine(List<String? Function()> validators){
-    for (final func in validators){
-      final validations = func();
-      if(validations != null) return validations;
-    }
+  String? isCpf(String? value, [String? message]){
+    //https://dicasdeprogramacao.com.br/algoritmo-para-validar-cpf/
     return null;
   }
+  
 }
