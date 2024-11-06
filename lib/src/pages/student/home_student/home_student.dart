@@ -12,7 +12,7 @@ class HomeStudent extends StatefulWidget {
 }
 
 class _HomeStudentState extends State<HomeStudent> {
-  final _future = Supabase.instance.client.from('countries').select();
+  final _future = Supabase.instance.client.from('aluno').select();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,6 +38,8 @@ class _HomeStudentState extends State<HomeStudent> {
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: ListView(
+            shrinkWrap: true,
+            scrollDirection: Axis.vertical,
             children: [
               SizedBox(
                 height: 80.0,
@@ -98,26 +100,83 @@ class _HomeStudentState extends State<HomeStudent> {
                   ],
                 ),
               ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                width: double.maxFinite,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: ColorSchemeManagerClass.colorPrimary,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(5),
+                    topRight: Radius.circular(5),
+                  ),
+                ),
+                child: const Row(
+                  children:[
+                    TextComponente(title: 'Alunos cadastrados', flex: 2,),
+                    TextComponente(title: 'Ano'),
+                    TextComponente(title: 'Registro do aluno'),
+                    TextComponente(title: 'Turma/curso'),
+                    TextComponente(title: 'Número de matrícula'),
+                  ],
+                ),
+              ),
               FutureBuilder(
                 future: _future,
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     return const Center(child: CircularProgressIndicator());
                   }
-                  final countries = snapshot.data!;
-                  return ListView.builder(
-                    itemCount: countries.length,
-                    itemBuilder: ((context, index) {
-                      final country = countries[index];
-                      return ListTile(
-                        title: Text(country['name']),
-                      );
-                    }),
+                  final students = snapshot.data!;
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.vertical,
+                      itemCount: students.length,
+                      itemBuilder: ((context, index) {
+                        final student = students[index];
+                        return Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 20,
+                              backgroundImage: NetworkImage(student['imageProfile']),
+                            ),
+                            Column(
+                              children: [
+                                Text(student['nome']),
+                                Text(student['email'])
+                              ],
+                            ),
+                          ],
+                        );
+                      }),
+                    ),
                   );
                 },
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class TextComponente extends StatelessWidget {
+  final String title;
+  final int? flex;
+  const TextComponente({super.key, required this.title, this.flex});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      flex: flex ?? 1,
+      child: Text(
+        title,
+        style: TextStyle(
+          color: ColorSchemeManagerClass.colorWhite,
+          fontWeight: FontWeight.w600,
         ),
       ),
     );
