@@ -16,7 +16,7 @@ class _OptionsStudentState extends State<OptionsStudent> {
   final _future = Supabase.instance.client.from('aluno').select();
   @override
   Widget build(BuildContext context) {
-    final navigation = Navigator.of(context);
+    // final navigation = Navigator.of(context);
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
@@ -55,17 +55,11 @@ class _OptionsStudentState extends State<OptionsStudent> {
                       children: [
                         Text(
                           'Alunos',
-                          style: TextStyle(
-                              color: ColorSchemeManagerClass.colorPrimary,
-                              fontWeight: FontWeight.w900,
-                              fontSize: 20.0),
+                          style: TextStyle(color: ColorSchemeManagerClass.colorPrimary, fontWeight: FontWeight.w900, fontSize: 20.0),
                         ),
                         Text(
                           'Veja todos os alunos cadastrados',
-                          style: TextStyle(
-                              color: ColorSchemeManagerClass.colorPrimary,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 16.0),
+                          style: TextStyle(color: ColorSchemeManagerClass.colorPrimary, fontWeight: FontWeight.w400, fontSize: 16.0),
                         ),
                       ],
                     ),
@@ -115,8 +109,7 @@ class _OptionsStudentState extends State<OptionsStudent> {
                 ),
                 child: const Row(
                   children: [
-                    Expanded(
-                        child: TextComponente(title: 'Alunos cadastrados')),
+                    Expanded(child: TextComponente(title: 'Alunos cadastrados')),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -156,12 +149,9 @@ class _OptionsStudentState extends State<OptionsStudent> {
                         ),
                         child: Container(
                           height: 70,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 15.0, vertical: 10.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
                           width: double.maxFinite,
-                          color: index == 0
-                              ? ColorSchemeManagerClass.colorPrimary
-                              : Colors.transparent,
+                          color: index == 0 ? ColorSchemeManagerClass.colorPrimary : Colors.transparent,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -169,18 +159,14 @@ class _OptionsStudentState extends State<OptionsStudent> {
                                 children: [
                                   CircleAvatar(
                                     radius: 20,
-                                    backgroundImage:
-                                        NetworkImage(student['imageProfile']),
+                                    backgroundImage: NetworkImage(student['imageProfile']),
                                   ),
                                   const SizedBox(
                                     width: 6,
                                   ),
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(student['nome']),
-                                      Text(student['email'])
-                                    ],
+                                    children: [Text(student['nome']), Text(student['email'])],
                                   ),
                                 ],
                               ),

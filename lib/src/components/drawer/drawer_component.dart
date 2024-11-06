@@ -50,17 +50,13 @@ class _DrawerComponentState extends State<DrawerComponent> {
       await client.storage.from('profiles').uploadBinary(
             imagePath,
             imagesBytes,
-            fileOptions:
-                FileOptions(upsert: true, contentType: 'image/$imageExtension'),
+            fileOptions: FileOptions(upsert: true, contentType: 'image/$imageExtension'),
           );
 
       String imageUrl = client.storage.from('profiles').getPublicUrl(imagePath);
-      imageUrl = Uri.parse(imageUrl).replace(queryParameters: {
-        't': DateTime.now().millisecondsSinceEpoch.toString()
-      }).toString();
+      imageUrl = Uri.parse(imageUrl).replace(queryParameters: {'t': DateTime.now().millisecondsSinceEpoch.toString()}).toString();
 
-      widget
-          .onUpload(imageUrl); // Chama o callback passando a nova URL da imagem
+      widget.onUpload(imageUrl); // Chama o callback passando a nova URL da imagem
     } catch (e) {
       sm.showSnackBar(SnackBar(
         backgroundColor: ColorSchemeManagerClass.colorDanger,
@@ -95,9 +91,7 @@ class _DrawerComponentState extends State<DrawerComponent> {
                       CircleAvatar(
                         radius: 65.0,
                         backgroundColor: ColorSchemeManagerClass.colorGrey,
-                        backgroundImage: widget.imageUrl != null && !isUploading
-                            ? NetworkImage(widget.imageUrl!)
-                            : null,
+                        backgroundImage: widget.imageUrl != null && !isUploading ? NetworkImage(widget.imageUrl!) : null,
                         child: widget.imageUrl == null && !isUploading
                             ? const Icon(
                                 Icons.image_not_supported,
@@ -113,11 +107,9 @@ class _DrawerComponentState extends State<DrawerComponent> {
                         right: 5,
                         child: CircleAvatar(
                           child: CircleAvatar(
-                            backgroundColor:
-                                ColorSchemeManagerClass.colorPrimary,
+                            backgroundColor: ColorSchemeManagerClass.colorPrimary,
                             child: IconButton(
-                              onPressed:
-                                  _uploadImage, // Função que faz o upload da imagem
+                              onPressed: _uploadImage, // Função que faz o upload da imagem
                               icon: Icon(
                                 HugeIcons.strokeRoundedPencilEdit01,
                                 color: ColorSchemeManagerClass.colorWhite,
@@ -184,11 +176,11 @@ class _DrawerComponentState extends State<DrawerComponent> {
                 },
               ),
               userClient!.id == 'cb7fd182-9255-402c-a601-c41f824c9df1'
-              ? ListTileComponent(
-                title: 'Secratário(a)',
-                onTap: () {},
-              )
-              : const SizedBox.shrink()
+                  ? ListTileComponent(
+                      title: 'Secratário(a)',
+                      onTap: () {},
+                    )
+                  : const SizedBox.shrink()
             ],
           ),
           const Spacer(),
@@ -198,8 +190,7 @@ class _DrawerComponentState extends State<DrawerComponent> {
               onTap: () async {
                 final navigation = Navigator.of(context);
                 await client.auth.signOut();
-                await navigation.pushNamedAndRemoveUntil(
-                    '/', (router) => false);
+                await navigation.pushNamedAndRemoveUntil('/', (router) => false);
               },
               child: Row(
                 mainAxisSize: MainAxisSize.min,

@@ -46,7 +46,7 @@ class _PdfViewState extends State<PdfView> {
           scale: 0.80,
           child: SfPdfViewer.asset(
             'assets/contrato/contrato.pdf',
-            initialZoomLevel: 1.0 ,
+            initialZoomLevel: 1.0,
             maxZoomLevel: 100.0,
             controller: _pdfViewerController,
           ),

@@ -31,12 +31,11 @@ class ResponsibleComponent extends StatelessWidget with ValidationMixinClass {
     required this.bairroController,
     required this.cidadeController,
     required this.ufController,
-    required this.complementoController, 
+    required this.complementoController,
     required this.formKey,
   });
 
-  Widget buildField(String label, TextEditingController controller,
-      {int flex = 1}) {
+  Widget buildField(String label, TextEditingController controller, {int flex = 1}) {
     return Expanded(
       flex: flex,
       child: Column(
@@ -74,8 +73,7 @@ class ResponsibleComponent extends StatelessWidget with ValidationMixinClass {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         for (var field in fields) ...[
-          buildField(field['label'], field['controller'],
-              flex: field['flex'] ?? 1),
+          buildField(field['label'], field['controller'], flex: field['flex'] ?? 1),
           const SizedBox(width: 7),
         ],
       ],
@@ -105,11 +103,7 @@ class ResponsibleComponent extends StatelessWidget with ValidationMixinClass {
                   buildRow([
                     {'label': 'Cep', 'controller': cepController},
                     {'label': 'Número', 'controller': numeroController},
-                    {
-                      'label': 'Endereço',
-                      'controller': enderecoController,
-                      'flex': 4
-                    },
+                    {'label': 'Endereço', 'controller': enderecoController, 'flex': 4},
                   ]),
                   buildRow([
                     {'label': 'Bairro', 'controller': bairroController},

@@ -21,7 +21,6 @@ class StudentComponent extends StatefulWidget {
   final TextEditingController raStudentController;
   final TextEditingController escolaAnteriorController;
   final TextEditingController sexoStudentController;
-  //as
   final TextEditingController nomeResponsavelController;
   final TextEditingController cpfResponsavelController;
 

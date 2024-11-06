@@ -250,19 +250,19 @@ class _HomeStudentState extends State<HomeStudent> with SingleTickerProviderStat
             //     final String complemento = complementoController.text;
             //     createResponsible(
             //       cep: cep,
-            //       nome: nome, 
-            //       email: email, 
-            //       cpf: cpf, 
-            //       rg: rg, 
-            //       celular: celular, 
-            //       endereco: endereco, 
+            //       nome: nome,
+            //       email: email,
+            //       cpf: cpf,
+            //       rg: rg,
+            //       celular: celular,
+            //       endereco: endereco,
             //       numero: numero,
-            //       bairro: bairro, 
-            //       cidade: cidade, 
-            //       uf: uf, 
+            //       bairro: bairro,
+            //       cidade: cidade,
+            //       uf: uf,
             //       complemento: complemento
             //     );
-            //   }, 
+            //   },
             //   child: const Text('Enviar')
             // ),
 
@@ -302,7 +302,7 @@ class _HomeStudentState extends State<HomeStudent> with SingleTickerProviderStat
             //       qualPlano: qualPlano,
             //       vacinas: vacinas
             //     );
-            //   }, 
+            //   },
             //   child: const Text('Enviar')
             // ),
           ],
@@ -310,48 +310,47 @@ class _HomeStudentState extends State<HomeStudent> with SingleTickerProviderStat
       ),
     );
   }
-  Future<void> createResponsible(
-      {required String nome,
-      required String email,
-      required String cpf,
-      required String rg,
-      required String celular,
-      required String endereco,
-      required String numero,
-      required String bairro,
-      required String cidade,
-      required String uf,
-      required String cep,
-      required String complemento,}) async {
+
+  Future<void> createResponsible({
+    required String nome,
+    required String email,
+    required String cpf,
+    required String rg,
+    required String celular,
+    required String endereco,
+    required String numero,
+    required String bairro,
+    required String cidade,
+    required String uf,
+    required String cep,
+    required String complemento,
+  }) async {
     try {
       final sm = ScaffoldMessenger.of(context);
       final newUser = await Supabase.instance.client.from('responsavel').insert({
-          'nome': nome,
-          'email': email,
-          'cpf_responsavel': cpf,
-          'rg': rg,
-          'cep': cep,
-          'celular': celular,
-          'endereco': endereco,
-          'numero_residencia': numero,
-          'bairro': bairro,
-          'cidade': cidade,
-          'uf_estado': uf,
-          'complemento': complemento,
-        });
-        if (newUser.error == null) {
+        'nome': nome,
+        'email': email,
+        'cpf_responsavel': cpf,
+        'rg': rg,
+        'cep': cep,
+        'celular': celular,
+        'endereco': endereco,
+        'numero_residencia': numero,
+        'bairro': bairro,
+        'cidade': cidade,
+        'uf_estado': uf,
+        'complemento': complemento,
+      });
+      if (newUser.error == null) {
         sm.showSnackBar(
           const SnackBar(content: Text('Postagem criada com sucesso!')),
         );
       } else {
         sm.showSnackBar(
-          SnackBar(
-              content:
-                Text('Erro ao criar postagem: ${newUser.error!.message}')
-            ),
+          SnackBar(content: Text('Erro ao criar postagem: ${newUser.error!.message}')),
         );
       }
-    }catch(e){
+    } catch (e) {
       // ignore: avoid_print
       print(e);
     }
