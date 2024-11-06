@@ -20,32 +20,37 @@ class _PdfViewState extends State<PdfView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // floatingActionButton: ElevatedButton(
-      //   onPressed: () {},
-      //   child: Row(
-      //     crossAxisAlignment: CrossAxisAlignment.end,
-      //     mainAxisSize: MainAxisSize.min,
-      //     children: [
-      //       IconButton(
-      //         icon: const Icon(Icons.zoom_in),
-      //         onPressed: () {
-      //           _pdfViewerController.zoomLevel += 0.25;
-      //         },
-      //       ),
-      //       IconButton(
-      //         icon: const Icon(Icons.zoom_out),
-      //         onPressed: () {
-      //           _pdfViewerController.zoomLevel -= 0.25;
-      //         },
-      //       ),
-      //     ],
-      //   ),
-      // ),
-      body: SfPdfViewer.asset(
-        'assets/contrato/contrato.pdf',
-        initialZoomLevel: 0.01,
-        maxZoomLevel: 100.0,
-        controller: _pdfViewerController,
+      floatingActionButton: ElevatedButton(
+        onPressed: () {},
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.zoom_in),
+              onPressed: () {
+                _pdfViewerController.zoomLevel += 0.25;
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.zoom_out),
+              onPressed: () {
+                _pdfViewerController.zoomLevel -= 0.25;
+              },
+            ),
+          ],
+        ),
+      ),
+      body: Center(
+        child: Transform.scale(
+          scale: 0.80,
+          child: SfPdfViewer.asset(
+            'assets/contrato/contrato.pdf',
+            initialZoomLevel: 1.0 ,
+            maxZoomLevel: 100.0,
+            controller: _pdfViewerController,
+          ),
+        ),
       ),
     );
   }

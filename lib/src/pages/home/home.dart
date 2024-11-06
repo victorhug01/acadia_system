@@ -1,5 +1,6 @@
 import 'package:acadia/src/components/appbar/appbar_component.dart';
 import 'package:acadia/src/components/drawer/drawer_component.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -48,6 +49,11 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  List<String> imagesCarousel = [
+    'assets/images/slide1.png',
+    'assets/images/slide2.jpg',
+  ];
+
   @override
   Widget build(BuildContext context) {
     final client = Supabase.instance.client;
@@ -74,16 +80,38 @@ class _HomePageState extends State<HomePage> {
         preferredSize: Size.fromHeight(60.0),
         child: AppBarComponent(),
       ),
-      body: const SafeArea(
-        child: Center(
-          // child: ElevatedButton(
-          //   onPressed: () async {
-          //     final navigation = Navigator.of(context);
-          //     await client.auth.signOut();
-          //     await navigation.pushNamedAndRemoveUntil('/', (router) => false);
-          //   },
-          //   child: const Text('Sair'),
-          // ),
+      body: SafeArea(
+        child: Column(
+          children: [
+            const SizedBox(height: 40),
+            SizedBox(
+              width: double.maxFinite,
+              height: 300,
+              child: CarouselSlider(
+                options: CarouselOptions(
+                  autoPlayCurve: Curves.easeInOut,
+                  autoPlay: true,
+                  viewportFraction: 1,
+                  aspectRatio: 1,
+                ),
+                items: <Widget>[
+                  Image.asset(
+                    'assets/images/slide1.png',
+                    fit: BoxFit.cover,
+                    alignment: Alignment.topCenter,
+                    width: double.infinity,
+                    height: double.maxFinite,
+                  ),
+                  Image.asset(
+                    'assets/images/slide2.jpg',
+                    fit: BoxFit.fill,
+                    width: double.infinity,
+                    height: double.maxFinite,
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

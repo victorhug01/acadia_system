@@ -53,6 +53,10 @@ class StudentComponent extends StatefulWidget {
 }
 
 class _StudentComponentState extends State<StudentComponent> with ValidationMixinClass {
+  // final _serie = Supabase.instance.client.from('serie').select();
+  // final _tipoSerie = Supabase.instance.client.from('tipo_serie').select();
+  // final _escola = Supabase.instance.client.from('escola').select();
+  // final _turma = Supabase.instance.client.from('turma').select();
   Widget buildField(String label, TextEditingController controller,
     {int flex = 1}) {
     return Expanded(

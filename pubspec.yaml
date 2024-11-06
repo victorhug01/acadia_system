@@ -45,6 +45,7 @@ dependencies:
   image_picker: ^1.1.2
   hugeicons: ^0.0.7
   syncfusion_flutter_pdfviewer: ^27.1.58
+  carousel_slider: ^5.0.0
 
 flutter_icons:
   image_path: "assets/images/a_logo.png"

@@ -5,6 +5,7 @@ import 'package:acadia/src/pages/student/components/responsible/responsible_comp
 import 'package:acadia/src/pages/student/components/student/student_component.dart';
 import 'package:acadia/src/theme/theme_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class RegisterStudentPage extends StatefulWidget {
   const RegisterStudentPage({super.key});
@@ -201,10 +202,85 @@ class _RegisterStudentPageState extends State<RegisterStudentPage>
                   ? 'Gerar contrato e finalizar'
                   : 'Avançar',
             ),
+            ElevatedButton(
+              onPressed: (){
+                final String nome = nameController.text;
+                final String email = emailController.text;
+                final String cpf = cpfController.text;
+                final String rg = rgController.text;
+                final String celular= celularController.text;
+                final String endereco = enderecoController.text;
+                final String numero = numeroController.text;
+                final String bairro = bairroController.text;
+                final String cidade = cidadeController.text;
+                final String uf = ufController.text;
+                final String cep = cepController.text;
+                final String complemento = complementoController.text;
+                createResponsible(
+                  cep: cep,
+                  nome: nome, 
+                  email: email, 
+                  cpf: cpf, 
+                  rg: rg, 
+                  celular: celular, 
+                  endereco: endereco, 
+                  numero: numero,
+                  bairro: bairro, 
+                  cidade: cidade, 
+                  uf: uf, 
+                  complemento: complemento
+                );
+              }, 
+              child: const Text('Enviar')
+            ),
           ],
         ),
       ),
     );
+  }
+  Future<void> createResponsible(
+      {required String nome,
+      required String email,
+      required String cpf,
+      required String rg,
+      required String celular,
+      required String endereco,
+      required String numero,
+      required String bairro,
+      required String cidade,
+      required String uf,
+      required String cep,
+      required String complemento,}) async {
+    try {
+      final newUser = await Supabase.instance.client.from('responsavel').insert({
+          'nome': nome,
+          'email': email,
+          'cpf_responsavel': cpf,
+          'rg': rg,
+          'cep': cep,
+          'celular': celular,
+          'endereco': endereco,
+          'numero_residencia': numero,
+          'bairro': bairro,
+          'cidade': cidade,
+          'uf_estado': uf,
+          'complemento': complemento,
+        });
+        if (newUser.error == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Postagem criada com sucesso!')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content:
+                  Text('Erro ao criar postagem: ${newUser.error!.message}')),
+        );
+      }
+    }catch(e){
+      // ignore: avoid_print
+      print(e);
+    }
   }
 }
 
