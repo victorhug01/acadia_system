@@ -2,6 +2,7 @@ import 'package:acadia/src/components/appbar/appbar_component.dart';
 import 'package:acadia/src/theme/theme_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class HomeStudent extends StatefulWidget {
   const HomeStudent({super.key});
@@ -11,6 +12,7 @@ class HomeStudent extends StatefulWidget {
 }
 
 class _HomeStudentState extends State<HomeStudent> {
+  final _future = Supabase.instance.client.from('countries').select();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,10 +59,9 @@ class _HomeStudentState extends State<HomeStudent> {
                         Text(
                           'Veja todos os alunos cadastrados',
                           style: TextStyle(
-                            color: ColorSchemeManagerClass.colorPrimary,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 16.0
-                          ),
+                              color: ColorSchemeManagerClass.colorPrimary,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 16.0),
                         ),
                       ],
                     ),
@@ -96,6 +97,24 @@ class _HomeStudentState extends State<HomeStudent> {
                     ),
                   ],
                 ),
+              ),
+              FutureBuilder(
+                future: _future,
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  final countries = snapshot.data!;
+                  return ListView.builder(
+                    itemCount: countries.length,
+                    itemBuilder: ((context, index) {
+                      final country = countries[index];
+                      return ListTile(
+                        title: Text(country['name']),
+                      );
+                    }),
+                  );
+                },
               ),
             ],
           ),

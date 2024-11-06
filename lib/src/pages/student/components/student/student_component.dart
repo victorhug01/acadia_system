@@ -123,6 +123,7 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       InkWell(
+                        // ignore: avoid_print
                         onTap: () => print('qidjwqdn'),
                         child: Container(
                           width: 180,
@@ -195,7 +196,6 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
                   Expanded(
                     child: Column(
                       children: [
-                        //https://pub.dev/packages/multi_dropdown/example
                         buildRow([
                           {'label': 'Nome completo', 'controller': widget.nameStudentController},
                           {'label': 'Email', 'controller': widget.emailStudentController},
