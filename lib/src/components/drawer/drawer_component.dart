@@ -180,7 +180,7 @@ class _DrawerComponentState extends State<DrawerComponent> {
               ListTileComponent(
                 title: 'Aluno',
                 onTap: () {
-                  navigation.pushNamed('/home_student');
+                  navigation.pushNamed('/options_student');
                 },
               ),
               userClient!.id == 'cb7fd182-9255-402c-a601-c41f824c9df1'

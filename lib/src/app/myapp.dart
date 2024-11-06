@@ -1,6 +1,7 @@
 import 'package:acadia/src/pages/home/home.dart';
 import 'package:acadia/src/pages/login/login.dart';
 import 'package:acadia/src/pages/student/home_student/home_student.dart';
+import 'package:acadia/src/pages/student/options_student/options_student.dart';
 import 'package:acadia/src/pages/student/register_student/register_student.dart';
 import 'package:acadia/src/theme/theme_colors.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => const LoginPage(),
         '/home': (context) => const HomePage(),
         '/home_student': (context) => const HomeStudent(),
+        '/options_student': (context) => const OptionsStudent(),
         '/register_student': (context) => const RegisterStudentPage(),
       },
     );
