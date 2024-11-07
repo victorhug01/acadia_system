@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:acadia/src/components/appbar/appbar_component.dart';
 import 'package:acadia/src/pages/student/components/anamnese/anamnese_componente.dart';
 import 'package:acadia/src/pages/student/components/contrato/contrato_component.dart';
@@ -94,6 +96,14 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
     super.dispose();
   }
 
+  String gerarNumeroAleatorio() {
+    final random = Random();
+    // Gera um número aleatório de 11 dígitos
+    int numero = random.nextInt(900000000) + 100000000; // Gera um número entre 100000000 e 999999999
+    String numeroString = numero.toString(); // Converte para string
+    return numeroString.padLeft(11, '0'); // Preenche à esquerda, se necessário, para garantir 11 dígitos
+  }
+
   void _nextTab() {
     if (_tabController.index < 3) {
       _tabController.animateTo(_tabController.index + 1);
@@ -108,6 +118,7 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
 
   @override
   Widget build(BuildContext context) {
+    raStudentController.text = gerarNumeroAleatorio();
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
@@ -246,83 +257,81 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
             //----------------------responsavel---------------------------------
 
             // ElevatedButton(
-            //   onPressed: (){
-            // final String nome = nameController.text;
-            // final String email = emailController.text;
-            // final String cpf = cpfController.text;
-            // final String rg = rgController.text;
-            // final String celular= celularController.text;
-            // final String endereco = enderecoController.text;
-            // final String numero = numeroController.text;
-            // final String bairro = bairroController.text;
-            // final String cidade = cidadeController.text;
-            // final String uf = ufController.text;
-            // final String cep = cepController.text;
-            // final String complemento = complementoController.text;
-            // createResponsible(
-            //   cep: cep,
-            //   nome: nome,
-            //   email: email,
-            //   cpf: cpf,
-            //   rg: rg,
-            //   celular: celular,
-            //   endereco: endereco,
-            //   numero: numero,
-            //   bairro: bairro,
-            //   cidade: cidade,
-            //   uf: uf,
-            //   complemento: complemento
-            // );
+            //   onPressed: () {
+            //     final String nome = nameController.text;
+            //     final String email = emailController.text;
+            //     final String cpf = cpfController.text;
+            //     final String rg = rgController.text;
+            //     final String celular = celularController.text;
+            //     final String endereco = enderecoController.text;
+            //     final String numero = numeroController.text;
+            //     final String bairro = bairroController.text;
+            //     final String cidade = cidadeController.text;
+            //     final String uf = ufController.text;
+            //     final String cep = cepController.text;
+            //     final String complemento = complementoController.text;
+            //     createResponsible(
+            //       cep: cep,
+            //       nome: nome,
+            //       email: email,
+            //       cpf: cpf,
+            //       rg: rg,
+            //       celular: celular,
+            //       endereco: endereco,
+            //       numero: numero,
+            //       bairro: bairro,
+            //       cidade: cidade,
+            //       uf: uf,
+            //       complemento: complemento,
+            //     );
             //   },
-            //   child: const Text('Enviar')
+            //   child: const Text('Enviar'),
             // ),
 
             //----------------------aluno------------------------------------------
 
             ElevatedButton(
-                onPressed: () {
-                  final String nome = nameStudentController.text;
-                  final String email = emailStudentController.text;
-                  final String cpf = cpfStudentController.text;
-                  final String rg = rgStudentController.text;
-                  final String celular = celularStudentController.text;
-                  final String endereco = enderecoStudentController.text;
-                  final String numero = numeroStudentController.text;
-                  final String bairro = bairroStudentController.text;
-                  final String cidade = cidadeStudentController.text;
-                  final String uf = ufStudentController.text;
-                  final String cep = cepStudentController.text;
-                  final String raAluno = raStudentController.text;
-                  final String escolaAnterior = escolaAnteriorController.text;
-                  final String sexo = sexoStudentController.text;
-                  final String dataNascimento = dataNacimentoStudentController.text;
-                  final String complemento = complementoStudentController.text;
-                  final String cpfResponsavel = cpfController.text;
-                  final String nomeResponsavel = nameController.text;
-                  final String imagemAluno = cpfController.text; //adda
-                  createStudent(
-                    nome: nome,
-                    email: email,
-                    cpf: cpf,
-                    rg: rg,
-                    celular: celular,
-                    endereco: endereco,
-                    numero: numero,
-                    cep: cep,
-                    bairro: bairro,
-                    cidade: cidade,
-                    uf: uf,
-                    complemento: complemento,
-                    dataNascimento: dataNascimento,
-                    escolaAnterior: escolaAnterior,
-                    raAluno: raAluno,
-                    sexo: sexo,
-                    cpfResponsavel: cpfResponsavel,
-                    imagemAluno: imagemAluno,
-                    nomeResponsavel: nomeResponsavel,
-                  );
-                },
-                child: const Text('Enviar')),
+              onPressed: () {
+                final String nomeA = nameStudentController.text;
+                final String emailA = emailStudentController.text;
+                final String cpfA =cpfStudentController.text;
+                final String rgA = rgStudentController.text;
+                final String celularA = celularStudentController.text;
+                final String enderecoA = enderecoStudentController.text;
+                final String numeroA = numeroStudentController.text;
+                final String bairroA = bairroStudentController.text;
+                final String cidadeA = cidadeStudentController.text;
+                final String ufA = ufStudentController.text;
+                final String cepA =cepStudentController.text;
+                final String raAlunoA = raStudentController.text;
+                final String escolaAnteriorA = escolaAnteriorController.text;
+                final String sexoA = sexoStudentController.text;
+                final String dataNascimentoA = dataNacimentoStudentController.text;
+                final String complementoA = complementoStudentController.text;
+                final String cpfResponsavelA = (42031814885).toString();
+                createStudent(
+                  ra: raAlunoA,
+                  nome: nomeA,
+                  email: emailA,
+                  cpf: cpfA,
+                  rg: rgA,
+                  celular: celularA,
+                  endereco: enderecoA,
+                  numero: numeroA,
+                  cep: cepA,
+                  bairro: bairroA,
+                  cidade: cidadeA,
+                  uf: ufA,
+                  complemento: complementoA,
+                  dataNascimento: dataNascimentoA,
+                  escolaAnterior: escolaAnteriorA,
+                  raAluno: raAlunoA,
+                  sexo: sexoA,
+                  cpfResponsavel: cpfResponsavelA,
+                );
+              },
+              child: const Text('Enviar'),
+            ),
 
             //--------------------anamnese------------------------------------
 
@@ -434,8 +443,7 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
     required String raAluno,
     required String sexo,
     required String cpfResponsavel,
-    required dynamic imagemAluno,
-    required String nomeResponsavel,
+    required String ra,
   }) async {
     try {
       final sm = ScaffoldMessenger.of(context);
@@ -448,15 +456,15 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
         'celular': celular,
         'email': email,
         'escola_anterior': escolaAnterior,
-        'imageProfile': imagemAluno,
         'uf_estado': uf,
         'bairro': bairro,
         'cidade': cidade,
         'cep': cep,
         'complemento': complemento,
         'numero_residencia': numero,
-        'fk_cpf_responsavel': cpf,
+        'fk_cpf_responsavel': cpfResponsavel,
         'endereco': endereco,
+        'ra': ra,
       });
       if (newUser.error == null) {
         sm.showSnackBar(
@@ -526,6 +534,106 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
       print(e);
     }
   }
+
+  // void _sendData() async{
+  //   final String nome = nameController.text;
+  //   final String email = emailController.text;
+  //   final String cpf = cpfController.text;
+  //   final String rg = rgController.text;
+  //   final String celular = celularController.text;
+  //   final String endereco = enderecoController.text;
+  //   final String numero = numeroController.text;
+  //   final String bairro = bairroController.text;
+  //   final String cidade = cidadeController.text;
+  //   final String uf = ufController.text;
+  //   final String cep = cepController.text;
+  //   final String complemento = complementoController.text;
+  //   final String doencaCronica = diseaseController.text == '' ? 'Não informado' : diseaseController.text;
+  //   final String doencaGrave = seriousIllnessController.text == '' ? 'Não informado' : seriousIllnessController.text;
+  //   final String cirurgia = surgeryController.text == '' ? 'Não informado' : surgeryController.text;
+  //   final String problemasRespiratorios = respiratoryController.text == '' ? 'Não informado' : respiratoryController.text;
+  //   final String reacaoAlergicaSevera = allergicReactionController.text == '' ? 'Não informado' : allergicReactionController.text;
+  //   final String vacinas = vaccineController.text == '' ? 'Não informado' : vaccineController.text;
+  //   final String acompanhamentoMedico = medicalMonitoringController.text == '' ? 'Não informado' : medicalMonitoringController.text;
+  //   final String medicamentoPeriodico = dailyMedicationController.text == '' ? 'Não informado' : dailyMedicationController.text;
+  //   final String medicamentosEmergenciais = emergencyMedicationController.text == '' ? 'Não informado' : emergencyMedicationController.text;
+  //   final String nomeParentesco = emergencyNameController.text == '' ? 'Não informado' : emergencyNameController.text;
+  //   final String restricaoAlimentar = dietaryRestrictionController.text == '' ? 'Não informado' : dietaryRestrictionController.text;
+  //   final int telefone = emergencyPhoneController.value.text == '' ? 00000000000 : int.parse(emergencyPhoneController.text);
+  //   final String parentesco = emergencyParentescoController.text == '' ? 'Não informado' : emergencyParentescoController.text;
+  //   final String qualPlano = healthPlanController.text == '' ? 'Não informado' : healthPlanController.text;
+  //   final String alergia = allergyController.text == '' ? 'Não informado' : allergyController.text;
+  //   final String nomeA = nameStudentController.text;
+  //   final String emailA = emailStudentController.text;
+  //   final String cpfA = cpfStudentController.text;
+  //   final String rgA = rgStudentController.text;
+  //   final String celularA = celularStudentController.text;
+  //   final String enderecoA = enderecoStudentController.text;
+  //   final String numeroA = numeroStudentController.text;
+  //   final String bairroA = bairroStudentController.text;
+  //   final String cidadeA = cidadeStudentController.text;
+  //   final String ufA = ufStudentController.text;
+  //   final String cepA = cepStudentController.text;
+  //   final String raAlunoA = raStudentController.text;
+  //   final String escolaAnteriorA = escolaAnteriorController.text;
+  //   final String sexoA = sexoStudentController.text;
+  //   final String dataNascimentoA = dataNacimentoStudentController.text;
+  //   final String complementoA = complementoStudentController.text;
+  //   final String cpfResponsavelA = cpfController.text;
+  //   final String nomeResponsavelA = nameController.text;
+  //   final String imagemAlunoA = cpfController.text;
+  //   await createResponsible(
+  //     cep: cep,
+  //     nome: nome,
+  //     email: email,
+  //     cpf: cpf,
+  //     rg: rg,
+  //     celular: celular,
+  //     endereco: endereco,
+  //     numero: numero,
+  //     bairro: bairro,
+  //     cidade: cidade,
+  //     uf: uf,
+  //     complemento: complemento,
+  //   );
+  //   await createStudent(
+  //     nome: nomeA,
+  //     email: emailA,
+  //     cpf: cpfA,
+  //     rg: rgA,
+  //     celular: celularA,
+  //     endereco: enderecoA,
+  //     numero: numeroA,
+  //     cep: cepA,
+  //     bairro: bairroA,
+  //     cidade: cidadeA,
+  //     uf: ufA,
+  //     complemento: complementoA,
+  //     dataNascimento: dataNascimentoA,
+  //     escolaAnterior: escolaAnteriorA,
+  //     raAluno: raAlunoA,
+  //     sexo: sexoA,
+  //     cpfResponsavel: cpfResponsavelA,
+  //     imagemAluno: imagemAlunoA,
+  //     nomeResponsavel: nomeResponsavelA,
+  //   );
+  //   await createAnaminese(
+  //       acompanhamentoMedico: acompanhamentoMedico,
+  //       alergia: alergia,
+  //       cirurgia: cirurgia,
+  //       doencaCronica: doencaCronica,
+  //       doencaGrave: doencaGrave,
+  //       medicamentoPeriodico: medicamentoPeriodico,
+  //       medicamentosEmergenciais: medicamentosEmergenciais,
+  //       nomeParentesco: nomeParentesco,
+  //       parentesco: parentesco,
+  //       problemasRespiratorios: problemasRespiratorios,
+  //       reacaoAlergicaSevera: reacaoAlergicaSevera,
+  //       restricaoAlimentar: restricaoAlimentar,
+  //       telefone: telefone,
+  //       qualPlano: qualPlano,
+  //       vacinas: vacinas);
+  // }
 }
 
 class ButtonComponent extends StatelessWidget {

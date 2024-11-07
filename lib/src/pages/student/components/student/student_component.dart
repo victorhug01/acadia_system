@@ -3,7 +3,7 @@ import 'package:acadia/src/theme/theme_colors.dart';
 import 'package:acadia/src/validations/mixin_validation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io'; // Importado para usar o File
+import 'dart:io';
 
 class StudentComponent extends StatefulWidget {
   final GlobalKey<FormState> formKey;
@@ -60,8 +60,8 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
 
   // Função para pegar a imagem
   Future<void> _pickImage() async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       setState(() {
         _image = image; // Atualiza a imagem escolhida
@@ -69,7 +69,7 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
     }
   }
 
-  Widget buildField(String label, TextEditingController controller, {int flex = 1}) {
+  Widget buildField(String label, TextEditingController controller, bool enable, {int flex = 1}) {
     return Expanded(
       flex: flex,
       child: Column(
@@ -86,6 +86,7 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
             height: 45,
             constraints: const BoxConstraints(minHeight: 55, maxHeight: 56),
             child: TextFormFieldComponent(
+              enable: enable,
               paddingLeftInput: 8.0,
               colorBorderInput: ColorSchemeManagerClass.colorPrimary,
               inputBorderType: const OutlineInputBorder(),
@@ -107,12 +108,13 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         for (var field in fields) ...[
-          buildField(field['label'], field['controller'], flex: field['flex'] ?? 1),
+          buildField(field['label'], field['controller'], field['enable'] ?? true, flex: field['flex'] ?? 1),
           const SizedBox(width: 7),
         ],
       ],
     );
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -182,7 +184,7 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
                           {'label': 'Data nascimento', 'controller': widget.dataNacimentoStudentController},
                           {'label': 'RG', 'controller': widget.rgStudentController},
                           {'label': 'CPF', 'controller': widget.cpfStudentController},
-                          {'label': 'RA', 'controller': widget.raStudentController},
+                          {'label': 'RA', 'controller': widget.raStudentController, 'enable': false},
                         ]),
                         buildRow([
                           {'label': 'Celular', 'controller': widget.celularStudentController},
@@ -190,8 +192,8 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
                           {'label': 'Escola anterior', 'controller': widget.escolaAnteriorController, 'flex': 4},
                         ]),
                         buildRow([
-                          {'label': 'Nome Responsável', 'controller': widget.nomeResponsavelController, 'flex': 2},
-                          {'label': 'CPF do responsável', 'controller': widget.cpfResponsavelController},
+                          {'label': 'Nome Responsável', 'controller': widget.nomeResponsavelController, 'flex': 2 , 'enable': false},
+                          {'label': 'CPF do responsável', 'controller': widget.cpfResponsavelController, 'enable': false},
                         ]),
                         buildRow([
                           {'label': 'CEP', 'controller': widget.cepStudentController},

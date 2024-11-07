@@ -2,6 +2,7 @@ import 'package:acadia/src/theme/theme_colors.dart';
 import 'package:flutter/material.dart';
 
 class TextFormFieldComponent extends StatefulWidget {
+  final bool? enable;
   final String? labelText;
   final Widget? iconPrefix;
   final IconButton? iconSuffix;
@@ -28,7 +29,8 @@ class TextFormFieldComponent extends StatefulWidget {
     required this.inputBorderType,
     required this.sizeInputBorder,
     this.colorBorderInput,
-    this.paddingLeftInput,
+    this.paddingLeftInput, 
+    this.enable,
   });
 
   @override
@@ -45,6 +47,7 @@ class _TextFormFieldComponentState extends State<TextFormFieldComponent> {
       ),
     );
     return TextFormField(
+      enabled: widget.enable ?? true,
       autofocus: widget.autofocus,
       keyboardType: widget.inputType,
       obscureText: widget.obscure,
