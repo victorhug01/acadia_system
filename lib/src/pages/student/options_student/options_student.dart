@@ -151,7 +151,7 @@ class _OptionsStudentState extends State<OptionsStudent> {
                           height: 70,
                           padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
                           width: double.maxFinite,
-                          color: index == 0 ? ColorSchemeManagerClass.colorPrimary : Colors.transparent,
+                          color: index == 0 ? ColorSchemeManagerClass.colorSecondary : Colors.transparent,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [

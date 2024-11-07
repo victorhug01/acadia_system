@@ -277,6 +277,53 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
             //   child: const Text('Enviar')
             // ),
 
+            //----------------------aluno------------------------------------------
+
+            ElevatedButton(
+                onPressed: () {
+                  final String nome = nameStudentController.text;
+                  final String email = emailStudentController.text;
+                  final String cpf = cpfStudentController.text;
+                  final String rg = rgStudentController.text;
+                  final String celular = celularStudentController.text;
+                  final String endereco = enderecoStudentController.text;
+                  final String numero = numeroStudentController.text;
+                  final String bairro = bairroStudentController.text;
+                  final String cidade = cidadeStudentController.text;
+                  final String uf = ufStudentController.text;
+                  final String cep = cepStudentController.text;
+                  final String raAluno = raStudentController.text;
+                  final String escolaAnterior = escolaAnteriorController.text;
+                  final String sexo = sexoStudentController.text;
+                  final String dataNascimento = dataNacimentoStudentController.text;
+                  final String complemento = complementoStudentController.text;
+                  final String cpfResponsavel = cpfController.text;
+                  final String nomeResponsavel = nameController.text;
+                  final String imagemAluno = cpfController.text; //adda
+                  createStudent(
+                    nome: nome,
+                    email: email,
+                    cpf: cpf,
+                    rg: rg,
+                    celular: celular,
+                    endereco: endereco,
+                    numero: numero,
+                    cep: cep,
+                    bairro: bairro,
+                    cidade: cidade,
+                    uf: uf,
+                    complemento: complemento,
+                    dataNascimento: dataNascimento,
+                    escolaAnterior: escolaAnterior,
+                    raAluno: raAluno,
+                    sexo: sexo,
+                    cpfResponsavel: cpfResponsavel,
+                    imagemAluno: imagemAluno,
+                    nomeResponsavel: nomeResponsavel,
+                  );
+                },
+                child: const Text('Enviar')),
+
             //--------------------anamnese------------------------------------
 
             // ElevatedButton(

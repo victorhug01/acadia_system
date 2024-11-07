@@ -2,9 +2,12 @@ import 'package:acadia/src/components/textformfields/field_component.dart';
 import 'package:acadia/src/theme/theme_colors.dart';
 import 'package:acadia/src/validations/mixin_validation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io'; // Importado para usar o File
 
 class StudentComponent extends StatefulWidget {
   final GlobalKey<FormState> formKey;
+  final dynamic imagemAluno;
   final TextEditingController nameStudentController;
   final TextEditingController emailStudentController;
   final TextEditingController cpfStudentController;
@@ -37,14 +40,15 @@ class StudentComponent extends StatefulWidget {
     required this.bairroStudentController,
     required this.cidadeStudentController,
     required this.ufStudentController,
-    required this.complementoStudentController, 
-    required this.formKey, 
-    required this.dataNacimentoStudentController, 
-    required this.raStudentController, 
-    required this.escolaAnteriorController, 
-    required this.sexoStudentController, 
-    required this.nomeResponsavelController, 
+    required this.complementoStudentController,
+    required this.formKey,
+    required this.dataNacimentoStudentController,
+    required this.raStudentController,
+    required this.escolaAnteriorController,
+    required this.sexoStudentController,
+    required this.nomeResponsavelController,
     required this.cpfResponsavelController,
+    this.imagemAluno,
   });
 
   @override
@@ -52,12 +56,20 @@ class StudentComponent extends StatefulWidget {
 }
 
 class _StudentComponentState extends State<StudentComponent> with ValidationMixinClass {
-  // final _serie = Supabase.instance.client.from('serie').select();
-  // final _tipoSerie = Supabase.instance.client.from('tipo_serie').select();
-  // final _escola = Supabase.instance.client.from('escola').select();
-  // final _turma = Supabase.instance.client.from('turma').select();
-  Widget buildField(String label, TextEditingController controller,
-    {int flex = 1}) {
+  XFile? _image;
+
+  // Função para pegar a imagem
+  Future<void> _pickImage() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      setState(() {
+        _image = image; // Atualiza a imagem escolhida
+      });
+    }
+  }
+
+  Widget buildField(String label, TextEditingController controller, {int flex = 1}) {
     return Expanded(
       flex: flex,
       child: Column(
@@ -95,19 +107,15 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         for (var field in fields) ...[
-          buildField(field['label'], field['controller'],
-              flex: field['flex'] ?? 1),
+          buildField(field['label'], field['controller'], flex: field['flex'] ?? 1),
           const SizedBox(width: 7),
         ],
       ],
     );
   }
 
-  List<String> list = <String>['Selecionar','One', 'Two', 'Three', 'Four'];
-
   @override
   Widget build(BuildContext context) {
-    String dropdownValue = list.first;
     return Padding(
       padding: const EdgeInsets.all(25.0),
       child: SingleChildScrollView(
@@ -122,73 +130,44 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       InkWell(
-                        // ignore: avoid_print
-                        onTap: () => print('qidjwqdn'),
+                        onTap: _pickImage, // Chama a função para selecionar a imagem
                         child: Container(
                           width: 180,
                           height: 220,
                           decoration: BoxDecoration(
-                            color: ColorSchemeManagerClass.colorPrimary,
+                            color: widget.imagemAluno != null ? Colors.transparent : ColorSchemeManagerClass.colorPrimary,
                             borderRadius: BorderRadius.circular(5.0),
+                            border: Border.all(width: 2.0, color: ColorSchemeManagerClass.colorPrimary),
                           ),
-                          child:   Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          child: Stack(
+                            fit: StackFit.expand,
                             children: [
-                              Icon(Icons.add_a_photo_outlined,size: 55, color: ColorSchemeManagerClass.colorWhite),
-                              const SizedBox(height: 15.0),
-                              Text(
-                                'Adicionar uma foto', 
-                                style: TextStyle(
-                                  color: ColorSchemeManagerClass.colorWhite
+                              widget.imagemAluno != null || _image != null
+                                  ? Image.file(
+                                      File(_image?.path ?? widget.imagemAluno.toString()),
+                                      fit: BoxFit.cover,
+                                    )
+                                  : const SizedBox.shrink(),
+                              if (widget.imagemAluno == null && _image == null)
+                                Align(
+                                  alignment: Alignment.center,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.add_a_photo_outlined, size: 55, color: ColorSchemeManagerClass.colorWhite),
+                                      const SizedBox(height: 15.0),
+                                      Text(
+                                        'Adicionar uma foto',
+                                        style: TextStyle(color: ColorSchemeManagerClass.colorWhite),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
                             ],
                           ),
                         ),
                       ),
                       const SizedBox(height: 5.0),
-                      Container(
-                        width: 180,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5.0),
-                          color: ColorSchemeManagerClass.colorPrimary,
-                        ),
-                        child: DropdownMenu<String>(
-                          enableSearch: false,
-                          enableFilter: false,
-                          width: 187,
-                          initialSelection: dropdownValue,
-                          onSelected: (String? value) {
-                            setState(() {
-                              dropdownValue = value!;
-                            });
-                          },
-                          dropdownMenuEntries: list.map<DropdownMenuEntry<String>>((String value) {
-                            return DropdownMenuEntry<String>(
-                              value: value, 
-                              label: value,
-                              style: MenuItemButton.styleFrom(
-                                foregroundColor: ColorSchemeManagerClass.colorWhite
-                              )
-                            );
-                          }).toList(),
-                          textStyle: TextStyle(
-                            color: ColorSchemeManagerClass.colorWhite,
-                          ),
-                          selectedTrailingIcon: Icon(
-                            Icons.arrow_drop_down, 
-                            color: ColorSchemeManagerClass.colorWhite,
-                          ),
-                          trailingIcon: Icon(
-                            Icons.arrow_drop_down, 
-                            color: ColorSchemeManagerClass.colorWhite,
-                          ),
-                          menuStyle: MenuStyle(
-                            backgroundColor: WidgetStatePropertyAll(ColorSchemeManagerClass.colorPrimary),
-                          ),
-                        ),
-                      ),
-                      
                     ],
                   ),
                   const SizedBox(width: 10),
@@ -208,11 +187,7 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
                         buildRow([
                           {'label': 'Celular', 'controller': widget.celularStudentController},
                           {'label': 'Sexo', 'controller': widget.sexoStudentController},
-                          {
-                            'label': 'Escola anterior',
-                            'controller': widget.escolaAnteriorController,
-                            'flex': 4
-                          },
+                          {'label': 'Escola anterior', 'controller': widget.escolaAnteriorController, 'flex': 4},
                         ]),
                         buildRow([
                           {'label': 'Nome Responsável', 'controller': widget.nomeResponsavelController, 'flex': 2},
