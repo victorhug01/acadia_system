@@ -253,6 +253,10 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
               },
               text: _tabController.index == 3 ? 'Gerar contrato e finalizar' : 'Avançar',
             ),
+            ElevatedButton(
+              onPressed: _sendRegisterStudentSystem,
+              child: const Text('registrar'),
+            ),
 
             //----------------------responsavel---------------------------------
 
@@ -290,88 +294,86 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
 
             //----------------------aluno------------------------------------------
 
-            ElevatedButton(
-              onPressed: () {
-                final String nomeA = nameStudentController.text;
-                final String emailA = emailStudentController.text;
-                final String cpfA =cpfStudentController.text;
-                final String rgA = rgStudentController.text;
-                final String celularA = celularStudentController.text;
-                final String enderecoA = enderecoStudentController.text;
-                final String numeroA = numeroStudentController.text;
-                final String bairroA = bairroStudentController.text;
-                final String cidadeA = cidadeStudentController.text;
-                final String ufA = ufStudentController.text;
-                final String cepA =cepStudentController.text;
-                final String raAlunoA = raStudentController.text;
-                final String escolaAnteriorA = escolaAnteriorController.text;
-                final String sexoA = sexoStudentController.text;
-                final String dataNascimentoA = dataNacimentoStudentController.text;
-                final String complementoA = complementoStudentController.text;
-                final String cpfResponsavelA = (42031814885).toString();
-                createStudent(
-                  ra: raAlunoA,
-                  nome: nomeA,
-                  email: emailA,
-                  cpf: cpfA,
-                  rg: rgA,
-                  celular: celularA,
-                  endereco: enderecoA,
-                  numero: numeroA,
-                  cep: cepA,
-                  bairro: bairroA,
-                  cidade: cidadeA,
-                  uf: ufA,
-                  complemento: complementoA,
-                  dataNascimento: dataNascimentoA,
-                  escolaAnterior: escolaAnteriorA,
-                  raAluno: raAlunoA,
-                  sexo: sexoA,
-                  cpfResponsavel: cpfResponsavelA,
-                );
-              },
-              child: const Text('Enviar'),
-            ),
+            // ElevatedButton(
+            //   onPressed: () {
+            //     final String nomeA = nameStudentController.text;
+            //     final String emailA = emailStudentController.text;
+            //     final String cpfA = cpfStudentController.text;
+            //     final String rgA = rgStudentController.text;
+            //     final String celularA = celularStudentController.text;
+            //     final String enderecoA = enderecoStudentController.text;
+            //     final String numeroA = numeroStudentController.text;
+            //     final String bairroA = bairroStudentController.text;
+            //     final String cidadeA = cidadeStudentController.text;
+            //     final String ufA = ufStudentController.text;
+            //     final String cepA = cepStudentController.text;
+            //     final String raAlunoA = raStudentController.text;
+            //     final String escolaAnteriorA = escolaAnteriorController.text;
+            //     final String sexoA = sexoStudentController.text;
+            //     final String dataNascimentoA = dataNacimentoStudentController.text;
+            //     final String complementoA = complementoStudentController.text;
+            //     final String cpfResponsavelA = (42031814885).toString();
+            //     createStudent(
+            //       ra: raAlunoA,
+            //       nome: nomeA,
+            //       email: emailA,
+            //       cpf: cpfA,
+            //       rg: rgA,
+            //       celular: celularA,
+            //       endereco: enderecoA,
+            //       numero: numeroA,
+            //       cep: cepA,
+            //       bairro: bairroA,
+            //       cidade: cidadeA,
+            //       uf: ufA,
+            //       complemento: complementoA,
+            //       dataNascimento: dataNascimentoA,
+            //       escolaAnterior: escolaAnteriorA,
+            //       raAluno: raAlunoA,
+            //       sexo: sexoA,
+            //       cpfResponsavel: cpfResponsavelA,
+            //     );
+            //   },
+            //   child: const Text('Enviar'),
+            // ),
 
             //--------------------anamnese------------------------------------
 
             // ElevatedButton(
-            //   onPressed: (){
-            // final String doencaCronica = diseaseController.text == '' ? 'Não informado' : diseaseController.text;
-            // final String doencaGrave = seriousIllnessController.text == '' ? 'Não informado' : seriousIllnessController.text;
-            // final String cirurgia = surgeryController.text == '' ? 'Não informado' : surgeryController.text;
-            // final String problemasRespiratorios = respiratoryController.text == '' ? 'Não informado' : respiratoryController.text;
-            // final String reacaoAlergicaSevera = allergicReactionController.text == '' ? 'Não informado' : allergicReactionController.text;
-            // final String vacinas = vaccineController.text == '' ? 'Não informado' : vaccineController.text;
-            // final String acompanhamentoMedico = medicalMonitoringController.text == '' ? 'Não informado' : medicalMonitoringController.text;
-            // final String medicamentoPeriodico = dailyMedicationController.text == '' ? 'Não informado' : dailyMedicationController.text;
-            // final String medicamentosEmergenciais = emergencyMedicationController.text == '' ? 'Não informado' : emergencyMedicationController.text;
-            // final String nomeParentesco = emergencyNameController.text == '' ? 'Não informado' : emergencyNameController.text;
-            // final String restricaoAlimentar = dietaryRestrictionController.text == '' ? 'Não informado' : dietaryRestrictionController.text;
-            // final int telefone = emergencyPhoneController.value.text == '' ? 00000000000 : int.parse(emergencyPhoneController.text);
-            // final String parentesco = emergencyParentescoController.text == '' ? 'Não informado' : emergencyParentescoController.text;
-            // final String qualPlano = healthPlanController.text == '' ? 'Não informado' : healthPlanController.text;
-            // final String alergia = allergyController.text == '' ? 'Não informado' : allergyController.text;
-            // createAnaminese(
-            //   acompanhamentoMedico: acompanhamentoMedico,
-            //   alergia: alergia,
-            //   cirurgia: cirurgia,
-            //   doencaCronica: doencaCronica,
-            //   doencaGrave: doencaGrave,
-            //   medicamentoPeriodico: medicamentoPeriodico,
-            //   medicamentosEmergenciais: medicamentosEmergenciais,
-            //   nomeParentesco: nomeParentesco,
-            //   parentesco: parentesco,
-            //   problemasRespiratorios: problemasRespiratorios,
-            //   reacaoAlergicaSevera: reacaoAlergicaSevera,
-            //   restricaoAlimentar: restricaoAlimentar,
-            //   telefone: telefone,
-            //   qualPlano: qualPlano,
-            //   vacinas: vacinas
-            //     );
-            //   },
-            //   child: const Text('Enviar')
-            // ),
+            //     onPressed: () {
+            //       final String doencaCronica = diseaseController.text == '' ? 'Não informado' : diseaseController.text;
+            //       final String doencaGrave = seriousIllnessController.text == '' ? 'Não informado' : seriousIllnessController.text;
+            //       final String cirurgia = surgeryController.text == '' ? 'Não informado' : surgeryController.text;
+            //       final String problemasRespiratorios = respiratoryController.text == '' ? 'Não informado' : respiratoryController.text;
+            //       final String reacaoAlergicaSevera = allergicReactionController.text == '' ? 'Não informado' : allergicReactionController.text;
+            //       final String vacinas = vaccineController.text == '' ? 'Não informado' : vaccineController.text;
+            //       final String acompanhamentoMedico = medicalMonitoringController.text == '' ? 'Não informado' : medicalMonitoringController.text;
+            //       final String medicamentoPeriodico = dailyMedicationController.text == '' ? 'Não informado' : dailyMedicationController.text;
+            //       final String medicamentosEmergenciais = emergencyMedicationController.text == '' ? 'Não informado' : emergencyMedicationController.text;
+            //       final String nomeParentesco = emergencyNameController.text == '' ? 'Não informado' : emergencyNameController.text;
+            //       final String restricaoAlimentar = dietaryRestrictionController.text == '' ? 'Não informado' : dietaryRestrictionController.text;
+            //       final int telefone = emergencyPhoneController.value.text == '' ? 00000000000 : int.parse(emergencyPhoneController.text);
+            //       final String parentesco = emergencyParentescoController.text == '' ? 'Não informado' : emergencyParentescoController.text;
+            //       final String qualPlano = healthPlanController.text == '' ? 'Não informado' : healthPlanController.text;
+            //       final String alergia = allergyController.text == '' ? 'Não informado' : allergyController.text;
+            //       createAnaminese(
+            //           acompanhamentoMedico: acompanhamentoMedico,
+            //           alergia: alergia,
+            //           cirurgia: cirurgia,
+            //           doencaCronica: doencaCronica,
+            //           doencaGrave: doencaGrave,
+            //           medicamentoPeriodico: medicamentoPeriodico,
+            //           medicamentosEmergenciais: medicamentosEmergenciais,
+            //           nomeParentesco: nomeParentesco,
+            //           parentesco: parentesco,
+            //           problemasRespiratorios: problemasRespiratorios,
+            //           reacaoAlergicaSevera: reacaoAlergicaSevera,
+            //           restricaoAlimentar: restricaoAlimentar,
+            //           telefone: telefone,
+            //           qualPlano: qualPlano,
+            //           vacinas: vacinas);
+            //     },
+            //     child: const Text('Enviar')),
           ],
         ),
       ),
@@ -535,105 +537,103 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
     }
   }
 
-  // void _sendData() async{
-  //   final String nome = nameController.text;
-  //   final String email = emailController.text;
-  //   final String cpf = cpfController.text;
-  //   final String rg = rgController.text;
-  //   final String celular = celularController.text;
-  //   final String endereco = enderecoController.text;
-  //   final String numero = numeroController.text;
-  //   final String bairro = bairroController.text;
-  //   final String cidade = cidadeController.text;
-  //   final String uf = ufController.text;
-  //   final String cep = cepController.text;
-  //   final String complemento = complementoController.text;
-  //   final String doencaCronica = diseaseController.text == '' ? 'Não informado' : diseaseController.text;
-  //   final String doencaGrave = seriousIllnessController.text == '' ? 'Não informado' : seriousIllnessController.text;
-  //   final String cirurgia = surgeryController.text == '' ? 'Não informado' : surgeryController.text;
-  //   final String problemasRespiratorios = respiratoryController.text == '' ? 'Não informado' : respiratoryController.text;
-  //   final String reacaoAlergicaSevera = allergicReactionController.text == '' ? 'Não informado' : allergicReactionController.text;
-  //   final String vacinas = vaccineController.text == '' ? 'Não informado' : vaccineController.text;
-  //   final String acompanhamentoMedico = medicalMonitoringController.text == '' ? 'Não informado' : medicalMonitoringController.text;
-  //   final String medicamentoPeriodico = dailyMedicationController.text == '' ? 'Não informado' : dailyMedicationController.text;
-  //   final String medicamentosEmergenciais = emergencyMedicationController.text == '' ? 'Não informado' : emergencyMedicationController.text;
-  //   final String nomeParentesco = emergencyNameController.text == '' ? 'Não informado' : emergencyNameController.text;
-  //   final String restricaoAlimentar = dietaryRestrictionController.text == '' ? 'Não informado' : dietaryRestrictionController.text;
-  //   final int telefone = emergencyPhoneController.value.text == '' ? 00000000000 : int.parse(emergencyPhoneController.text);
-  //   final String parentesco = emergencyParentescoController.text == '' ? 'Não informado' : emergencyParentescoController.text;
-  //   final String qualPlano = healthPlanController.text == '' ? 'Não informado' : healthPlanController.text;
-  //   final String alergia = allergyController.text == '' ? 'Não informado' : allergyController.text;
-  //   final String nomeA = nameStudentController.text;
-  //   final String emailA = emailStudentController.text;
-  //   final String cpfA = cpfStudentController.text;
-  //   final String rgA = rgStudentController.text;
-  //   final String celularA = celularStudentController.text;
-  //   final String enderecoA = enderecoStudentController.text;
-  //   final String numeroA = numeroStudentController.text;
-  //   final String bairroA = bairroStudentController.text;
-  //   final String cidadeA = cidadeStudentController.text;
-  //   final String ufA = ufStudentController.text;
-  //   final String cepA = cepStudentController.text;
-  //   final String raAlunoA = raStudentController.text;
-  //   final String escolaAnteriorA = escolaAnteriorController.text;
-  //   final String sexoA = sexoStudentController.text;
-  //   final String dataNascimentoA = dataNacimentoStudentController.text;
-  //   final String complementoA = complementoStudentController.text;
-  //   final String cpfResponsavelA = cpfController.text;
-  //   final String nomeResponsavelA = nameController.text;
-  //   final String imagemAlunoA = cpfController.text;
-  //   await createResponsible(
-  //     cep: cep,
-  //     nome: nome,
-  //     email: email,
-  //     cpf: cpf,
-  //     rg: rg,
-  //     celular: celular,
-  //     endereco: endereco,
-  //     numero: numero,
-  //     bairro: bairro,
-  //     cidade: cidade,
-  //     uf: uf,
-  //     complemento: complemento,
-  //   );
-  //   await createStudent(
-  //     nome: nomeA,
-  //     email: emailA,
-  //     cpf: cpfA,
-  //     rg: rgA,
-  //     celular: celularA,
-  //     endereco: enderecoA,
-  //     numero: numeroA,
-  //     cep: cepA,
-  //     bairro: bairroA,
-  //     cidade: cidadeA,
-  //     uf: ufA,
-  //     complemento: complementoA,
-  //     dataNascimento: dataNascimentoA,
-  //     escolaAnterior: escolaAnteriorA,
-  //     raAluno: raAlunoA,
-  //     sexo: sexoA,
-  //     cpfResponsavel: cpfResponsavelA,
-  //     imagemAluno: imagemAlunoA,
-  //     nomeResponsavel: nomeResponsavelA,
-  //   );
-  //   await createAnaminese(
-  //       acompanhamentoMedico: acompanhamentoMedico,
-  //       alergia: alergia,
-  //       cirurgia: cirurgia,
-  //       doencaCronica: doencaCronica,
-  //       doencaGrave: doencaGrave,
-  //       medicamentoPeriodico: medicamentoPeriodico,
-  //       medicamentosEmergenciais: medicamentosEmergenciais,
-  //       nomeParentesco: nomeParentesco,
-  //       parentesco: parentesco,
-  //       problemasRespiratorios: problemasRespiratorios,
-  //       reacaoAlergicaSevera: reacaoAlergicaSevera,
-  //       restricaoAlimentar: restricaoAlimentar,
-  //       telefone: telefone,
-  //       qualPlano: qualPlano,
-  //       vacinas: vacinas);
-  // }
+  void _sendRegisterStudentSystem() async {
+    final String doencaCronica = diseaseController.text == '' ? 'Não informado' : diseaseController.text;
+    final String doencaGrave = seriousIllnessController.text == '' ? 'Não informado' : seriousIllnessController.text;
+    final String cirurgia = surgeryController.text == '' ? 'Não informado' : surgeryController.text;
+    final String problemasRespiratorios = respiratoryController.text == '' ? 'Não informado' : respiratoryController.text;
+    final String reacaoAlergicaSevera = allergicReactionController.text == '' ? 'Não informado' : allergicReactionController.text;
+    final String vacinas = vaccineController.text == '' ? 'Não informado' : vaccineController.text;
+    final String acompanhamentoMedico = medicalMonitoringController.text == '' ? 'Não informado' : medicalMonitoringController.text;
+    final String medicamentoPeriodico = dailyMedicationController.text == '' ? 'Não informado' : dailyMedicationController.text;
+    final String medicamentosEmergenciais = emergencyMedicationController.text == '' ? 'Não informado' : emergencyMedicationController.text;
+    final String nomeParentesco = emergencyNameController.text == '' ? 'Não informado' : emergencyNameController.text;
+    final String restricaoAlimentar = dietaryRestrictionController.text == '' ? 'Não informado' : dietaryRestrictionController.text;
+    final int telefone = emergencyPhoneController.value.text == '' ? 00000000000 : int.parse(emergencyPhoneController.text);
+    final String parentesco = emergencyParentescoController.text == '' ? 'Não informado' : emergencyParentescoController.text;
+    final String qualPlano = healthPlanController.text == '' ? 'Não informado' : healthPlanController.text;
+    final String alergia = allergyController.text == '' ? 'Não informado' : allergyController.text;
+    final String nomeA = nameStudentController.text;
+    final String emailA = emailStudentController.text;
+    final String cpfA = cpfStudentController.text;
+    final String rgA = rgStudentController.text;
+    final String celularA = celularStudentController.text;
+    final String enderecoA = enderecoStudentController.text;
+    final String numeroA = numeroStudentController.text;
+    final String bairroA = bairroStudentController.text;
+    final String cidadeA = cidadeStudentController.text;
+    final String ufA = ufStudentController.text;
+    final String cepA = cepStudentController.text;
+    final String raAlunoA = raStudentController.text;
+    final String escolaAnteriorA = escolaAnteriorController.text;
+    final String sexoA = sexoStudentController.text;
+    final String dataNascimentoA = dataNacimentoStudentController.text;
+    final String complementoA = complementoStudentController.text;
+    final String cpfResponsavelA = cpfController.text;
+    final String nome = nameController.text;
+    final String email = emailController.text;
+    final String cpf = cpfController.text;
+    final String rg = rgController.text;
+    final String celular = celularController.text;
+    final String endereco = enderecoController.text;
+    final String numero = numeroController.text;
+    final String bairro = bairroController.text;
+    final String cidade = cidadeController.text;
+    final String uf = ufController.text;
+    final String cep = cepController.text;
+    final String complemento = complementoController.text;
+    await createResponsible(
+      cep: cep,
+      nome: nome,
+      email: email,
+      cpf: cpf,
+      rg: rg,
+      celular: celular,
+      endereco: endereco,
+      numero: numero,
+      bairro: bairro,
+      cidade: cidade,
+      uf: uf,
+      complemento: complemento,
+    );
+    await createStudent(
+      ra: raAlunoA,
+      nome: nomeA,
+      email: emailA,
+      cpf: cpfA,
+      rg: rgA,
+      celular: celularA,
+      endereco: enderecoA,
+      numero: numeroA,
+      cep: cepA,
+      bairro: bairroA,
+      cidade: cidadeA,
+      uf: ufA,
+      complemento: complementoA,
+      dataNascimento: dataNascimentoA,
+      escolaAnterior: escolaAnteriorA,
+      raAluno: raAlunoA,
+      sexo: sexoA,
+      cpfResponsavel: cpfResponsavelA,
+    );
+    await createAnaminese(
+      acompanhamentoMedico: acompanhamentoMedico,
+      alergia: alergia,
+      cirurgia: cirurgia,
+      doencaCronica: doencaCronica,
+      doencaGrave: doencaGrave,
+      medicamentoPeriodico: medicamentoPeriodico,
+      medicamentosEmergenciais: medicamentosEmergenciais,
+      nomeParentesco: nomeParentesco,
+      parentesco: parentesco,
+      problemasRespiratorios: problemasRespiratorios,
+      reacaoAlergicaSevera: reacaoAlergicaSevera,
+      restricaoAlimentar: restricaoAlimentar,
+      telefone: telefone,
+      qualPlano: qualPlano,
+      vacinas: vacinas,
+    );
+  }
 }
 
 class ButtonComponent extends StatelessWidget {

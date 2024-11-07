@@ -151,7 +151,7 @@ class _OptionsStudentState extends State<OptionsStudent> {
                           height: 70,
                           padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
                           width: double.maxFinite,
-                          color: index == 0 ? ColorSchemeManagerClass.colorSecondary : Colors.transparent,
+                          color: (index % 2) == 1 ? ColorSchemeManagerClass.colorSecondary : Colors.transparent,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -159,7 +159,10 @@ class _OptionsStudentState extends State<OptionsStudent> {
                                 children: [
                                   CircleAvatar(
                                     radius: 20,
-                                    backgroundImage: NetworkImage(student['imageProfile']),
+                                    backgroundImage: student['imageProfile'] != null ? NetworkImage(student['imageProfile']) : null,
+                                    child: student['imageProfile'] == null
+                                        ? const Icon(Icons.person) // default icon if no image
+                                        : null,
                                   ),
                                   const SizedBox(
                                     width: 6,

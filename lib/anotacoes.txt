@@ -113,3 +113,10 @@ Container(
       vacinas: vacinas
       );
   }     
+
+
+  final response = await _client
+          .from('aluno')
+          .select('id_aluno') // Seleciona apenas o campo id_aluno
+          .eq('cpf', cpf)
+          .single(); // Retorna apenas um resultado
