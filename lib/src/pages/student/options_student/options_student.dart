@@ -169,6 +169,7 @@ class _OptionsStudentState extends State<OptionsStudent> {
                                   ),
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [Text(student['nome']), Text(student['email'])],
                                   ),
                                 ],

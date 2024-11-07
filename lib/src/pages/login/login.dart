@@ -114,7 +114,7 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
                                                         child: Divider(
                                                           color:ColorSchemeManagerClass.colorPrimary,
                                                         ),
-                                                      ),
+                                                     ),
                                                       Padding(
                                                         padding:const EdgeInsets.all(8.0),
                                                         child: Text(
@@ -122,7 +122,7 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
                                                           style: TextStyle(
                                                             color:ColorSchemeManagerClass.colorPrimary,
                                                             fontWeight:
-                                                                FontWeight.w700,
+                                                                                   FontWeight.w700,
                                                           ),
                                                         ),
                                                       ),

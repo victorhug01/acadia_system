@@ -16,10 +16,4 @@ mixin ValidationMixinClass{
     if(value!.length < 6) return message ?? "Você tem que usar 6 caracteres!";
     return null;
   }
-
-  String? isCpf(String? value, [String? message]){
-    //https://dicasdeprogramacao.com.br/algoritmo-para-validar-cpf/
-    return null;
-  }
-  
 }
