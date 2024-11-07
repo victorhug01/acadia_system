@@ -486,6 +486,7 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
 //------------------------------------------------------------------
 
   Future<void> createAnaminese({
+    required String idAluno,
     required String doencaCronica,
     required String doencaGrave,
     required String cirurgia,
@@ -505,7 +506,7 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
     try {
       final sm = ScaffoldMessenger.of(context);
       final newAnamnese = await Supabase.instance.client.from('Anamnese').insert({
-        'fk_id_aluno': 2,
+        'fk_id_aluno': idAluno,
         'doenca_cronica': doencaCronica,
         'doenca_grave': doencaGrave,
         'cirurgia': cirurgia,
@@ -538,6 +539,7 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
   }
 
   void _sendRegisterStudentSystem() async {
+    final response = await Supabase.instance.client.from('aluno').select('id_aluno').eq('cpf', cpfStudentController.toString()).single(); // Retorna apenas um resultado
     final String doencaCronica = diseaseController.text == '' ? 'Não informado' : diseaseController.text;
     final String doencaGrave = seriousIllnessController.text == '' ? 'Não informado' : seriousIllnessController.text;
     final String cirurgia = surgeryController.text == '' ? 'Não informado' : surgeryController.text;
@@ -617,6 +619,7 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
       cpfResponsavel: cpfResponsavelA,
     );
     await createAnaminese(
+      idAluno: response.toString(),
       acompanhamentoMedico: acompanhamentoMedico,
       alergia: alergia,
       cirurgia: cirurgia,
