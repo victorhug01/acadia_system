@@ -7,7 +7,6 @@ import 'dart:io';
 
 class StudentComponent extends StatefulWidget {
   final GlobalKey<FormState> formKey;
-  final dynamic imagemAluno;
   final ValueNotifier<XFile?> imagemAlunoNotifier;
   final TextEditingController nameStudentController;
   final TextEditingController emailStudentController;
@@ -50,7 +49,6 @@ class StudentComponent extends StatefulWidget {
     required this.nomeResponsavelController,
     required this.cpfResponsavelController,
     required this.imagemAlunoNotifier,
-    this.imagemAluno,
   });
 
   @override
@@ -59,13 +57,12 @@ class StudentComponent extends StatefulWidget {
 
 class _StudentComponentState extends State<StudentComponent> with ValidationMixinClass {
   
-  // Função para pegar a imagem
   Future<void> _pickImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       setState(() {
-        widget.imagemAlunoNotifier.value = image; // Atualiza a imagem escolhida
+        widget.imagemAlunoNotifier.value = image;
       });
     }
   }

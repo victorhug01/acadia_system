@@ -312,7 +312,7 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
 //-----------------------------------------------------------------
 
   Future<void> createStudent({
-    required String nome,
+    required String? nome,
     required String email,
     required String cpf,
     required String rg,
@@ -421,7 +421,7 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
     }
   }
 
-  Future<void> _uploadImage({required String cpfA}) async {
+  Future<void> _uploadImage({required String cpfA, required int raAlunoImage}) async {
     final client = Supabase.instance.client;
     final sm = ScaffoldMessenger.of(context);
 
@@ -440,6 +440,7 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
           );
       String imageUrl = client.storage.from('students-image').getPublicUrl(imagePath);
       imageUrl = Uri.parse(imageUrl).replace(queryParameters: {'t': DateTime.now().millisecondsSinceEpoch.toString()}).toString();
+      await client.from('aluno').update({'imageProfile': imageUrl}).eq('id_aluno', raAlunoImage).single();
     } catch (e) {
       sm.showSnackBar(SnackBar(
         backgroundColor: ColorSchemeManagerClass.colorDanger,
@@ -528,8 +529,7 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
       sexo: sexoA,
       cpfResponsavel: cpfResponsavelA,
     );
-    await _uploadImage(cpfA: cpfA);
-    // await _uploadImageForStudent(raAlunoA, imageUrl);
+    await _uploadImage(cpfA: cpfA, raAlunoImage: raAlunoA);
     await createAnaminese(
       raAluno: raAlunoA,
       acompanhamentoMedico: acompanhamentoMedico,
