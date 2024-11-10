@@ -564,6 +564,8 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
     } finally {
       navigation.pop();
       navigation.pop();
+      navigation.pop();
+      navigation.pushNamed('/options_student');
     }
   }
 }

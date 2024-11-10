@@ -1,6 +1,7 @@
 import 'package:acadia/src/components/textformfields/field_component.dart';
 import 'package:acadia/src/theme/theme_colors.dart';
 import 'package:acadia/src/validations/mixin_validation.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -56,7 +57,6 @@ class StudentComponent extends StatefulWidget {
 }
 
 class _StudentComponentState extends State<StudentComponent> with ValidationMixinClass {
-  
   Future<void> _pickImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
@@ -67,14 +67,14 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
     }
   }
 
-  Widget buildField(String label, TextEditingController controller, bool enable, {int flex = 1}) {
+  Widget buildField(String label, TextEditingController controller, bool enable, dynamic validator, String asterisco, {int flex = 1}) {
     return Expanded(
       flex: flex,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '$label *',
+            '$label $asterisco',
             style: TextStyle(
               color: ColorSchemeManagerClass.colorPrimary,
               fontWeight: FontWeight.w700,
@@ -93,7 +93,7 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
               inputType: TextInputType.text,
               obscure: false,
               autofocus: true,
-              validator: isNotEmpyt,
+              validator: validator,
             ),
           ),
         ],
@@ -106,13 +106,12 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         for (var field in fields) ...[
-          buildField(field['label'], field['controller'], field['enable'] ?? true, flex: field['flex'] ?? 1),
+          buildField(field['label'], field['controller'], field['enable'] ?? true, field['validations'], field['asterisco'] ?? '',flex: field['flex'] ?? 1),
           const SizedBox(width: 7),
         ],
       ],
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -130,7 +129,7 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       InkWell(
-                        onTap: _pickImage, // Chama a função para selecionar a imagem
+                        onTap: _pickImage,
                         child: Container(
                           width: 180,
                           height: 220,
@@ -180,34 +179,99 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
                     child: Column(
                       children: [
                         buildRow([
-                          {'label': 'Nome completo', 'controller': widget.nameStudentController},
-                          {'label': 'Email', 'controller': widget.emailStudentController},
+                          {'label': 'Nome completo', 'controller': widget.nameStudentController, 'validations': isNotEmpyt, 'asterisco': '*'},
+                          {
+                            'label': 'Email',
+                            'controller': widget.emailStudentController,
+                            'asterisco': '*',
+                            'validations': (value) => combine([
+                                  () => isNotEmpyt(value),
+                                  () => EmailValidator.validate(value.toString()) ? null : "Email inválido",
+                                ]),
+                          },
                         ]),
                         buildRow([
-                          {'label': 'Data nascimento', 'controller': widget.dataNacimentoStudentController},
-                          {'label': 'RG', 'controller': widget.rgStudentController},
-                          {'label': 'CPF', 'controller': widget.cpfStudentController},
-                          {'label': 'RA', 'controller': widget.raStudentController, 'enable': false},
+                          {
+                            'label': 'Data nascimento',
+                            'controller': widget.dataNacimentoStudentController,
+                            'asterisco': '*',
+                            'validations': (value) => combine([
+                                  () => isNotEmpyt(value),
+                                  () => isNumber(value),
+                                ]),
+                          },
+                          {
+                            'label': 'RG',
+                            'controller': widget.rgStudentController,
+                            'asterisco': '*',
+                            'validations': (value) => combine([
+                                  () => isNotEmpyt(value),
+                                  () => isNumber(value),
+                                ]),
+                          },
+                          {
+                            'label': 'CPF',
+                            'controller': widget.cpfStudentController,
+                            'asterisco': '*',
+                            'validations': (value) => combine([
+                                  () => isNotEmpyt(value),
+                                  () => isNumber(value),
+                                  () => isValidCPF(value),
+                                ]),
+                          },
+                          {
+                            'label': 'RA',
+                            'controller': widget.raStudentController,
+                            'enable': false,
+                            'validations': (value) => combine([
+                                  () => isNotEmpyt(value),
+                                  () => isNumber(value),
+                                ]),
+                          },
                         ]),
                         buildRow([
-                          {'label': 'Celular', 'controller': widget.celularStudentController},
-                          {'label': 'Sexo', 'controller': widget.sexoStudentController},
+                          {
+                            'label': 'Celular',
+                            'controller': widget.celularStudentController,
+                            'asterisco': '*',
+                            'validations': (value) => combine([
+                                  () => isNotEmpyt(value),
+                                  () => isNumber(value),
+                                ]),
+                          },
+                          {'label': 'Sexo', 'controller': widget.sexoStudentController, 'validations': isNotEmpyt, 'asterisco': '*',},
                           {'label': 'Escola anterior', 'controller': widget.escolaAnteriorController, 'flex': 4},
                         ]),
                         buildRow([
-                          {'label': 'Nome Responsável', 'controller': widget.nomeResponsavelController, 'flex': 2 , 'enable': false},
-                          {'label': 'CPF do responsável', 'controller': widget.cpfResponsavelController, 'enable': false},
+                          {'label': 'Nome Responsável', 'controller': widget.nomeResponsavelController, 'flex': 2, 'enable': false, 'asterisco': '*',},
+                          {'label': 'CPF do responsável', 'controller': widget.cpfResponsavelController, 'enable': false, 'asterisco': '*',},
                         ]),
                         buildRow([
-                          {'label': 'CEP', 'controller': widget.cepStudentController},
-                          {'label': 'Endereço', 'controller': widget.enderecoStudentController, 'flex': 2},
-                          {'label': 'Bairro', 'controller': widget.bairroStudentController},
+                          {
+                            'label': 'CEP',
+                            'controller': widget.cepStudentController,
+                            'asterisco': '*',
+                            'validations': (value) => combine([
+                                  () => isNotEmpyt(value),
+                                  () => isNumber(value),
+                                ]),
+                          },
+                          {'label': 'Endereço', 'controller': widget.enderecoStudentController, 'flex': 2, 'validations': isNotEmpyt, 'asterisco': '*',},
+                          {'label': 'Bairro', 'controller': widget.bairroStudentController, 'validations': isNotEmpyt, 'asterisco': '*',},
                         ]),
                         buildRow([
                           {'label': 'Complemento', 'controller': widget.complementoStudentController},
-                          {'label': 'Número', 'controller': widget.numeroStudentController},
-                          {'label': 'Cidade', 'controller': widget.cidadeStudentController},
-                          {'label': 'Uf', 'controller': widget.ufStudentController},
+                          {
+                            'label': 'Número',
+                            'controller': widget.numeroStudentController,
+                            'asterisco': '*',
+                            'validations': (value) => combine([
+                                  () => isNotEmpyt(value),
+                                  () => isNumber(value),
+                                ]),
+                          },
+                          {'label': 'Cidade', 'controller': widget.cidadeStudentController, 'validations': isNotEmpyt, 'asterisco': '*',},
+                          {'label': 'UF', 'controller': widget.ufStudentController, 'validations': isNotEmpyt, 'asterisco': '*',},
                         ]),
                       ],
                     ),

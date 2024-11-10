@@ -5,18 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class OptionsStudent extends StatefulWidget {
+class OptionsStudent extends StatelessWidget {
   const OptionsStudent({super.key});
 
   @override
-  State<OptionsStudent> createState() => _OptionsStudentState();
-}
-
-class _OptionsStudentState extends State<OptionsStudent> {
-  final _future = Supabase.instance.client.from('aluno').select();
-  @override
   Widget build(BuildContext context) {
-    // final navigation = Navigator.of(context);
+    final _stream = Supabase.instance.client.from('aluno').stream(primaryKey: ['id_aluno']);
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
@@ -125,21 +120,29 @@ class _OptionsStudentState extends State<OptionsStudent> {
                   ],
                 ),
               ),
-              FutureBuilder(
-                future: _future,
+              StreamBuilder<List<dynamic>>(
+                stream: _stream,
                 builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
                   }
+
+                  if (snapshot.hasError) {
+                    return Center(child: Text('Erro ao carregar dados: ${snapshot.error}'));
+                  }
+
+                  if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(child: Text('Nenhum aluno encontrado.'));
+                  }
+
                   final students = snapshot.data!;
                   return ListView.builder(
                     shrinkWrap: true,
                     scrollDirection: Axis.vertical,
                     itemCount: students.length,
-                    itemBuilder: ((context, index) {
+                    itemBuilder: (context, index) {
                       final student = students[index];
                       return InkWell(
-                        // ignore: avoid_print
                         onTap: () => Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (_) => HomeStudent(
@@ -161,16 +164,17 @@ class _OptionsStudentState extends State<OptionsStudent> {
                                     radius: 20,
                                     backgroundImage: student['imageProfile'] != null ? NetworkImage(student['imageProfile']) : null,
                                     child: student['imageProfile'] == null
-                                        ? const Icon(Icons.person) // default icon if no image
+                                        ? const Icon(Icons.person) // Icone padrão se não houver imagem
                                         : null,
                                   ),
-                                  const SizedBox(
-                                    width: 6,
-                                  ),
+                                  const SizedBox(width: 6),
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [Text(student['nome']), Text(student['email'])],
+                                    children: [
+                                      Text(student['nome']),
+                                      Text(student['email']),
+                                    ],
                                   ),
                                 ],
                               ),
@@ -179,7 +183,7 @@ class _OptionsStudentState extends State<OptionsStudent> {
                           ),
                         ),
                       );
-                    }),
+                    },
                   );
                 },
               ),
