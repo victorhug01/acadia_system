@@ -2,7 +2,7 @@ import 'package:acadia/src/components/appbar/appbar_component.dart';
 import 'package:acadia/src/pages/student/components/anamnese/anamnese_componente.dart';
 import 'package:acadia/src/pages/student/components/contrato/contrato_component.dart';
 import 'package:acadia/src/pages/student/components/responsible/responsible_component.dart';
-import 'package:acadia/src/pages/student/components/student/student_component.dart';
+// import 'package:acadia/src/pages/student/components/student/student_component.dart';
 import 'package:acadia/src/theme/theme_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -49,7 +49,7 @@ class _HomeStudentState extends State<HomeStudent> with SingleTickerProviderStat
   final TextEditingController escolaAnteriorController = TextEditingController();
   final TextEditingController sexoStudentController = TextEditingController();
   final GlobalKey<FormState> _formKeyR = GlobalKey<FormState>();
-  final GlobalKey<FormState> _formKeyS = GlobalKey<FormState>();
+  // final GlobalKey<FormState> _formKeyS = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeyA = GlobalKey<FormState>();
   //anamnese
   final TextEditingController diseaseController = TextEditingController();
@@ -167,27 +167,27 @@ class _HomeStudentState extends State<HomeStudent> with SingleTickerProviderStat
                     ufController: ufController,
                     complementoController: complementoController,
                   ),
-                  StudentComponent(
-                    formKey: _formKeyS,
-                    nameStudentController: nameStudentController,
-                    emailStudentController: emailStudentController,
-                    cpfStudentController: cpfStudentController,
-                    rgStudentController: rgStudentController,
-                    celularStudentController: celularStudentController,
-                    enderecoStudentController: enderecoStudentController,
-                    numeroStudentController: numeroStudentController,
-                    cepStudentController: cepStudentController,
-                    bairroStudentController: bairroStudentController,
-                    cidadeStudentController: cidadeStudentController,
-                    ufStudentController: ufStudentController,
-                    complementoStudentController: complementoStudentController,
-                    dataNacimentoStudentController: dataNacimentoStudentController,
-                    escolaAnteriorController: escolaAnteriorController,
-                    raStudentController: raStudentController,
-                    sexoStudentController: sexoStudentController,
-                    cpfResponsavelController: cpfController,
-                    nomeResponsavelController: nameController,
-                  ),
+                  // StudentComponent(
+                  //   formKey: _formKeyS,
+                  //   nameStudentController: nameStudentController,
+                  //   emailStudentController: emailStudentController,
+                  //   cpfStudentController: cpfStudentController,
+                  //   rgStudentController: rgStudentController,
+                  //   celularStudentController: celularStudentController,
+                  //   enderecoStudentController: enderecoStudentController,
+                  //   numeroStudentController: numeroStudentController,
+                  //   cepStudentController: cepStudentController,
+                  //   bairroStudentController: bairroStudentController,
+                  //   cidadeStudentController: cidadeStudentController,
+                  //   ufStudentController: ufStudentController,
+                  //   complementoStudentController: complementoStudentController,
+                  //   dataNacimentoStudentController: dataNacimentoStudentController,
+                  //   escolaAnteriorController: escolaAnteriorController,
+                  //   raStudentController: raStudentController,
+                  //   sexoStudentController: sexoStudentController,
+                  //   cpfResponsavelController: cpfController,
+                  //   nomeResponsavelController: nameController,
+                  // ),
                   HealthFormComponent(
                     formKey: _formKeyA,
                     allergicReactionController: allergicReactionController,

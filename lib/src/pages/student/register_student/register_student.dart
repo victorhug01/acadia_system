@@ -6,6 +6,7 @@ import 'package:acadia/src/pages/student/components/responsible/responsible_comp
 import 'package:acadia/src/pages/student/components/student/student_component.dart';
 import 'package:acadia/src/theme/theme_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class RegisterStudentPage extends StatefulWidget {
@@ -16,6 +17,7 @@ class RegisterStudentPage extends StatefulWidget {
 }
 
 class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTickerProviderStateMixin {
+  final ValueNotifier<XFile?> imagemAlunoNotifier = ValueNotifier(null);
   late TabController _tabController;
   final GlobalKey<FormState> _formKeyR = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeyS = GlobalKey<FormState>();
@@ -176,6 +178,7 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
                     complementoController: complementoController,
                   ),
                   StudentComponent(
+                    imagemAlunoNotifier: imagemAlunoNotifier,
                     formKey: _formKeyS,
                     nameStudentController: nameStudentController,
                     emailStudentController: emailStudentController,
@@ -236,6 +239,7 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
                   ),
             ButtonComponent(
               onpress: () {
+                print(imagemAlunoNotifier.value);
                 if (_tabController.index == 0) {
                   if (_formKeyR.currentState!.validate()) {
                     _nextTab();
@@ -248,13 +252,11 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
                   if (_formKeyA.currentState!.validate()) {
                     _nextTab();
                   }
+                } else if (_tabController.index == 3) {
+                  _sendRegisterStudentSystem();
                 }
               },
               text: _tabController.index == 3 ? 'Gerar contrato e finalizar' : 'Avançar',
-            ),
-            ElevatedButton(
-              onPressed: _sendRegisterStudentSystem,
-              child: const Text('registrar'),
             ),
           ],
         ),
@@ -419,7 +421,36 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
     }
   }
 
+  Future<void> _uploadImage({required String cpfA}) async {
+    final client = Supabase.instance.client;
+    final sm = ScaffoldMessenger.of(context);
+
+    if (imagemAlunoNotifier.value == null) return;
+
+    try {
+      final imageExtension = imagemAlunoNotifier.value?.path.split('.').last.toLowerCase();
+      final imagesBytes = await imagemAlunoNotifier.value?.readAsBytes();
+      final imagePath = '/$cpfA/students-profile';
+
+      // Faz o upload da imagem
+      await client.storage.from('students-image').uploadBinary(
+            imagePath,
+            imagesBytes!,
+            fileOptions: FileOptions(upsert: true, contentType: 'image/$imageExtension'),
+          );
+      String imageUrl = client.storage.from('students-image').getPublicUrl(imagePath);
+      imageUrl = Uri.parse(imageUrl).replace(queryParameters: {'t': DateTime.now().millisecondsSinceEpoch.toString()}).toString();
+    } catch (e) {
+      sm.showSnackBar(SnackBar(
+        backgroundColor: ColorSchemeManagerClass.colorDanger,
+        content: Text(e.toString()),
+        duration: const Duration(seconds: 3),
+      ));
+    }
+  }
+
   void _sendRegisterStudentSystem() async {
+    final navigation = Navigator.of(context);
     final String doencaCronica = diseaseController.text == '' ? 'Não informado' : diseaseController.text;
     final String doencaGrave = seriousIllnessController.text == '' ? 'Não informado' : seriousIllnessController.text;
     final String cirurgia = surgeryController.text == '' ? 'Não informado' : surgeryController.text;
@@ -497,6 +528,8 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
       sexo: sexoA,
       cpfResponsavel: cpfResponsavelA,
     );
+    await _uploadImage(cpfA: cpfA);
+    // await _uploadImageForStudent(raAlunoA, imageUrl);
     await createAnaminese(
       raAluno: raAlunoA,
       acompanhamentoMedico: acompanhamentoMedico,
@@ -515,6 +548,7 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
       qualPlano: qualPlano,
       vacinas: vacinas,
     );
+     await navigation.pushNamed('/options_student');
   }
 }
 

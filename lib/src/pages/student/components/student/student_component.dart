@@ -8,6 +8,7 @@ import 'dart:io';
 class StudentComponent extends StatefulWidget {
   final GlobalKey<FormState> formKey;
   final dynamic imagemAluno;
+  final ValueNotifier<XFile?> imagemAlunoNotifier;
   final TextEditingController nameStudentController;
   final TextEditingController emailStudentController;
   final TextEditingController cpfStudentController;
@@ -48,6 +49,7 @@ class StudentComponent extends StatefulWidget {
     required this.sexoStudentController,
     required this.nomeResponsavelController,
     required this.cpfResponsavelController,
+    required this.imagemAlunoNotifier,
     this.imagemAluno,
   });
 
@@ -56,15 +58,14 @@ class StudentComponent extends StatefulWidget {
 }
 
 class _StudentComponentState extends State<StudentComponent> with ValidationMixinClass {
-  XFile? _image;
-
+  
   // Função para pegar a imagem
   Future<void> _pickImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       setState(() {
-        _image = image; // Atualiza a imagem escolhida
+        widget.imagemAlunoNotifier.value = image; // Atualiza a imagem escolhida
       });
     }
   }
@@ -137,20 +138,25 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
                           width: 180,
                           height: 220,
                           decoration: BoxDecoration(
-                            color: widget.imagemAluno != null ? Colors.transparent : ColorSchemeManagerClass.colorPrimary,
+                            color: widget.imagemAlunoNotifier.value != null ? Colors.transparent : ColorSchemeManagerClass.colorPrimary,
                             borderRadius: BorderRadius.circular(5.0),
                             border: Border.all(width: 2.0, color: ColorSchemeManagerClass.colorPrimary),
                           ),
                           child: Stack(
                             fit: StackFit.expand,
                             children: [
-                              widget.imagemAluno != null || _image != null
-                                  ? Image.file(
-                                      File(_image?.path ?? widget.imagemAluno.toString()),
-                                      fit: BoxFit.cover,
-                                    )
-                                  : const SizedBox.shrink(),
-                              if (widget.imagemAluno == null && _image == null)
+                              ValueListenableBuilder<XFile?>(
+                                valueListenable: widget.imagemAlunoNotifier,
+                                builder: (context, image, child) {
+                                  return image != null
+                                      ? Image.file(
+                                          File(image.path),
+                                          fit: BoxFit.cover,
+                                        )
+                                      : const SizedBox.shrink();
+                                },
+                              ),
+                              if (widget.imagemAlunoNotifier.value == null)
                                 Align(
                                   alignment: Alignment.center,
                                   child: Column(
