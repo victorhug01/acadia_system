@@ -440,7 +440,7 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
           );
       String imageUrl = client.storage.from('students-image').getPublicUrl(imagePath);
       imageUrl = Uri.parse(imageUrl).replace(queryParameters: {'t': DateTime.now().millisecondsSinceEpoch.toString()}).toString();
-      await client.from('aluno').update({'imageProfile': imageUrl}).eq('id_aluno', raAlunoImage).single();
+      await client.from('aluno').update({'imageProfile': imageUrl}).eq('id_aluno', raAlunoImage);
     } catch (e) {
       sm.showSnackBar(SnackBar(
         backgroundColor: ColorSchemeManagerClass.colorDanger,
@@ -496,59 +496,75 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
     final String uf = ufController.text;
     final String cep = cepController.text;
     final String complemento = complementoController.text;
-    await createResponsible(
-      cep: cep,
-      nome: nome,
-      email: email,
-      cpf: cpf,
-      rg: rg,
-      celular: celular,
-      endereco: endereco,
-      numero: numero,
-      bairro: bairro,
-      cidade: cidade,
-      uf: uf,
-      complemento: complemento,
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
     );
-    await createStudent(
-      raAluno: raAlunoA,
-      nome: nomeA,
-      email: emailA,
-      cpf: cpfA,
-      rg: rgA,
-      celular: celularA,
-      endereco: enderecoA,
-      numero: numeroA,
-      cep: cepA,
-      bairro: bairroA,
-      cidade: cidadeA,
-      uf: ufA,
-      complemento: complementoA,
-      dataNascimento: dataNascimentoA,
-      escolaAnterior: escolaAnteriorA,
-      sexo: sexoA,
-      cpfResponsavel: cpfResponsavelA,
-    );
-    await _uploadImage(cpfA: cpfA, raAlunoImage: raAlunoA);
-    await createAnaminese(
-      raAluno: raAlunoA,
-      acompanhamentoMedico: acompanhamentoMedico,
-      alergia: alergia,
-      cirurgia: cirurgia,
-      doencaCronica: doencaCronica,
-      doencaGrave: doencaGrave,
-      medicamentoPeriodico: medicamentoPeriodico,
-      medicamentosEmergenciais: medicamentosEmergenciais,
-      nomeParentesco: nomeParentesco,
-      parentesco: parentesco,
-      problemasRespiratorios: problemasRespiratorios,
-      reacaoAlergicaSevera: reacaoAlergicaSevera,
-      restricaoAlimentar: restricaoAlimentar,
-      telefone: telefone,
-      qualPlano: qualPlano,
-      vacinas: vacinas,
-    );
-     await navigation.pushNamed('/options_student');
+    try {
+      await createResponsible(
+        cep: cep,
+        nome: nome,
+        email: email,
+        cpf: cpf,
+        rg: rg,
+        celular: celular,
+        endereco: endereco,
+        numero: numero,
+        bairro: bairro,
+        cidade: cidade,
+        uf: uf,
+        complemento: complemento,
+      );
+      await createStudent(
+        raAluno: raAlunoA,
+        nome: nomeA,
+        email: emailA,
+        cpf: cpfA,
+        rg: rgA,
+        celular: celularA,
+        endereco: enderecoA,
+        numero: numeroA,
+        cep: cepA,
+        bairro: bairroA,
+        cidade: cidadeA,
+        uf: ufA,
+        complemento: complementoA,
+        dataNascimento: dataNascimentoA,
+        escolaAnterior: escolaAnteriorA,
+        sexo: sexoA,
+        cpfResponsavel: cpfResponsavelA,
+      );
+      await _uploadImage(cpfA: cpfA, raAlunoImage: raAlunoA);
+      await createAnaminese(
+        raAluno: raAlunoA,
+        acompanhamentoMedico: acompanhamentoMedico,
+        alergia: alergia,
+        cirurgia: cirurgia,
+        doencaCronica: doencaCronica,
+        doencaGrave: doencaGrave,
+        medicamentoPeriodico: medicamentoPeriodico,
+        medicamentosEmergenciais: medicamentosEmergenciais,
+        nomeParentesco: nomeParentesco,
+        parentesco: parentesco,
+        problemasRespiratorios: problemasRespiratorios,
+        reacaoAlergicaSevera: reacaoAlergicaSevera,
+        restricaoAlimentar: restricaoAlimentar,
+        telefone: telefone,
+        qualPlano: qualPlano,
+        vacinas: vacinas,
+      );
+    } catch (e) {
+      // ignore: avoid_print
+      print(e);
+    } finally {
+      navigation.pop();
+      navigation.pop();
+    }
   }
 }
 
