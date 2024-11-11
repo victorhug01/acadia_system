@@ -60,28 +60,25 @@ class StudentComponent extends StatefulWidget {
 
 class _StudentComponentState extends State<StudentComponent> with ValidationMixinClass {
   String? selectedSchool;
-  List<Map<String, dynamic>> schools = []; // Alterado para armazenar um mapa com nome e id_escola
-  String? selectedTypeSerie;
-  List<String> typeSeries = [];
+  List<Map<String, dynamic>> schools = [];
+  String? selectedTypeEnsino;
+  List<String> typeEnsino = [];
   String? selectedTurma;
   List<String> turmas = [];
-  int? selectedSchoolId; // Armazena o ID da escola selecionada
+  int? selectedSchoolId;
 
   @override
   void initState() {
     super.initState();
-    _loadSchoolNames(); // Carrega os nomes das escolas no início
+    _loadSchoolNames();
   }
 
   Future<void> _loadSchoolNames() async {
     try {
-      // Carrega as escolas com seus respectivos ids
       final List<dynamic> response = await Supabase.instance.client.from('escola').select('id_escola, nome');
 
-      // Verifica a resposta
       print('Escolas carregadas: $response');
 
-      // Atualiza a lista de escolas com os nomes e ids
       setState(() {
         schools = List<Map<String, dynamic>>.from(response.map((escola) => {
               'id_escola': escola['id_escola'],
@@ -93,25 +90,19 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
     }
   }
 
-  Future<void> _loadAnosSeries(int schoolId) async {
+  Future<void> _loadAnosEnsino(int schoolId) async {
     try {
-      // Verificar o ID da escola antes da consulta
       print('Carregando turmas para a escola com ID: $schoolId');
 
-      // Carregar as turmas filtradas pelo id da escola
-      final List<dynamic> response = await Supabase.instance.client.from('tipo_serie').select('id_tipo_serie, nome, fk_id_escola').eq('fk_id_escola', schoolId); // Filtra as turmas pela escola selecionada
+      final List<dynamic> response = await Supabase.instance.client.from('tipo_ensino').select('id_tipo_ensino, nome, fk_id_escola').eq('fk_id_escola', schoolId);
 
-      // Verifica a resposta
       print('Resposta da consulta para turmas: $response');
 
-      // Atualiza a lista de turmas
       setState(() {
         if (response.isEmpty) {
-          // Se a resposta estiver vazia, exibe uma mensagem no console
           print('Nenhuma turma encontrada para a escola com ID: $schoolId');
         } else {
-          // Caso contrário, preenche a lista de turmas com os resultados
-          typeSeries = List<String>.from(response.map((serie) => serie['nome']));
+          typeEnsino = List<String>.from(response.map((serie) => serie['nome']));
         }
       });
     } catch (e) {
@@ -121,12 +112,11 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
 
   Future<void> _loadTurmas(int schoolId) async {
     try {
-      final List<dynamic> response = await Supabase.instance.client.from('turma').select('grupo, qtdeAlunos').eq('fk_id_escola', schoolId); // Filtra pela escola selecionada
+      final List<dynamic> response = await Supabase.instance.client.from('turma').select('grupo, qtdeAlunos').eq('fk_id_escola', schoolId);
 
       List<String> availableTurmas = [];
       bool isFull = false;
 
-      // Verifica se há turmas disponíveis com menos de 40 alunos
       for (var turma in response) {
         if (turma['qtdeAlunos'] < 40) {
           availableTurmas.add(turma['grupo']);
@@ -140,19 +130,18 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
       });
 
       if (isFull && availableTurmas.isEmpty) {
-        // Se todas as turmas estão cheias, exibe uma mensagem
         showDialog(
           context: context,
           builder: (context) {
             return AlertDialog(
-              title: Text("Turmas Cheias"),
-              content: Text("Todas as turmas estão cheias. Por favor, crie uma nova turma."),
+              title: const Text("Turmas Cheias"),
+              content: const Text("Todas as turmas estão cheias. Por favor, crie uma nova turma."),
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text("OK"),
+                  child: const Text("OK"),
                 ),
               ],
             );
@@ -160,6 +149,7 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
         );
       }
     } catch (e) {
+      // ignore: avoid_print
       print('Erro ao tentar buscar turmas: $e');
     }
   }
@@ -307,15 +297,15 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
                             setState(() {
                               selectedSchool = newValue;
                               selectedSchoolId = schools.firstWhere((escola) => escola['nome'] == newValue)['id_escola'];
-                              selectedTypeSerie = null; // Limpa a seleção do tipo de série
-                              selectedTurma = null; // Limpa a seleção da turma
-                              typeSeries = [];
-                              turmas = []; // Limpa as turmas
+                              selectedTypeEnsino = null;
+                              selectedTurma = null;
+                              typeEnsino = [];
+                              turmas = [];
                             });
 
                             if (selectedSchoolId != null) {
-                              _loadAnosSeries(selectedSchoolId!); // Carrega turmas com base na escola
-                              _loadTurmas(selectedSchoolId!); // Carrega turmas da escola
+                              _loadAnosEnsino(selectedSchoolId!);
+                              _loadTurmas(selectedSchoolId!);
                             }
                           },
                           items: schools.map<DropdownMenuItem<String>>((Map<String, dynamic> escola) {
@@ -326,10 +316,7 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
                           }).toList(),
                         ),
                       ),
-
                       const SizedBox(height: 15),
-
-// Só mostra o dropdown de tipo de série se uma escola foi selecionada
                       selectedSchoolId == null
                           ? Container()
                           : Container(
@@ -340,11 +327,11 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
                               ),
                               child: DropdownButtonFormField<String>(
                                 validator: isNotEmpyt,
-                                value: selectedTypeSerie,
+                                value: selectedTypeEnsino,
                                 dropdownColor: ColorSchemeManagerClass.colorPrimary,
                                 borderRadius: BorderRadius.circular(5.0),
                                 hint: Text(
-                                  'Selecionar turma',
+                                  'Selecionar ensino',
                                   style: TextStyle(
                                     color: ColorSchemeManagerClass.colorWhite,
                                   ),
@@ -358,11 +345,11 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
                                 style: TextStyle(color: ColorSchemeManagerClass.colorWhite),
                                 onChanged: (String? newValue) {
                                   setState(() {
-                                    selectedTypeSerie = newValue; // Atualiza a turma selecionada
+                                    selectedTypeEnsino = newValue;
                                   });
                                 },
-                                items: typeSeries.isNotEmpty
-                                    ? typeSeries.map<DropdownMenuItem<String>>((String value) {
+                                items: typeEnsino.isNotEmpty
+                                    ? typeEnsino.map<DropdownMenuItem<String>>((String value) {
                                         return DropdownMenuItem<String>(
                                           value: value,
                                           child: Text(value, style: TextStyle(color: ColorSchemeManagerClass.colorWhite)),
@@ -379,13 +366,7 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
                                       ],
                               ),
                             ),
-
-                      const SizedBox(height: 15),
-
-// Só mostra o dropdown de turma se uma escola foi selecionada e um tipo de série
-                      selectedSchoolId == null || selectedTypeSerie == null
-                          ? Container()
-                          : Container(
+                      const SizedBox(height: 15),Container(
                               width: 180,
                               decoration: BoxDecoration(
                                 color: ColorSchemeManagerClass.colorPrimary,
@@ -393,11 +374,11 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
                               ),
                               child: DropdownButtonFormField<String>(
                                 validator: isNotEmpyt,
-                                value: selectedTurma,
+                                value: selectedTypeEnsino,
                                 dropdownColor: ColorSchemeManagerClass.colorPrimary,
                                 borderRadius: BorderRadius.circular(5.0),
                                 hint: Text(
-                                  'Selecionar turma',
+                                  'Selecionar ensino',
                                   style: TextStyle(
                                     color: ColorSchemeManagerClass.colorWhite,
                                   ),
@@ -411,7 +392,57 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
                                 style: TextStyle(color: ColorSchemeManagerClass.colorWhite),
                                 onChanged: (String? newValue) {
                                   setState(() {
-                                    selectedTurma = newValue; // Atualiza a turma selecionada
+                                    selectedTypeEnsino = newValue;
+                                  });
+                                },
+                                items: typeEnsino.isNotEmpty
+                                    ? typeEnsino.map<DropdownMenuItem<String>>((String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value, style: TextStyle(color: ColorSchemeManagerClass.colorWhite)),
+                                        );
+                                      }).toList()
+                                    : [
+                                        DropdownMenuItem<String>(
+                                          value: null,
+                                          child: Text(
+                                            'Nenhuma turma disponível',
+                                            style: TextStyle(color: ColorSchemeManagerClass.colorWhite),
+                                          ),
+                                        ),
+                                      ],
+                              ),
+                            ),
+                      const SizedBox(height: 15),
+                      selectedSchoolId == null || selectedTypeEnsino == null
+                          ? Container()
+                          : Container(
+                              width: 180,
+                              decoration: BoxDecoration(
+                                color: ColorSchemeManagerClass.colorPrimary,
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                              child: DropdownButtonFormField<String>(
+                                validator: isNotEmpyt,
+                                value: selectedTurma,
+                                dropdownColor: ColorSchemeManagerClass.colorPrimary,
+                                borderRadius: BorderRadius.circular(5.0),
+                                hint: Text(
+                                  'Selecionar ensino',
+                                  style: TextStyle(
+                                    color: ColorSchemeManagerClass.colorWhite,
+                                  ),
+                                ),
+                                decoration: const InputDecoration(
+                                  contentPadding: EdgeInsets.only(left: 8.0),
+                                  border: InputBorder.none,
+                                ),
+                                icon: const Icon(Icons.arrow_drop_down),
+                                iconSize: 24,
+                                style: TextStyle(color: ColorSchemeManagerClass.colorWhite),
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    selectedTurma = newValue;
                                   });
                                 },
                                 items: turmas.isNotEmpty
@@ -432,7 +463,6 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
                                       ],
                               ),
                             ),
-
                       const SizedBox(height: 5.0),
                     ],
                   ),
