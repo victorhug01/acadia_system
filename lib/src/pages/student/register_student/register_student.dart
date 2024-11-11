@@ -239,6 +239,7 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
                   ),
             ButtonComponent(
               onpress: () {
+                // ignore: avoid_print
                 print(imagemAlunoNotifier.value);
                 if (_tabController.index == 0) {
                   if (_formKeyR.currentState!.validate()) {
@@ -565,7 +566,7 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
       navigation.pop();
       navigation.pop();
       navigation.pop();
-      navigation.pushNamed('/options_student');
+      navigation.pushReplacementNamed('/confetti');
     }
   }
 }

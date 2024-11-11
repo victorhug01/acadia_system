@@ -10,7 +10,7 @@ class OptionsStudent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _stream = Supabase.instance.client.from('aluno').stream(primaryKey: ['id_aluno']);
+    final stream = Supabase.instance.client.from('aluno').stream(primaryKey: ['id_aluno']);
 
     return Scaffold(
       appBar: PreferredSize(
@@ -18,7 +18,7 @@ class OptionsStudent extends StatelessWidget {
         child: AppBarComponent(
           leading: IconButton(
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.of(context).pushReplacementNamed('/home');
             },
             icon: Icon(Icons.adaptive.arrow_back),
           ),
@@ -121,7 +121,7 @@ class OptionsStudent extends StatelessWidget {
                 ),
               ),
               StreamBuilder<List<dynamic>>(
-                stream: _stream,
+                stream: stream,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
@@ -136,54 +136,62 @@ class OptionsStudent extends StatelessWidget {
                   }
 
                   final students = snapshot.data!;
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
-                    itemCount: students.length,
-                    itemBuilder: (context, index) {
-                      final student = students[index];
-                      return InkWell(
-                        onTap: () => Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) => HomeStudent(
-                              idStudent: student['id_aluno'].toString(),
+                  return Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: ColorSchemeManagerClass.colorPrimary,
+                        width: 2.0,
+                      ),
+                    ),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.vertical,
+                      itemCount: students.length,
+                      itemBuilder: (context, index) {
+                        final student = students[index];
+                        return InkWell(
+                          onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => HomeStudent(
+                                idStudent: student['id_aluno'].toString(),
+                              ),
                             ),
                           ),
-                        ),
-                        child: Container(
-                          height: 70,
-                          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
-                          width: double.maxFinite,
-                          color: (index % 2) == 1 ? ColorSchemeManagerClass.colorSecondary : Colors.transparent,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 20,
-                                    backgroundImage: student['imageProfile'] != null ? NetworkImage(student['imageProfile']) : null,
-                                    child: student['imageProfile'] == null
-                                        ? const Icon(Icons.person) // Icone padrão se não houver imagem
-                                        : null,
-                                  ),
-                                  const SizedBox(width: 6),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(student['nome']),
-                                      Text(student['email']),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              Text(student['id_aluno'].toString())
-                            ],
+                          child: Container(
+                            height: 70,
+                            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+                            width: double.maxFinite,
+                            color: (index % 2) == 1 ? ColorSchemeManagerClass.colorSecondary : Colors.transparent,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 20,
+                                      backgroundImage: student['imageProfile'] != null ? NetworkImage(student['imageProfile']) : null,
+                                      child: student['imageProfile'] == null
+                                          ? const Icon(Icons.person) // Icone padrão se não houver imagem
+                                          : null,
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(student['nome']),
+                                        Text(student['email']),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                Text(student['id_aluno'].toString())
+                              ],
+                            ),
                           ),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   );
                 },
               ),

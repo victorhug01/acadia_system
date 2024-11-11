@@ -55,7 +55,6 @@ class _DrawerComponentState extends State<DrawerComponent> {
 
       String imageUrl = client.storage.from('profiles').getPublicUrl(imagePath);
       imageUrl = Uri.parse(imageUrl).replace(queryParameters: {'t': DateTime.now().millisecondsSinceEpoch.toString()}).toString();
-
     } catch (e) {
       sm.showSnackBar(SnackBar(
         backgroundColor: ColorSchemeManagerClass.colorDanger,
@@ -177,7 +176,9 @@ class _DrawerComponentState extends State<DrawerComponent> {
               userClient!.id == 'cb7fd182-9255-402c-a601-c41f824c9df1'
                   ? ListTileComponent(
                       title: 'Secratário(a)',
-                      onTap: () {},
+                      onTap: () {
+                        navigation.pushNamed('/confetti');
+                      },
                     )
                   : const SizedBox.shrink()
             ],
@@ -188,8 +189,25 @@ class _DrawerComponentState extends State<DrawerComponent> {
             child: InkWell(
               onTap: () async {
                 final navigation = Navigator.of(context);
-                await client.auth.signOut();
-                await navigation.pushNamedAndRemoveUntil('/', (router) => false);
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
+                );
+                try {
+                  await client.auth.signOut();
+                  
+                } catch (e) {
+                  // ignore: avoid_print
+                  print(e);
+                }finally{
+                  await navigation.pushNamedAndRemoveUntil('/', (router) => false);
+                  navigation.pop();
+                }
               },
               child: Row(
                 mainAxisSize: MainAxisSize.min,
