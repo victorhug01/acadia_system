@@ -1,4 +1,5 @@
 import 'package:acadia/src/components/appbar/appbar_component.dart';
+import 'package:acadia/src/components/textformfields/field_component.dart';
 import 'package:acadia/src/pages/student/home_student/home_student.dart';
 import 'package:acadia/src/theme/theme_colors.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ class OptionsStudent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final stream = Supabase.instance.client.from('aluno').stream(primaryKey: ['id_aluno']);
+    final TextEditingController searchStudentController = TextEditingController(); 
 
     return Scaffold(
       appBar: PreferredSize(
@@ -89,6 +91,23 @@ class OptionsStudent extends StatelessWidget {
                       ),
                     ),
                   ],
+                ),
+              ),
+              const SizedBox(height: 40,),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: SizedBox(
+                  height: 55,
+                  width: 300,
+                  child: TextFormFieldComponent(
+                    iconPrefix: Icon(Icons.search, color: ColorSchemeManagerClass.colorPrimary,),
+                    autofocus: false,
+                    controller: searchStudentController,
+                    inputBorderType: const OutlineInputBorder(),
+                    inputType: TextInputType.text,
+                    obscure: false,
+                    sizeInputBorder: 2,
+                  ),
                 ),
               ),
               Container(
@@ -193,7 +212,7 @@ class OptionsStudent extends StatelessWidget {
                                   child: Row(
                                     children: [
                                       CircleAvatar(
-                                        radius: 20,
+                                        radius: 30,
                                         backgroundImage: student['imageProfile'] != null ? NetworkImage(student['imageProfile']) : null,
                                         child: student['imageProfile'] == null
                                             ? const Icon(Icons.person) // Icone padrão se não houver imagem
