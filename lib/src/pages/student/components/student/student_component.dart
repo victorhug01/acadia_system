@@ -364,7 +364,7 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
                                 dropdownColor: ColorSchemeManagerClass.colorPrimary,
                                 borderRadius: BorderRadius.circular(5.0),
                                 hint: Text(
-                                  'Selecionar tipo de ensino',
+                                  'Selecionar ensino',
                                   style: TextStyle(
                                     color: ColorSchemeManagerClass.colorWhite,
                                   ),
@@ -423,7 +423,6 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
                                 onChanged: (String? newValue) {
                                   setState(() {
                                     selectedSerie = newValue; // A série selecionada
-
                                     // Encontre o 'id_serie' da série selecionada
                                     // Se não encontrar, retornará um mapa vazio, mas nunca null
                                     final selectedSerieMap = seriesResponse.firstWhere((serie) => serie['ano'] == newValue, orElse: () => {} // Retorna um mapa vazio como padrão
