@@ -202,6 +202,7 @@ class _UpdateStudentPageState extends State<UpdateStudentPage> with SingleTicker
                 controller: _tabController,
                 children: [
                   ResponsibleComponent(
+                    enablecpfResponsible: false,
                     formKey: _formKeyR,
                     nameController: nameController,
                     emailController: emailController,
@@ -322,12 +323,10 @@ class _UpdateStudentPageState extends State<UpdateStudentPage> with SingleTicker
     required String complemento,
   }) async {
     try {
-      final cpfResponsibleBd =  Supabase.instance.client.from('aluno').select('fk_cpf_responsavel').eq('id_aluno', widget.idAlunoUpdate);
       final sm = ScaffoldMessenger.of(context);
       final newUser = await Supabase.instance.client.from('responsavel').update({
         'nome': nome,
         'email': email,
-        'cpf_responsavel': cpf,
         'rg': rg,
         'cep': cep,
         'celular': celular,
@@ -337,7 +336,7 @@ class _UpdateStudentPageState extends State<UpdateStudentPage> with SingleTicker
         'cidade': cidade,
         'uf_estado': uf,
         'complemento': complemento,
-      }).eq('cpf_responsavel', int.parse(cpfResponsibleBd.toString()));
+      }).eq('cpf_responsavel', cpfController);
       if (newUser.error == null) {
         sm.showSnackBar(
           const SnackBar(content: Text('Postagem criada com sucesso!')),

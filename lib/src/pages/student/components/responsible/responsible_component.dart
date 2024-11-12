@@ -5,6 +5,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
 class ResponsibleComponent extends StatelessWidget with ValidationMixinClass {
+  final bool? enablecpfResponsible;
   final GlobalKey<FormState> formKey;
   final TextEditingController nameController;
   final TextEditingController emailController;
@@ -33,11 +34,11 @@ class ResponsibleComponent extends StatelessWidget with ValidationMixinClass {
     required this.cidadeController,
     required this.ufController,
     required this.complementoController,
-    required this.formKey,
+    required this.formKey, this.enablecpfResponsible,
   });
 
 
-  Widget buildField(String label, TextEditingController controller, dynamic validator, String asterisco, {int flex = 1}) {
+  Widget buildField(String label, TextEditingController controller, dynamic validator, String asterisco, bool enable, {int flex = 1}) {
     return Expanded(
       flex: flex,
       child: Column(
@@ -54,6 +55,7 @@ class ResponsibleComponent extends StatelessWidget with ValidationMixinClass {
             height: 45,
             constraints: const BoxConstraints(minHeight: 55, maxHeight: 56),
             child: TextFormFieldComponent(
+              enable: enable,
               paddingLeftInput: 8.0,
               colorBorderInput: ColorSchemeManagerClass.colorPrimary,
               inputBorderType: const OutlineInputBorder(),
@@ -75,7 +77,7 @@ class ResponsibleComponent extends StatelessWidget with ValidationMixinClass {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         for (var field in fields) ...[
-          buildField(field['label'], field['controller'], field['validations'], field['asterisco'] ?? '', flex: field['flex'] ?? 1),
+          buildField(field['label'], field['controller'], field['validations'], field['asterisco'] ?? '',field['enable'] ?? true, flex: field['flex'] ?? 1),
           const SizedBox(width: 7),
         ],
       ],
@@ -110,6 +112,7 @@ class ResponsibleComponent extends StatelessWidget with ValidationMixinClass {
                       'label': 'CPF',
                       'controller': cpfController,
                       'asterisco': '*',
+                      'enable': enablecpfResponsible,
                       'validations': (value) => combine([
                             () => isNotEmpyt(value),
                             () => isNumber(value),
