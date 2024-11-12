@@ -6,13 +6,35 @@ import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class OptionsStudent extends StatelessWidget {
+class OptionsStudent extends StatefulWidget {
   const OptionsStudent({super.key});
+
+  @override
+  _OptionsStudentState createState() => _OptionsStudentState();
+}
+
+class _OptionsStudentState extends State<OptionsStudent> {
+  final TextEditingController searchStudentController = TextEditingController();
+  List<dynamic> students = [];
+
+  // Função de filtro
+  List<dynamic> filterStudents(String query) {
+    if (query.isEmpty) {
+      return students;
+    }
+    return students.where((student) {
+      return student['nome'].toLowerCase().contains(query.toLowerCase()) ||
+          student['email'].toLowerCase().contains(query.toLowerCase()) ||
+          student['id_aluno'].toString().contains(query) ||
+          student['ensino'].toLowerCase().contains(query.toLowerCase()) ||
+          student['turma'].toLowerCase().contains(query.toLowerCase()) ||
+          student['escola'].toLowerCase().contains(query.toLowerCase());
+    }).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
     final stream = Supabase.instance.client.from('aluno').stream(primaryKey: ['id_aluno']);
-    final TextEditingController searchStudentController = TextEditingController(); 
 
     return Scaffold(
       appBar: PreferredSize(
@@ -93,14 +115,22 @@ class OptionsStudent extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: 40,),
+              const SizedBox(
+                height: 40,
+              ),
               Align(
                 alignment: Alignment.centerLeft,
                 child: SizedBox(
                   height: 55,
                   width: 300,
                   child: TextFormFieldComponent(
-                    iconPrefix: Icon(Icons.search, color: ColorSchemeManagerClass.colorPrimary,),
+                    onChanged: (String? value) {
+                      setState(() {});
+                    },
+                    iconPrefix: Icon(
+                      Icons.search,
+                      color: ColorSchemeManagerClass.colorPrimary,
+                    ),
                     autofocus: false,
                     controller: searchStudentController,
                     inputBorderType: const OutlineInputBorder(),
@@ -145,7 +175,6 @@ class OptionsStudent extends StatelessWidget {
                           Expanded(
                             child: Container(
                               alignment: Alignment.center,
-                              // padding: EdgeInsets.only(right: 20),
                               color: Colors.green,
                               child: const TextComponente(title: 'Turma'),
                             ),
@@ -178,7 +207,15 @@ class OptionsStudent extends StatelessWidget {
                     return const Center(child: Text('Nenhum aluno encontrado.'));
                   }
 
-                  final students = snapshot.data!;
+                  students = snapshot.data!;
+
+                  final filteredStudents = filterStudents(searchStudentController.text);
+
+                  // Exibir mensagem caso não haja alunos filtrados
+                  if (filteredStudents.isEmpty) {
+                    return const Center(child: Text('Nenhum aluno encontrado para a pesquisa.'));
+                  }
+
                   return Container(
                     decoration: BoxDecoration(
                       border: Border.all(
@@ -189,9 +226,9 @@ class OptionsStudent extends StatelessWidget {
                     child: ListView.builder(
                       shrinkWrap: true,
                       scrollDirection: Axis.vertical,
-                      itemCount: students.length,
+                      itemCount: filteredStudents.length,
                       itemBuilder: (context, index) {
-                        final student = students[index];
+                        final student = filteredStudents[index];
                         return InkWell(
                           onTap: () => Navigator.of(context).push(
                             MaterialPageRoute(
@@ -276,7 +313,7 @@ class OptionsStudent extends StatelessWidget {
                     ),
                   );
                 },
-              ),
+              )
             ],
           ),
         ),
@@ -293,11 +330,8 @@ class TextComponente extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       title,
-      style: TextStyle(
-        color: ColorSchemeManagerClass.colorWhite,
-        fontWeight: FontWeight.w600,
-        fontSize: 13,
-      ),
+      style: TextStyle(color: ColorSchemeManagerClass.colorWhite),
+      textAlign: TextAlign.center,
     );
   }
 }
