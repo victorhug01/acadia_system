@@ -61,11 +61,14 @@ class StudentComponent extends StatefulWidget {
 class _StudentComponentState extends State<StudentComponent> with ValidationMixinClass {
   String? selectedSchool;
   List<Map<String, dynamic>> schools = [];
-  String? selectedTypeEnsino;
+  int? selectedTypeSerie;
   List<String> typeEnsino = [];
   String? selectedTurma;
   List<String> turmas = [];
+  String? selectedSerie;
+  List<String> series = [];
   int? selectedSchoolId;
+  List<Map<String, dynamic>> tipoEnsino = [];
 
   @override
   void initState() {
@@ -91,24 +94,56 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
   }
 
   Future<void> _loadAnosEnsino(int schoolId) async {
-    try {
-      print('Carregando turmas para a escola com ID: $schoolId');
+  try {
+    print('Carregando tipos de ensino para a escola com ID: $schoolId');
 
-      final List<dynamic> response = await Supabase.instance.client.from('tipo_ensino').select('id_tipo_ensino, nome, fk_id_escola').eq('fk_id_escola', schoolId);
+    final List<dynamic> response = await Supabase.instance.client
+        .from('tipo_ensino')
+        .select('id_tipo_ensino, nome, fk_id_escola')
+        .eq('fk_id_escola', schoolId);
 
-      print('Resposta da consulta para turmas: $response');
+    print('Resposta da consulta para tipos de ensino: $response');
 
-      setState(() {
-        if (response.isEmpty) {
-          print('Nenhuma turma encontrada para a escola com ID: $schoolId');
-        } else {
-          typeEnsino = List<String>.from(response.map((serie) => serie['nome']));
-        }
-      });
-    } catch (e) {
-      print('Erro ao tentar buscar turmas: $e');
-    }
+    setState(() {
+      if (response.isEmpty) {
+        print('Nenhum tipo de ensino encontrado para a escola com ID: $schoolId');
+      } else {
+        tipoEnsino = List<Map<String, dynamic>>.from(response);
+      }
+    });
+  } catch (e) {
+    print('Erro ao tentar buscar tipos de ensino: $e');
   }
+}
+
+Future<void> _loadSeries(int idTipoEnsino) async {
+  try {
+    print('Buscando séries para o tipo de ensino com ID: $idTipoEnsino');
+
+    final List<dynamic> seriesResponse = await Supabase.instance.client
+        .from('serie')
+        .select('id_serie, ano')  // Certifique-se de selecionar o campo correto
+        .eq('fk_id_tipo_ensino', idTipoEnsino);
+
+    if (seriesResponse.isEmpty) {
+      print('Nenhuma série encontrada para o tipo de ensino com ID: $idTipoEnsino');
+    } else {
+      // Verificar o conteúdo de 'seriesResponse' novamente
+      print('Séries encontradas: $seriesResponse');
+      setState(() {
+        // Usando 'ano' em vez de 'nome' porque a resposta contém 'ano'
+        series = List<String>.from(seriesResponse.map((serie) => serie['ano'] ?? 'Valor não encontrado'));
+      });
+    }
+  } catch (e) {
+    print('Erro ao tentar buscar séries: $e');
+    setState(() {
+      series = []; // Limpa a lista de séries em caso de erro
+    });
+  }
+}
+
+
 
   Future<void> _loadTurmas(int schoolId) async {
     try {
@@ -149,7 +184,6 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
         );
       }
     } catch (e) {
-      // ignore: avoid_print
       print('Erro ao tentar buscar turmas: $e');
     }
   }
@@ -270,199 +304,197 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
                       ),
                       const SizedBox(height: 10),
                       Container(
-                        width: 180,
-                        decoration: BoxDecoration(
-                          color: ColorSchemeManagerClass.colorPrimary,
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                        child: DropdownButtonFormField<String>(
-                          validator: isNotEmpyt,
-                          value: selectedSchool,
-                          dropdownColor: ColorSchemeManagerClass.colorPrimary,
-                          borderRadius: BorderRadius.circular(5.0),
-                          hint: Text(
-                            'Selecionar escola',
-                            style: TextStyle(
-                              color: ColorSchemeManagerClass.colorWhite,
-                            ),
-                          ),
-                          decoration: const InputDecoration(
-                            contentPadding: EdgeInsets.only(left: 8.0),
-                            border: InputBorder.none,
-                          ),
-                          icon: const Icon(Icons.arrow_drop_down),
-                          iconSize: 24,
-                          style: TextStyle(color: ColorSchemeManagerClass.colorWhite),
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              selectedSchool = newValue;
-                              selectedSchoolId = schools.firstWhere((escola) => escola['nome'] == newValue)['id_escola'];
-                              selectedTypeEnsino = null;
-                              selectedTurma = null;
-                              typeEnsino = [];
-                              turmas = [];
-                            });
+  width: 180,
+  decoration: BoxDecoration(
+    color: ColorSchemeManagerClass.colorPrimary,
+    borderRadius: BorderRadius.circular(5.0),
+  ),
+  child: DropdownButtonFormField<String>(
+    validator: isNotEmpyt,
+    value: selectedSchool,
+    dropdownColor: ColorSchemeManagerClass.colorPrimary,
+    borderRadius: BorderRadius.circular(5.0),
+    hint: Text(
+      'Selecionar escola',
+      style: TextStyle(
+        color: ColorSchemeManagerClass.colorWhite,
+      ),
+    ),
+    decoration: const InputDecoration(
+      contentPadding: EdgeInsets.only(left: 8.0),
+      border: InputBorder.none,
+    ),
+    icon: const Icon(Icons.arrow_drop_down),
+    iconSize: 24,
+    style: TextStyle(color: ColorSchemeManagerClass.colorWhite),
+    onChanged: (String? newValue) {
+      setState(() {
+        selectedSchool = newValue;
+        selectedSchoolId = schools.firstWhere((escola) => escola['nome'] == newValue)['id_escola'];
+        selectedTypeSerie = null;
+        selectedTurma = null;
+        selectedSerie = null;  // Limpar série ao mudar a escola
+        typeEnsino = [];
+        turmas = [];
+        series = [];  // Limpar séries
+      });
 
-                            if (selectedSchoolId != null) {
-                              _loadAnosEnsino(selectedSchoolId!);
-                              _loadTurmas(selectedSchoolId!);
-                            }
-                          },
-                          items: schools.map<DropdownMenuItem<String>>((Map<String, dynamic> escola) {
-                            return DropdownMenuItem<String>(
-                              value: escola['nome'],
-                              child: Text(escola['nome'], style: TextStyle(color: ColorSchemeManagerClass.colorWhite)),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                      const SizedBox(height: 15),
-                      selectedSchoolId == null
-                          ? Container()
-                          : Container(
-                              width: 180,
-                              decoration: BoxDecoration(
-                                color: ColorSchemeManagerClass.colorPrimary,
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
-                              child: DropdownButtonFormField<String>(
-                                validator: isNotEmpyt,
-                                value: selectedTypeEnsino,
-                                dropdownColor: ColorSchemeManagerClass.colorPrimary,
-                                borderRadius: BorderRadius.circular(5.0),
-                                hint: Text(
-                                  'Selecionar ensino',
-                                  style: TextStyle(
-                                    color: ColorSchemeManagerClass.colorWhite,
-                                  ),
-                                ),
-                                decoration: const InputDecoration(
-                                  contentPadding: EdgeInsets.only(left: 8.0),
-                                  border: InputBorder.none,
-                                ),
-                                icon: const Icon(Icons.arrow_drop_down),
-                                iconSize: 24,
-                                style: TextStyle(color: ColorSchemeManagerClass.colorWhite),
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    selectedTypeEnsino = newValue;
-                                  });
-                                },
-                                items: typeEnsino.isNotEmpty
-                                    ? typeEnsino.map<DropdownMenuItem<String>>((String value) {
-                                        return DropdownMenuItem<String>(
-                                          value: value,
-                                          child: Text(value, style: TextStyle(color: ColorSchemeManagerClass.colorWhite)),
-                                        );
-                                      }).toList()
-                                    : [
-                                        DropdownMenuItem<String>(
-                                          value: null,
-                                          child: Text(
-                                            'Nenhuma turma disponível',
-                                            style: TextStyle(color: ColorSchemeManagerClass.colorWhite),
-                                          ),
-                                        ),
-                                      ],
-                              ),
-                            ),
-                      const SizedBox(height: 15),Container(
-                              width: 180,
-                              decoration: BoxDecoration(
-                                color: ColorSchemeManagerClass.colorPrimary,
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
-                              child: DropdownButtonFormField<String>(
-                                validator: isNotEmpyt,
-                                value: selectedTypeEnsino,
-                                dropdownColor: ColorSchemeManagerClass.colorPrimary,
-                                borderRadius: BorderRadius.circular(5.0),
-                                hint: Text(
-                                  'Selecionar ensino',
-                                  style: TextStyle(
-                                    color: ColorSchemeManagerClass.colorWhite,
-                                  ),
-                                ),
-                                decoration: const InputDecoration(
-                                  contentPadding: EdgeInsets.only(left: 8.0),
-                                  border: InputBorder.none,
-                                ),
-                                icon: const Icon(Icons.arrow_drop_down),
-                                iconSize: 24,
-                                style: TextStyle(color: ColorSchemeManagerClass.colorWhite),
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    selectedTypeEnsino = newValue;
-                                  });
-                                },
-                                items: typeEnsino.isNotEmpty
-                                    ? typeEnsino.map<DropdownMenuItem<String>>((String value) {
-                                        return DropdownMenuItem<String>(
-                                          value: value,
-                                          child: Text(value, style: TextStyle(color: ColorSchemeManagerClass.colorWhite)),
-                                        );
-                                      }).toList()
-                                    : [
-                                        DropdownMenuItem<String>(
-                                          value: null,
-                                          child: Text(
-                                            'Nenhuma turma disponível',
-                                            style: TextStyle(color: ColorSchemeManagerClass.colorWhite),
-                                          ),
-                                        ),
-                                      ],
-                              ),
-                            ),
-                      const SizedBox(height: 15),
-                      selectedSchoolId == null || selectedTypeEnsino == null
-                          ? Container()
-                          : Container(
-                              width: 180,
-                              decoration: BoxDecoration(
-                                color: ColorSchemeManagerClass.colorPrimary,
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
-                              child: DropdownButtonFormField<String>(
-                                validator: isNotEmpyt,
-                                value: selectedTurma,
-                                dropdownColor: ColorSchemeManagerClass.colorPrimary,
-                                borderRadius: BorderRadius.circular(5.0),
-                                hint: Text(
-                                  'Selecionar ensino',
-                                  style: TextStyle(
-                                    color: ColorSchemeManagerClass.colorWhite,
-                                  ),
-                                ),
-                                decoration: const InputDecoration(
-                                  contentPadding: EdgeInsets.only(left: 8.0),
-                                  border: InputBorder.none,
-                                ),
-                                icon: const Icon(Icons.arrow_drop_down),
-                                iconSize: 24,
-                                style: TextStyle(color: ColorSchemeManagerClass.colorWhite),
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    selectedTurma = newValue;
-                                  });
-                                },
-                                items: turmas.isNotEmpty
-                                    ? turmas.map<DropdownMenuItem<String>>((String value) {
-                                        return DropdownMenuItem<String>(
-                                          value: value,
-                                          child: Text(value, style: TextStyle(color: ColorSchemeManagerClass.colorWhite)),
-                                        );
-                                      }).toList()
-                                    : [
-                                        DropdownMenuItem<String>(
-                                          value: null,
-                                          child: Text(
-                                            'Nenhuma turma disponível',
-                                            style: TextStyle(color: ColorSchemeManagerClass.colorWhite),
-                                          ),
-                                        ),
-                                      ],
-                              ),
-                            ),
+      if (selectedSchoolId != null) {
+        _loadAnosEnsino(selectedSchoolId!);
+      }
+    },
+    items: schools.map<DropdownMenuItem<String>>((Map<String, dynamic> escola) {
+      return DropdownMenuItem<String>(
+        value: escola['nome'],
+        child: Text(escola['nome'], style: TextStyle(color: ColorSchemeManagerClass.colorWhite)),
+      );
+    }).toList(),
+  ),
+),
+const SizedBox(height: 15),
+selectedSchoolId == null
+    ? Container()
+    : Container(
+  width: 180,
+  decoration: BoxDecoration(
+    color: ColorSchemeManagerClass.colorPrimary,
+    borderRadius: BorderRadius.circular(5.0),
+  ),
+  child: DropdownButtonFormField<int>( // Agora espera um int
+    value: selectedTypeSerie,
+    dropdownColor: ColorSchemeManagerClass.colorPrimary,
+    borderRadius: BorderRadius.circular(5.0),
+    hint: Text(
+      'Selecionar tipo de ensino',
+      style: TextStyle(
+        color: ColorSchemeManagerClass.colorWhite,
+      ),
+    ),
+    decoration: const InputDecoration(
+      contentPadding: EdgeInsets.only(left: 8.0),
+      border: InputBorder.none,
+    ),
+    icon: const Icon(Icons.arrow_drop_down),
+    iconSize: 24,
+    style: TextStyle(color: ColorSchemeManagerClass.colorWhite),
+    onChanged: (int? newValue) {
+      setState(() {
+        selectedTypeSerie = newValue; // Armazena o id_tipo_ensino que é um int
+      });
+      if (newValue != null) {
+        _loadSeries(newValue); // Passa o id_tipo_ensino como int para carregar as séries
+      }
+    },
+    items: tipoEnsino.map<DropdownMenuItem<int>>((Map<String, dynamic> tipoEnsinoItem) {
+      return DropdownMenuItem<int>(
+        value: tipoEnsinoItem['id_tipo_ensino'], // Passa o id_tipo_ensino
+        child: Text(tipoEnsinoItem['nome'], style: TextStyle(color: ColorSchemeManagerClass.colorWhite)),
+      );
+    }).toList(),
+  ),
+),
+
+const SizedBox(height: 15),
+selectedSchoolId == null || selectedTypeSerie == null
+    ? Container()
+    : Container(
+  width: 180,
+  decoration: BoxDecoration(
+    color: ColorSchemeManagerClass.colorPrimary,
+    borderRadius: BorderRadius.circular(5.0),
+  ),
+  child: DropdownButtonFormField<String>(
+    validator: isNotEmpyt,
+    value: selectedSerie,
+    dropdownColor: ColorSchemeManagerClass.colorPrimary,
+    borderRadius: BorderRadius.circular(5.0),
+    hint: Text(
+      'Selecionar série',
+      style: TextStyle(
+        color: ColorSchemeManagerClass.colorWhite,
+      ),
+    ),
+    decoration: const InputDecoration(
+      contentPadding: EdgeInsets.only(left: 8.0),
+      border: InputBorder.none,
+    ),
+    icon: const Icon(Icons.arrow_drop_down),
+    iconSize: 24,
+    style: TextStyle(color: ColorSchemeManagerClass.colorWhite),
+    onChanged: (String? newValue) {
+      setState(() {
+        selectedSerie = newValue; // Atualiza a série selecionada
+      });
+    },
+    items: series.isNotEmpty
+        ? series.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value, style: TextStyle(color: ColorSchemeManagerClass.colorWhite)),
+            );
+          }).toList()
+        : [
+            DropdownMenuItem<String>(
+              value: null,
+              child: Text(
+                'Nenhuma série disponível',
+                style: TextStyle(color: ColorSchemeManagerClass.colorWhite),
+              ),
+            ),
+          ],
+  ),
+),
+
+const SizedBox(height: 15),
+selectedSchoolId == null || selectedTypeSerie == null || selectedSerie == null
+    ? Container()
+    : Container(
+        width: 180,
+        decoration: BoxDecoration(
+          color: ColorSchemeManagerClass.colorPrimary,
+          borderRadius: BorderRadius.circular(5.0),
+        ),
+        child: DropdownButtonFormField<String>(
+          validator: isNotEmpyt,
+          value: selectedTurma,
+          dropdownColor: ColorSchemeManagerClass.colorPrimary,
+          borderRadius: BorderRadius.circular(5.0),
+          hint: Text(
+            'Selecionar turma',
+            style: TextStyle(
+              color: ColorSchemeManagerClass.colorWhite,
+            ),
+          ),
+          decoration: const InputDecoration(
+            contentPadding: EdgeInsets.only(left: 8.0),
+            border: InputBorder.none,
+          ),
+          icon: const Icon(Icons.arrow_drop_down),
+          iconSize: 24,
+          style: TextStyle(color: ColorSchemeManagerClass.colorWhite),
+          onChanged: (String? newValue) {
+            setState(() {
+              selectedTurma = newValue;
+            });
+          },
+          items: turmas.isNotEmpty
+              ? turmas.map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value, style: TextStyle(color: ColorSchemeManagerClass.colorWhite)),
+                  );
+                }).toList()
+              : [
+                  DropdownMenuItem<String>(
+                    value: null,
+                    child: Text(
+                      'Nenhuma turma disponível',
+                      style: TextStyle(color: ColorSchemeManagerClass.colorWhite),
+                    ),
+                  ),
+                ],
+        ),
+      ),
                       const SizedBox(height: 5.0),
                     ],
                   ),
