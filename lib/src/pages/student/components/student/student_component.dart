@@ -126,36 +126,42 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
   }
 
   Future<void> _loadSeries(int idTipoEnsino) async {
-    try {
-      // ignore: avoid_print
-      print('Buscando séries para o tipo de ensino com ID: $idTipoEnsino');
+  try {
+    // ignore: avoid_print
+    print('Buscando séries para o tipo de ensino com ID: $idTipoEnsino');
 
-      final response = await Supabase.instance.client
-          .from('serie')
-          .select('id_serie, ano') // Certifique-se de selecionar o id_serie e o campo ano
-          .eq('fk_id_tipo_ensino', idTipoEnsino);
+    final response = await Supabase.instance.client
+        .from('serie')
+        .select('id_serie, ano')
+        .eq('fk_id_tipo_ensino', idTipoEnsino);
 
-      if (response.isEmpty) {
-        // ignore: avoid_print
-        print('Nenhuma série encontrada para o tipo de ensino com ID: $idTipoEnsino');
-      } else {
-        // ignore: avoid_print
-        print('Séries encontradas: $response');
-        setState(() {
-          seriesResponse = List<Map<String, dynamic>>.from(response); // Armazena a resposta completa
-          series = List<String>.from(seriesResponse.map((serie) => serie['ano'] ?? 'Valor não encontrado')); // Preenche com os nomes das séries
-        });
-      }
-    } catch (e) {
+    if (response.isEmpty) {
       // ignore: avoid_print
-      print('Erro ao tentar buscar séries: $e');
+      print('Nenhuma série encontrada para o tipo de ensino com ID: $idTipoEnsino');
       setState(() {
-        series = []; // Limpa a lista de séries em caso de erro
+        series = [];
+        seriesResponse = []; // Limpa seriesResponse também em caso de resposta vazia
+      });
+    } else {
+      // ignore: avoid_print
+      print('Séries encontradas: $response');
+      setState(() {
+        seriesResponse = List<Map<String, dynamic>>.from(response); // Armazena a resposta completa
+        series = List<String>.from(seriesResponse.map((serie) => serie['ano'] ?? 'Valor não encontrado')); // Preenche com os nomes das séries
       });
     }
+  } catch (e) {
+    // ignore: avoid_print
+    print('Erro ao tentar buscar séries: $e');
+    setState(() {
+      series = []; // Limpa a lista de séries em caso de erro
+      seriesResponse = [];
+    });
   }
+}
 
-  Future<void> _loadTurmas(int idSerie) async {
+
+ Future<void> _loadTurmas(int idSerie) async {
   try {
     // ignore: avoid_print
     print('Buscando turmas para a série com ID: $idSerie');
@@ -165,6 +171,9 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
         .select('grupo, qtdeAlunos')
         .eq('fk_id_serie', idSerie);
 
+    List<String> availableTurmas = [];
+    bool isFull = false;
+
     if (response.isEmpty) {
       // ignore: avoid_print
       print('Nenhuma turma encontrada para a série com ID: $idSerie');
@@ -172,51 +181,55 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
       // ignore: avoid_print
       print('Turmas encontradas: $response');
 
-      List<String> availableTurmas = [];
-      bool isFull = false;
-
       for (var turma in response) {
         // ignore: avoid_print
         print('Verificando turma: ${turma['grupo']}');
         if (turma['qtdeAlunos'] < 40) {
           availableTurmas.add(turma['grupo']);
         } else {
-          isFull = true;
+          isFull = true; // Marque que existe pelo menos uma turma cheia
         }
       }
+    }
 
-      if (mounted) {
-        setState(() {
-          turmas = availableTurmas;
-        });
+    if (mounted) {
+      setState(() {
+        turmas = availableTurmas; // Atualiza o estado com a lista de turmas disponíveis
+      });
 
-        if (isFull && availableTurmas.isEmpty) {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                title: const Text("Turmas Cheias"),
-                content: const Text(
-                    "Todas as turmas estão cheias. Por favor, crie uma nova turma."),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text("OK"),
-                  ),
-                ],
-              );
-            },
-          );
-        }
+      // Mostra o diálogo caso todas as turmas estejam cheias e nenhuma disponível
+      if (isFull && availableTurmas.isEmpty) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text("Turmas Cheias"),
+              content: const Text(
+                  "Todas as turmas estão cheias. Por favor, crie uma nova turma."),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("OK"),
+                ),
+              ],
+            );
+          },
+        );
       }
     }
   } catch (e) {
     // ignore: avoid_print
     print('Erro ao tentar buscar turmas: $e');
+    if (mounted) {
+      setState(() {
+        turmas = []; // Limpa a lista de turmas em caso de erro
+      });
+    }
   }
 }
+
 
 
   Future<void> _pickImage() async {
@@ -454,21 +467,27 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
                                 iconSize: 24,
                                 style: TextStyle(color: ColorSchemeManagerClass.colorWhite),
                                 onChanged: (String? newValue) {
-                                  setState(() {
-                                    selectedSerie = newValue; // A série selecionada
-                                    // Encontre o 'id_serie' da série selecionada
-                                    // Se não encontrar, retornará um mapa vazio, mas nunca null
-                                    final selectedSerieMap = seriesResponse.firstWhere((serie) => serie['ano'] == newValue, orElse: () => {} // Retorna um mapa vazio como padrão
-                                        );
+  setState(() {
+    selectedSerie = newValue;
+    selectedTurma = null; // Reseta a turma selecionada ao trocar a série
 
-                                    selectedSerieId = selectedSerieMap.isNotEmpty ? selectedSerieMap['id_serie'] : null; // Verifica se o mapa não está vazio antes de acessar o id_serie
-                                  });
+    final selectedSerieMap = seriesResponse.firstWhere(
+      (serie) => serie['ano'] == newValue,
+      orElse: () => {},
+    );
 
-                                  // Após selecionar a série, chamar a função _loadTurmas com o id_serie
-                                  if (selectedSerieId != null) {
-                                    _loadTurmas(selectedSerieId!); // Passa o id_serie para _loadTurmas
-                                  }
-                                },
+    selectedSerieId = selectedSerieMap.isNotEmpty ? selectedSerieMap['id_serie'] : null;
+  });
+
+  if (selectedSerieId != null) {
+    _loadTurmas(selectedSerieId!); // Recarrega as turmas para a nova série
+  } else {
+    setState(() {
+      turmas = []; // Limpa as turmas caso o id da série não seja encontrado
+    });
+  }
+}
+,
                                 items: series.isNotEmpty
                                     ? series.map<DropdownMenuItem<String>>((String serie) {
                                         return DropdownMenuItem<String>(
