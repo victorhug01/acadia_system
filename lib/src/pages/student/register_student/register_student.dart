@@ -18,6 +18,9 @@ class RegisterStudentPage extends StatefulWidget {
 
 class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTickerProviderStateMixin {
   final ValueNotifier<XFile?> imagemAlunoNotifier = ValueNotifier(null);
+  final ValueNotifier<String?> turmaAlunoNotifier = ValueNotifier(null);
+  final ValueNotifier<String?> ensinoAlunoNotifier = ValueNotifier(null);
+  final ValueNotifier<String?> escolaAlunoNotifier = ValueNotifier(null);
   late TabController _tabController;
   final GlobalKey<FormState> _formKeyR = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeyS = GlobalKey<FormState>();
@@ -178,6 +181,9 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
                     complementoController: complementoController,
                   ),
                   StudentComponent(
+                    ensinoAlunoNotifier: ensinoAlunoNotifier,
+                    escolaAlunoNotifier: escolaAlunoNotifier,
+                    turmaAlunoNotifier: turmaAlunoNotifier,
                     imagemAlunoNotifier: imagemAlunoNotifier,
                     formKey: _formKeyS,
                     nameStudentController: nameStudentController,
@@ -313,7 +319,10 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
 //-----------------------------------------------------------------
 
   Future<void> createStudent({
-    required String? nome,
+    required String turma,
+    required String ensino,
+    required String escola,
+    required String nome,
     required String email,
     required String cpf,
     required String rg,
@@ -351,6 +360,9 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
         'numero_residencia': numero,
         'fk_cpf_responsavel': cpfResponsavel,
         'endereco': endereco,
+        'turma': turma,
+        'ensino': ensino,
+        'escola': escola,
       });
       if (newUser.error == null) {
         sm.showSnackBar(
@@ -539,6 +551,9 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
         escolaAnterior: escolaAnteriorA,
         sexo: sexoA,
         cpfResponsavel: cpfResponsavelA,
+        turma: turmaAlunoNotifier.value.toString(), 
+        escola: escolaAlunoNotifier.value.toString(), 
+        ensino: ensinoAlunoNotifier.value.toString(),
       );
       await _uploadImage(cpfA: cpfA, raAlunoImage: raAlunoA);
       await createAnaminese(

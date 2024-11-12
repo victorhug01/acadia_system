@@ -102,20 +102,44 @@ class OptionsStudent extends StatelessWidget {
                     topRight: Radius.circular(5),
                   ),
                 ),
-                child: const Row(
+                child: Row(
                   children: [
-                    Expanded(child: TextComponente(title: 'Alunos cadastrados')),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        TextComponente(title: 'Ano'),
-                        SizedBox(width: 20),
-                        TextComponente(title: 'Registro do aluno'),
-                        SizedBox(width: 20),
-                        TextComponente(title: 'Turma/curso'),
-                        SizedBox(width: 20),
-                        TextComponente(title: 'Número de matrícula'),
-                      ],
+                    const Expanded(child: TextComponente(title: 'Alunos cadastrados')),
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Container(
+                              alignment: Alignment.center,
+                              color: Colors.purple,
+                              child: const TextComponente(title: 'Registro do aluno'),
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              alignment: Alignment.center,
+                              color: Colors.red,
+                              child: const TextComponente(title: 'Ensino'),
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              alignment: Alignment.center,
+                              // padding: EdgeInsets.only(right: 20),
+                              color: Colors.green,
+                              child: const TextComponente(title: 'Turma'),
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              alignment: Alignment.center,
+                              color: Colors.cyan,
+                              child: const TextComponente(title: 'Escola'),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -165,27 +189,66 @@ class OptionsStudent extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Row(
-                                  children: [
-                                    CircleAvatar(
-                                      radius: 20,
-                                      backgroundImage: student['imageProfile'] != null ? NetworkImage(student['imageProfile']) : null,
-                                      child: student['imageProfile'] == null
-                                          ? const Icon(Icons.person) // Icone padrão se não houver imagem
-                                          : null,
-                                    ),
-                                    const SizedBox(width: 6),
-                                    Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(student['nome']),
-                                        Text(student['email']),
-                                      ],
-                                    ),
-                                  ],
+                                Expanded(
+                                  child: Row(
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 20,
+                                        backgroundImage: student['imageProfile'] != null ? NetworkImage(student['imageProfile']) : null,
+                                        child: student['imageProfile'] == null
+                                            ? const Icon(Icons.person) // Icone padrão se não houver imagem
+                                            : null,
+                                      ),
+                                      const SizedBox(width: 6),
+                                      Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(student['nome']),
+                                          Text(student['email']),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                Text(student['id_aluno'].toString())
+                                Expanded(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        child: Container(
+                                          alignment: Alignment.center,
+                                          color: Colors.amber,
+                                          child: Text(student['id_aluno'].toString()),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Container(
+                                          alignment: Alignment.center,
+                                          color: Colors.deepOrangeAccent,
+                                          child: Text(student['ensino'].toString()),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Container(
+                                          alignment: Alignment.center,
+                                          color: Colors.indigo,
+                                          child: Text(student['turma'].toString()),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Container(
+                                          alignment: Alignment.center,
+                                          color: Colors.lime,
+                                          child: Text(
+                                            student['escola'].toString(),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ],
                             ),
                           ),

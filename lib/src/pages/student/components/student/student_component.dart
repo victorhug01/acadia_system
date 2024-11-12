@@ -10,10 +10,10 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class StudentComponent extends StatefulWidget {
   final GlobalKey<FormState> formKey;
-  // final ValueNotifier<XFile?> serieAlunoNotifier;
-  // final ValueNotifier<XFile?> escolaAlunoNotifier;
-  // final ValueNotifier<XFile?> turmaAlunoNotifier;
-  // final ValueNotifier<XFile?> ensinoAlunoNotifier;
+  final ValueNotifier<String?> turmaAlunoNotifier;
+  final ValueNotifier<String?> ensinoAlunoNotifier;
+  final ValueNotifier<String?> escolaAlunoNotifier;
+  // final ValueNotifier<String?> serieAlunoNotifier;
   final ValueNotifier<XFile?> imagemAlunoNotifier;
   final TextEditingController nameStudentController;
   final TextEditingController emailStudentController;
@@ -55,7 +55,10 @@ class StudentComponent extends StatefulWidget {
     required this.sexoStudentController,
     required this.nomeResponsavelController,
     required this.cpfResponsavelController,
-    required this.imagemAlunoNotifier,
+    required this.imagemAlunoNotifier, 
+    required this.turmaAlunoNotifier, 
+    required this.ensinoAlunoNotifier, 
+    required this.escolaAlunoNotifier,
   });
 
   @override
@@ -64,12 +67,12 @@ class StudentComponent extends StatefulWidget {
 
 class _StudentComponentState extends State<StudentComponent> with ValidationMixinClass {
   String? selectedSchool;
-  List<Map<String, dynamic>> schools = [];
-  int? selectedTypeSerie;
-  List<String> typeEnsino = [];
-  String? selectedTurma;
-  List<String> turmas = [];
   String? selectedSerie;
+  String? selectedTurma;
+  int? selectedTypeSerie;
+  List<Map<String, dynamic>> schools = [];
+  List<String> typeEnsino = [];
+  List<String> turmas = [];
   List<String> series = [];
   int? selectedSchoolId;
   int? selectedSerieId;
@@ -126,111 +129,101 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
   }
 
   Future<void> _loadSeries(int idTipoEnsino) async {
-  try {
-    // ignore: avoid_print
-    print('Buscando séries para o tipo de ensino com ID: $idTipoEnsino');
-
-    final response = await Supabase.instance.client
-        .from('serie')
-        .select('id_serie, ano')
-        .eq('fk_id_tipo_ensino', idTipoEnsino);
-
-    if (response.isEmpty) {
+    try {
       // ignore: avoid_print
-      print('Nenhuma série encontrada para o tipo de ensino com ID: $idTipoEnsino');
-      setState(() {
-        series = [];
-        seriesResponse = []; // Limpa seriesResponse também em caso de resposta vazia
-      });
-    } else {
+      print('Buscando séries para o tipo de ensino com ID: $idTipoEnsino');
+
+      final response = await Supabase.instance.client.from('serie').select('id_serie, ano').eq('fk_id_tipo_ensino', idTipoEnsino);
+
+      if (response.isEmpty) {
+        // ignore: avoid_print
+        print('Nenhuma série encontrada para o tipo de ensino com ID: $idTipoEnsino');
+        setState(() {
+          series = [];
+          seriesResponse = []; // Limpa seriesResponse também em caso de resposta vazia
+        });
+      } else {
+        // ignore: avoid_print
+        print('Séries encontradas: $response');
+        setState(() {
+          seriesResponse = List<Map<String, dynamic>>.from(response); // Armazena a resposta completa
+          series = List<String>.from(seriesResponse.map((serie) => serie['ano'] ?? 'Valor não encontrado')); // Preenche com os nomes das séries
+        });
+      }
+    } catch (e) {
       // ignore: avoid_print
-      print('Séries encontradas: $response');
+      print('Erro ao tentar buscar séries: $e');
       setState(() {
-        seriesResponse = List<Map<String, dynamic>>.from(response); // Armazena a resposta completa
-        series = List<String>.from(seriesResponse.map((serie) => serie['ano'] ?? 'Valor não encontrado')); // Preenche com os nomes das séries
+        series = []; // Limpa a lista de séries em caso de erro
+        seriesResponse = [];
       });
     }
-  } catch (e) {
-    // ignore: avoid_print
-    print('Erro ao tentar buscar séries: $e');
-    setState(() {
-      series = []; // Limpa a lista de séries em caso de erro
-      seriesResponse = [];
-    });
   }
-}
 
-
- Future<void> _loadTurmas(int idSerie) async {
-  try {
-    // ignore: avoid_print
-    print('Buscando turmas para a série com ID: $idSerie');
-
-    final List<dynamic> response = await Supabase.instance.client
-        .from('turma')
-        .select('grupo, qtdeAlunos')
-        .eq('fk_id_serie', idSerie);
-
-    List<String> availableTurmas = [];
-    bool isFull = false;
-
-    if (response.isEmpty) {
+  Future<void> _loadTurmas(int idSerie) async {
+    try {
       // ignore: avoid_print
-      print('Nenhuma turma encontrada para a série com ID: $idSerie');
-    } else {
-      // ignore: avoid_print
-      print('Turmas encontradas: $response');
+      print('Buscando turmas para a série com ID: $idSerie');
 
-      for (var turma in response) {
+      final List<dynamic> response = await Supabase.instance.client.from('turma').select('grupo, qtdeAlunos').eq('fk_id_serie', idSerie);
+
+      List<String> availableTurmas = [];
+      bool isFull = false;
+
+      if (response.isEmpty) {
         // ignore: avoid_print
-        print('Verificando turma: ${turma['grupo']}');
-        if (turma['qtdeAlunos'] < 40) {
-          availableTurmas.add(turma['grupo']);
-        } else {
-          isFull = true; // Marque que existe pelo menos uma turma cheia
+        print('Nenhuma turma encontrada para a série com ID: $idSerie');
+      } else {
+        // ignore: avoid_print
+        print('Turmas encontradas: $response');
+
+        for (var turma in response) {
+          // ignore: avoid_print
+          print('Verificando turma: ${turma['grupo']}');
+          if (turma['qtdeAlunos'] < 40) {
+            availableTurmas.add(turma['grupo']);
+          } else {
+            isFull = true; // Marque que existe pelo menos uma turma cheia
+          }
         }
       }
-    }
 
-    if (mounted) {
-      setState(() {
-        turmas = availableTurmas; // Atualiza o estado com a lista de turmas disponíveis
-      });
+      if (mounted) {
+        setState(() {
+          turmas = availableTurmas; // Atualiza o estado com a lista de turmas disponíveis
+        });
 
-      // Mostra o diálogo caso todas as turmas estejam cheias e nenhuma disponível
-      if (isFull && availableTurmas.isEmpty) {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: const Text("Turmas Cheias"),
-              content: const Text(
-                  "Todas as turmas estão cheias. Por favor, crie uma nova turma."),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text("OK"),
-                ),
-              ],
-            );
-          },
-        );
+        // Mostra o diálogo caso todas as turmas estejam cheias e nenhuma disponível
+        if (isFull && availableTurmas.isEmpty) {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text("Turmas Cheias"),
+                content: const Text("Todas as turmas estão cheias. Por favor, crie uma nova turma."),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text("OK"),
+                  ),
+                ],
+              );
+            },
+          );
+        }
+      }
+    } catch (e) {
+      // ignore: avoid_print
+      print('Erro ao tentar buscar turmas: $e');
+      if (mounted) {
+        setState(() {
+          turmas = []; // Limpa a lista de turmas em caso de erro
+        });
       }
     }
-  } catch (e) {
-    // ignore: avoid_print
-    print('Erro ao tentar buscar turmas: $e');
-    if (mounted) {
-      setState(() {
-        turmas = []; // Limpa a lista de turmas em caso de erro
-      });
-    }
   }
-}
-
-
 
   Future<void> _pickImage() async {
     final ImagePicker picker = ImagePicker();
@@ -290,6 +283,9 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
 
   @override
   Widget build(BuildContext context) {
+    widget.escolaAlunoNotifier.value = selectedSchool;
+    widget.ensinoAlunoNotifier.value = selectedSerie;
+    widget.turmaAlunoNotifier.value = selectedTurma;
     return Padding(
       padding: const EdgeInsets.all(25.0),
       child: SingleChildScrollView(
@@ -467,27 +463,26 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
                                 iconSize: 24,
                                 style: TextStyle(color: ColorSchemeManagerClass.colorWhite),
                                 onChanged: (String? newValue) {
-  setState(() {
-    selectedSerie = newValue;
-    selectedTurma = null; // Reseta a turma selecionada ao trocar a série
+                                  setState(() {
+                                    selectedSerie = newValue;
+                                    selectedTurma = null; // Reseta a turma selecionada ao trocar a série
 
-    final selectedSerieMap = seriesResponse.firstWhere(
-      (serie) => serie['ano'] == newValue,
-      orElse: () => {},
-    );
+                                    final selectedSerieMap = seriesResponse.firstWhere(
+                                      (serie) => serie['ano'] == newValue,
+                                      orElse: () => {},
+                                    );
 
-    selectedSerieId = selectedSerieMap.isNotEmpty ? selectedSerieMap['id_serie'] : null;
-  });
+                                    selectedSerieId = selectedSerieMap.isNotEmpty ? selectedSerieMap['id_serie'] : null;
+                                  });
 
-  if (selectedSerieId != null) {
-    _loadTurmas(selectedSerieId!); // Recarrega as turmas para a nova série
-  } else {
-    setState(() {
-      turmas = []; // Limpa as turmas caso o id da série não seja encontrado
-    });
-  }
-}
-,
+                                  if (selectedSerieId != null) {
+                                    _loadTurmas(selectedSerieId!); // Recarrega as turmas para a nova série
+                                  } else {
+                                    setState(() {
+                                      turmas = []; // Limpa as turmas caso o id da série não seja encontrado
+                                    });
+                                  }
+                                },
                                 items: series.isNotEmpty
                                     ? series.map<DropdownMenuItem<String>>((String serie) {
                                         return DropdownMenuItem<String>(
