@@ -10,6 +10,10 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class StudentComponent extends StatefulWidget {
   final GlobalKey<FormState> formKey;
+  // final ValueNotifier<XFile?> serieAlunoNotifier;
+  // final ValueNotifier<XFile?> escolaAlunoNotifier;
+  // final ValueNotifier<XFile?> turmaAlunoNotifier;
+  // final ValueNotifier<XFile?> ensinoAlunoNotifier;
   final ValueNotifier<XFile?> imagemAlunoNotifier;
   final TextEditingController nameStudentController;
   final TextEditingController emailStudentController;
@@ -82,6 +86,7 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
     try {
       final List<dynamic> response = await Supabase.instance.client.from('escola').select('id_escola, nome');
 
+      // ignore: avoid_print
       print('Escolas carregadas: $response');
 
       setState(() {
@@ -91,32 +96,38 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
             }));
       });
     } catch (e) {
+      // ignore: avoid_print
       print('Erro ao tentar buscar escolas: $e');
     }
   }
 
   Future<void> _loadAnosEnsino(int schoolId) async {
     try {
+      // ignore: avoid_print
       print('Carregando tipos de ensino para a escola com ID: $schoolId');
 
       final List<dynamic> response = await Supabase.instance.client.from('tipo_ensino').select('id_tipo_ensino, nome, fk_id_escola').eq('fk_id_escola', schoolId);
 
+      // ignore: avoid_print
       print('Resposta da consulta para tipos de ensino: $response');
 
       setState(() {
         if (response.isEmpty) {
+          // ignore: avoid_print
           print('Nenhum tipo de ensino encontrado para a escola com ID: $schoolId');
         } else {
           tipoEnsino = List<Map<String, dynamic>>.from(response);
         }
       });
     } catch (e) {
+      // ignore: avoid_print
       print('Erro ao tentar buscar tipos de ensino: $e');
     }
   }
 
   Future<void> _loadSeries(int idTipoEnsino) async {
     try {
+      // ignore: avoid_print
       print('Buscando séries para o tipo de ensino com ID: $idTipoEnsino');
 
       final response = await Supabase.instance.client
@@ -125,8 +136,10 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
           .eq('fk_id_tipo_ensino', idTipoEnsino);
 
       if (response.isEmpty) {
+        // ignore: avoid_print
         print('Nenhuma série encontrada para o tipo de ensino com ID: $idTipoEnsino');
       } else {
+        // ignore: avoid_print
         print('Séries encontradas: $response');
         setState(() {
           seriesResponse = List<Map<String, dynamic>>.from(response); // Armazena a resposta completa
@@ -134,6 +147,7 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
         });
       }
     } catch (e) {
+      // ignore: avoid_print
       print('Erro ao tentar buscar séries: $e');
       setState(() {
         series = []; // Limpa a lista de séries em caso de erro
@@ -142,15 +156,28 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
   }
 
   Future<void> _loadTurmas(int idSerie) async {
-    try {
-      print('Buscando turmas para a série com ID: $idSerie');
+  try {
+    // ignore: avoid_print
+    print('Buscando turmas para a série com ID: $idSerie');
 
-      final List<dynamic> response = await Supabase.instance.client.from('turma').select('grupo, qtdeAlunos').eq('fk_id_serie', idSerie); // Filtra pela série, não pela escola
+    final List<dynamic> response = await Supabase.instance.client
+        .from('turma')
+        .select('grupo, qtdeAlunos')
+        .eq('fk_id_serie', idSerie);
+
+    if (response.isEmpty) {
+      // ignore: avoid_print
+      print('Nenhuma turma encontrada para a série com ID: $idSerie');
+    } else {
+      // ignore: avoid_print
+      print('Turmas encontradas: $response');
 
       List<String> availableTurmas = [];
       bool isFull = false;
 
       for (var turma in response) {
+        // ignore: avoid_print
+        print('Verificando turma: ${turma['grupo']}');
         if (turma['qtdeAlunos'] < 40) {
           availableTurmas.add(turma['grupo']);
         } else {
@@ -158,33 +185,39 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
         }
       }
 
-      setState(() {
-        turmas = availableTurmas;
-      });
+      if (mounted) {
+        setState(() {
+          turmas = availableTurmas;
+        });
 
-      if (isFull && availableTurmas.isEmpty) {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: const Text("Turmas Cheias"),
-              content: const Text("Todas as turmas estão cheias. Por favor, crie uma nova turma."),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text("OK"),
-                ),
-              ],
-            );
-          },
-        );
+        if (isFull && availableTurmas.isEmpty) {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text("Turmas Cheias"),
+                content: const Text(
+                    "Todas as turmas estão cheias. Por favor, crie uma nova turma."),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text("OK"),
+                  ),
+                ],
+              );
+            },
+          );
+        }
       }
-    } catch (e) {
-      print('Erro ao tentar buscar turmas: $e');
     }
+  } catch (e) {
+    // ignore: avoid_print
+    print('Erro ao tentar buscar turmas: $e');
   }
+}
+
 
   Future<void> _pickImage() async {
     final ImagePicker picker = ImagePicker();
@@ -487,10 +520,10 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
                                   });
                                 },
                                 items: turmas.isNotEmpty
-                                    ? turmas.map<DropdownMenuItem<String>>((String value) {
+                                    ? turmas.map<DropdownMenuItem<String>>((String turma) {
                                         return DropdownMenuItem<String>(
-                                          value: value,
-                                          child: Text(value, style: TextStyle(color: ColorSchemeManagerClass.colorWhite)),
+                                          value: turma, // Exibe o nome da turma
+                                          child: Text(turma, style: TextStyle(color: ColorSchemeManagerClass.colorWhite)),
                                         );
                                       }).toList()
                                     : [
