@@ -1,6 +1,6 @@
 import 'package:acadia/src/components/appbar/appbar_component.dart';
 import 'package:acadia/src/components/textformfields/field_component.dart';
-import 'package:acadia/src/pages/student/home_student/home_student.dart';
+import 'package:acadia/src/pages/student/update_student/update_student.dart';
 import 'package:acadia/src/theme/theme_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
@@ -10,7 +10,7 @@ class OptionsStudent extends StatefulWidget {
   const OptionsStudent({super.key});
 
   @override
-  _OptionsStudentState createState() => _OptionsStudentState();
+  State<OptionsStudent> createState() => _OptionsStudentState();
 }
 
 class _OptionsStudentState extends State<OptionsStudent> {
@@ -26,7 +26,7 @@ class _OptionsStudentState extends State<OptionsStudent> {
       return student['nome'].toLowerCase().contains(query.toLowerCase()) ||
           student['email'].toLowerCase().contains(query.toLowerCase()) ||
           student['id_aluno'].toString().contains(query) ||
-          student['ensino'].toLowerCase().contains(query.toLowerCase()) ||
+          student['serie'].toLowerCase().contains(query.toLowerCase()) ||
           student['turma'].toLowerCase().contains(query.toLowerCase()) ||
           student['escola'].toLowerCase().contains(query.toLowerCase());
     }).toList();
@@ -124,6 +124,7 @@ class _OptionsStudentState extends State<OptionsStudent> {
                   height: 55,
                   width: 300,
                   child: TextFormFieldComponent(
+                    hintText: 'Pesquisar por...',
                     onChanged: (String? value) {
                       setState(() {});
                     },
@@ -153,7 +154,12 @@ class _OptionsStudentState extends State<OptionsStudent> {
                 ),
                 child: Row(
                   children: [
-                    const Expanded(child: TextComponente(title: 'Alunos cadastrados')),
+                    Expanded(
+                      child: Container(
+                        alignment: Alignment.centerLeft,
+                        child: const TextComponente(title: 'Alunos cadastrados'),
+                      ),
+                    ),
                     Expanded(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -169,7 +175,7 @@ class _OptionsStudentState extends State<OptionsStudent> {
                             child: Container(
                               alignment: Alignment.center,
                               color: Colors.red,
-                              child: const TextComponente(title: 'Ensino'),
+                              child: const TextComponente(title: 'Série'),
                             ),
                           ),
                           Expanded(
@@ -232,8 +238,8 @@ class _OptionsStudentState extends State<OptionsStudent> {
                         return InkWell(
                           onTap: () => Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (_) => HomeStudent(
-                                idStudent: student['id_aluno'].toString(),
+                              builder: (_) => UpdateStudentPage(
+                                idAlunoUpdate: int.parse(student['id_aluno'].toString()),
                               ),
                             ),
                           ),
@@ -282,7 +288,7 @@ class _OptionsStudentState extends State<OptionsStudent> {
                                         child: Container(
                                           alignment: Alignment.center,
                                           color: Colors.deepOrangeAccent,
-                                          child: Text(student['ensino'].toString()),
+                                          child: Text(student['serie'].toString()),
                                         ),
                                       ),
                                       Expanded(
@@ -332,6 +338,8 @@ class TextComponente extends StatelessWidget {
       title,
       style: TextStyle(color: ColorSchemeManagerClass.colorWhite),
       textAlign: TextAlign.center,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
     );
   }
 }

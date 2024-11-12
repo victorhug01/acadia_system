@@ -5,15 +5,13 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class StudentComponent extends StatefulWidget {
+class StudentUpdateComponente extends StatefulWidget {
   final GlobalKey<FormState> formKey;
   final ValueNotifier<String?> turmaAlunoNotifier;
-  final ValueNotifier<String?> ensinoAlunoNotifier;
+  final ValueNotifier<String?> serieAlunoNotifier;
   final ValueNotifier<String?> escolaAlunoNotifier;
-  // final ValueNotifier<String?> serieAlunoNotifier;
   final ValueNotifier<XFile?> imagemAlunoNotifier;
   final TextEditingController nameStudentController;
   final TextEditingController emailStudentController;
@@ -34,7 +32,7 @@ class StudentComponent extends StatefulWidget {
   final TextEditingController nomeResponsavelController;
   final TextEditingController cpfResponsavelController;
 
-  const StudentComponent({
+  const StudentUpdateComponente({
     super.key,
     required this.nameStudentController,
     required this.emailStudentController,
@@ -57,15 +55,15 @@ class StudentComponent extends StatefulWidget {
     required this.cpfResponsavelController,
     required this.imagemAlunoNotifier, 
     required this.turmaAlunoNotifier, 
-    required this.ensinoAlunoNotifier, 
-    required this.escolaAlunoNotifier,
+    required this.escolaAlunoNotifier, 
+    required this.serieAlunoNotifier,
   });
 
   @override
-  State<StudentComponent> createState() => _StudentComponentState();
+  State<StudentUpdateComponente> createState() => _StudentUpdateComponenteState();
 }
 
-class _StudentComponentState extends State<StudentComponent> with ValidationMixinClass {
+class _StudentUpdateComponenteState extends State<StudentUpdateComponente> with ValidationMixinClass {
   String? selectedSchool;
   String? selectedSerie;
   String? selectedTurma;
@@ -284,7 +282,7 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
   @override
   Widget build(BuildContext context) {
     widget.escolaAlunoNotifier.value = selectedSchool;
-    widget.ensinoAlunoNotifier.value = selectedSerie;
+    widget.serieAlunoNotifier.value = selectedSerie;
     widget.turmaAlunoNotifier.value = selectedTurma;
     return Padding(
       padding: const EdgeInsets.all(25.0),

@@ -1,22 +1,22 @@
-import 'dart:math';
 import 'package:acadia/src/components/appbar/appbar_component.dart';
 import 'package:acadia/src/pages/student/components/anamnese/anamnese_componente.dart';
 import 'package:acadia/src/pages/student/components/contrato/contrato_component.dart';
 import 'package:acadia/src/pages/student/components/responsible/responsible_component.dart';
-import 'package:acadia/src/pages/student/components/student_register_componente/student_register_component.dart';
+import 'package:acadia/src/pages/student/components/student_update_componente/student_update_componente.dart';
 import 'package:acadia/src/theme/theme_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class RegisterStudentPage extends StatefulWidget {
-  const RegisterStudentPage({super.key});
+class UpdateStudentPage extends StatefulWidget {
+  final int idAlunoUpdate;
+  const UpdateStudentPage({super.key, required this.idAlunoUpdate});
 
   @override
-  State<RegisterStudentPage> createState() => _RegisterStudentPageState();
+  State<UpdateStudentPage> createState() => _UpdateStudentPageState();
 }
 
-class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTickerProviderStateMixin {
+class _UpdateStudentPageState extends State<UpdateStudentPage> with SingleTickerProviderStateMixin {
   final ValueNotifier<XFile?> imagemAlunoNotifier = ValueNotifier(null);
   final ValueNotifier<String?> turmaAlunoNotifier = ValueNotifier(null);
   final ValueNotifier<String?> serieAlunoNotifier = ValueNotifier(null);
@@ -55,6 +55,67 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
   final TextEditingController raStudentController = TextEditingController();
   final TextEditingController escolaAnteriorController = TextEditingController();
   final TextEditingController sexoStudentController = TextEditingController();
+
+  Future<void> carregarDadosAluno(int alunoId) async {
+    try {
+      // Realiza a consulta para obter os dados do aluno com a ID fornecida
+      final responseAluno = await Supabase.instance.client.from('aluno').select().eq('id_aluno', alunoId).single();
+      final responseAnamnese = await Supabase.instance.client.from('Anamnese').select().eq('fk_id_aluno', alunoId).single();
+      final responseResponsavel = await Supabase.instance.client.from('responsavel').select().eq('cpf_responsavel', responseAluno['fk_cpf_responsavel']).single();
+
+      // Preenche os TextEditingControllers com os dados retornados do aluno
+      nameStudentController.text = responseAluno['nome'] ?? '';
+      emailStudentController.text = responseAluno['email'] ?? '';
+      cpfStudentController.text = responseAluno['cpf'] ?? '';
+      rgStudentController.text = responseAluno['rg'] ?? '';
+      celularStudentController.text = responseAluno['celular'] ?? '';
+      enderecoStudentController.text = responseAluno['endereco'] ?? '';
+      numeroStudentController.text = responseAluno['numero_residencia'] ?? '';
+      cepStudentController.text = responseAluno['cep'] ?? '';
+      bairroStudentController.text = responseAluno['bairro'] ?? '';
+      cidadeStudentController.text = responseAluno['cidade'] ?? '';
+      ufStudentController.text = responseAluno['uf_estado'] ?? '';
+      complementoStudentController.text = responseAluno['complemento'] ?? '';
+      dataNacimentoStudentController.text = responseAluno['data_nascimento'] ?? '';
+      raStudentController.text = responseAluno['id_aluno'].toString();
+      escolaAnteriorController.text = responseAluno['escola_anterior'] ?? '';
+      sexoStudentController.text = responseAluno['sexo'] ?? '';
+
+      nameController.text = responseResponsavel['nome'] ?? '';
+      emailController.text = responseResponsavel['email'] ?? '';
+      cpfController.text = responseResponsavel['cpf_responsavel'].toString();
+      rgController.text = responseResponsavel['rg'].toString();
+      celularController.text = responseResponsavel['celular'].toString();
+      enderecoController.text = responseResponsavel['endereco'].toString();
+      numeroController.text = responseResponsavel['numero_residencia'].toString();
+      cepController.text = responseResponsavel['cep'].toString();
+      bairroController.text = responseResponsavel['bairro'] ?? '';
+      cidadeController.text = responseResponsavel['cidade'] ?? '';
+      ufController.text = responseResponsavel['uf_estado'] ?? '';
+      complementoController.text = responseResponsavel['complemento'] ?? '';
+
+      //anamnese
+      diseaseController.text = responseAnamnese['doenca_cronica'] ?? '';
+      seriousIllnessController.text = responseAnamnese['doenca_grave'] ?? '';
+      surgeryController.text = responseAnamnese['cirurgia'] ?? '';
+      allergyController.text = responseAnamnese['alergia'] ?? '';
+      respiratoryController.text = responseAnamnese['problemas_respiratorios'] ?? '';
+      dietaryRestrictionController.text = responseAnamnese['restricao_alimentar'] ?? '';
+      allergicReactionController.text = responseAnamnese['reacao_alergica'] ?? '';
+      vaccineController.text = responseAnamnese['vacinas'] ?? '';
+      medicalMonitoringController.text = responseAnamnese['acompanhamento_medico'] ?? '';
+      dailyMedicationController.text = responseAnamnese['medicamento_periodico'] ?? '';
+      emergencyMedicationController.text = responseAnamnese['medicamentos_emergenciais'] ?? '';
+      emergencyParentescoController.text = responseAnamnese['parentesco'] ?? '';
+      emergencyPhoneController.text = responseAnamnese['telefone'].toString();
+      emergencyNameController.text = responseAnamnese['nome_parentesco'] ?? '';
+      healthPlanController.text = responseAnamnese['qual_plano'] ?? '';
+    } catch (error) {
+      // ignore: avoid_print
+      print("Erro inesperado: $error");
+    }
+  }
+
   //anamnese
   final TextEditingController diseaseController = TextEditingController();
   final TextEditingController seriousIllnessController = TextEditingController();
@@ -75,37 +136,13 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
   @override
   void initState() {
     super.initState();
+    // ignore: avoid_print
+    print(widget.idAlunoUpdate);
+    carregarDadosAluno(widget.idAlunoUpdate);
     _tabController = TabController(length: 4, vsync: this);
     _tabController.addListener(() {
       setState(() {});
     });
-  }
-
-  @override
-  void dispose() {
-    // Dispose de todos os controladores ao finalizar a página
-    _tabController.dispose();
-    nameController.dispose();
-    emailController.dispose();
-    cpfController.dispose();
-    rgController.dispose();
-    celularController.dispose();
-    enderecoController.dispose();
-    numeroController.dispose();
-    cepController.dispose();
-    bairroController.dispose();
-    cidadeController.dispose();
-    ufController.dispose();
-    complementoController.dispose();
-    super.dispose();
-  }
-
-  String gerarNumeroAleatorio() {
-    final random = Random();
-    // Gera um número aleatório de 11 dígitos
-    int numero = random.nextInt(900000000) + 100000000; // Gera um número entre 100000000 e 999999999
-    String numeroString = numero.toString(); // Converte para string
-    return numeroString.padLeft(11, '0'); // Preenche à esquerda, se necessário, para garantir 11 dígitos
   }
 
   void _nextTab() {
@@ -122,7 +159,6 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
 
   @override
   Widget build(BuildContext context) {
-    raStudentController.text = gerarNumeroAleatorio();
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
@@ -180,7 +216,7 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
                     ufController: ufController,
                     complementoController: complementoController,
                   ),
-                  StudentComponent(
+                  StudentUpdateComponente(
                     serieAlunoNotifier: serieAlunoNotifier,
                     escolaAlunoNotifier: escolaAlunoNotifier,
                     turmaAlunoNotifier: turmaAlunoNotifier,
@@ -286,8 +322,9 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
     required String complemento,
   }) async {
     try {
+      final cpfResponsibleBd =  Supabase.instance.client.from('aluno').select('fk_cpf_responsavel').eq('id_aluno', widget.idAlunoUpdate);
       final sm = ScaffoldMessenger.of(context);
-      final newUser = await Supabase.instance.client.from('responsavel').insert({
+      final newUser = await Supabase.instance.client.from('responsavel').update({
         'nome': nome,
         'email': email,
         'cpf_responsavel': cpf,
@@ -300,7 +337,7 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
         'cidade': cidade,
         'uf_estado': uf,
         'complemento': complemento,
-      });
+      }).eq('cpf_responsavel', int.parse(cpfResponsibleBd.toString()));
       if (newUser.error == null) {
         sm.showSnackBar(
           const SnackBar(content: Text('Postagem criada com sucesso!')),
@@ -342,7 +379,7 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
   }) async {
     try {
       final sm = ScaffoldMessenger.of(context);
-      final newUser = await Supabase.instance.client.from('aluno').insert({
+      final newUser = await Supabase.instance.client.from('aluno').update({
         'id_aluno': raAluno,
         'nome': nome,
         'cpf': cpf,
@@ -363,7 +400,7 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
         'turma': turma,
         'serie': serie,
         'escola': escola,
-      });
+      }).eq('id_aluno', widget.idAlunoUpdate);
       if (newUser.error == null) {
         sm.showSnackBar(
           const SnackBar(content: Text('Postagem criada com sucesso!')),
@@ -401,7 +438,7 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
   }) async {
     try {
       final sm = ScaffoldMessenger.of(context);
-      final newAnamnese = await Supabase.instance.client.from('Anamnese').insert({
+      final newAnamnese = await Supabase.instance.client.from('Anamnese').update({
         'fk_id_aluno': raAluno,
         'doenca_cronica': doencaCronica,
         'doenca_grave': doencaGrave,
@@ -418,7 +455,7 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
         'parentesco': parentesco,
         'qual_plano': qualPlano,
         'alergia': alergia,
-      });
+      }).eq('fk_id_aluno', widget.idAlunoUpdate);
       if (newAnamnese.error == null) {
         sm.showSnackBar(
           const SnackBar(content: Text('Anamnese criada com sucesso!')),
@@ -519,20 +556,6 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
       },
     );
     try {
-      await createResponsible(
-        cep: cep,
-        nome: nome,
-        email: email,
-        cpf: cpf,
-        rg: rg,
-        celular: celular,
-        endereco: endereco,
-        numero: numero,
-        bairro: bairro,
-        cidade: cidade,
-        uf: uf,
-        complemento: complemento,
-      );
       await createStudent(
         raAluno: raAlunoA,
         nome: nomeA,
@@ -551,9 +574,23 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
         escolaAnterior: escolaAnteriorA,
         sexo: sexoA,
         cpfResponsavel: cpfResponsavelA,
-        turma: turmaAlunoNotifier.value.toString(), 
-        escola: escolaAlunoNotifier.value.toString(), 
+        turma: turmaAlunoNotifier.value.toString(),
+        escola: escolaAlunoNotifier.value.toString(),
         serie: serieAlunoNotifier.value.toString(),
+      );
+      await createResponsible(
+        cep: cep,
+        nome: nome,
+        email: email,
+        cpf: cpf,
+        rg: rg,
+        celular: celular,
+        endereco: endereco,
+        numero: numero,
+        bairro: bairro,
+        cidade: cidade,
+        uf: uf,
+        complemento: complemento,
       );
       await _uploadImage(cpfA: cpfA, raAlunoImage: raAlunoA);
       await createAnaminese(

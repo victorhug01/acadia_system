@@ -2,7 +2,6 @@ import 'package:acadia/src/components/appbar/appbar_component.dart';
 import 'package:acadia/src/pages/student/components/anamnese/anamnese_componente.dart';
 import 'package:acadia/src/pages/student/components/contrato/contrato_component.dart';
 import 'package:acadia/src/pages/student/components/responsible/responsible_component.dart';
-// import 'package:acadia/src/pages/student/components/student/student_component.dart';
 import 'package:acadia/src/theme/theme_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';

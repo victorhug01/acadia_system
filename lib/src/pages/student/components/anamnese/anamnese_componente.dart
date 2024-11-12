@@ -19,23 +19,24 @@ class HealthFormComponent extends StatefulWidget {
   final TextEditingController emergencyNameController;
   final TextEditingController healthPlanController;
   const HealthFormComponent({
-    super.key, 
-    required this.diseaseController, 
-    required this.seriousIllnessController, 
-    required this.surgeryController, 
-    required this.allergyController, 
-    required this.respiratoryController, 
-    required this.dietaryRestrictionController, 
-    required this.allergicReactionController, 
-    required this.vaccineController, 
-    required this.medicalMonitoringController, 
-    required this.dailyMedicationController, 
-    required this.emergencyMedicationController, 
-    required this.emergencyParentescoController, 
+    super.key,
+    required this.diseaseController,
+    required this.seriousIllnessController,
+    required this.surgeryController,
+    required this.allergyController,
+    required this.respiratoryController,
+    required this.dietaryRestrictionController,
+    required this.allergicReactionController,
+    required this.vaccineController,
+    required this.medicalMonitoringController,
+    required this.dailyMedicationController,
+    required this.emergencyMedicationController,
+    required this.emergencyParentescoController,
     required this.emergencyPhoneController,
-    required this.emergencyNameController, 
-    required this.healthPlanController, required this.formKey,
-    });
+    required this.emergencyNameController,
+    required this.healthPlanController,
+    required this.formKey,
+  });
 
   @override
   State<HealthFormComponent> createState() => _HealthFormComponentState();
@@ -59,25 +60,77 @@ class _HealthFormComponentState extends State<HealthFormComponent> {
   bool hasHealthPlan = false;
   bool allowsEmergencyActions = false;
 
-  // @override
-  // void dispose() {
-  //   // Libera os controladores
-  //   widget.diseaseController.dispose();
-  //   widget.seriousIllnessController.dispose();
-  //   widget.surgeryController.dispose();
-  //   widget.allergyController.dispose();
-  //   widget.respiratoryController.dispose();
-  //   widget.dietaryRestrictionController.dispose();
-  //   widget.allergicReactionController.dispose();
-  //   widget.vaccineController.dispose();
-  //   widget.medicalMonitoringController.dispose();
-  //   widget.dailyMedicationController.dispose();
-  //   widget.emergencyMedicationController.dispose();
-  //   widget.emergencyParentescoController.dispose();
-  //   widget.emergencyPhoneController.dispose();
-  //   widget.healthPlanController.dispose();
-  //   super.dispose();
-  // }
+  @override
+  void initState() {
+    super.initState();
+
+    // Verificar se os campos contêm algum texto e marcar os checkboxes
+    if (widget.diseaseController.text.isNotEmpty) {
+      setState(() {
+        hasDisease = true;
+      });
+    }
+    if (widget.seriousIllnessController.text.isNotEmpty) {
+      setState(() {
+        hasSeriousIllness = true;
+      });
+    }
+    if (widget.surgeryController.text.isNotEmpty) {
+      setState(() {
+        hasSurgery = true;
+      });
+    }
+    if (widget.allergyController.text.isNotEmpty) {
+      setState(() {
+        hasAllergy = true;
+      });
+    }
+    if (widget.respiratoryController.text.isNotEmpty) {
+      setState(() {
+        hasRespiratoryProblems = true;
+      });
+    }
+    if (widget.dietaryRestrictionController.text.isNotEmpty) {
+      setState(() {
+        hasDietaryRestriction = true;
+      });
+    }
+    if (widget.allergicReactionController.text.isNotEmpty) {
+      setState(() {
+        hasAllergicReaction = true;
+      });
+    }
+    if (widget.vaccineController.text.isNotEmpty) {
+      setState(() {
+        isVaccinated = true;
+      });
+    }
+    if (widget.medicalMonitoringController.text.isNotEmpty) {
+      setState(() {
+        hasMedicalMonitoring = true;
+      });
+    }
+    if (widget.dailyMedicationController.text.isNotEmpty) {
+      setState(() {
+        takesDailyMedication = true;
+      });
+    }
+    if (widget.emergencyMedicationController.text.isNotEmpty) {
+      setState(() {
+        needsEmergencyMedication = true;
+      });
+    }
+    if (widget.healthPlanController.text.isNotEmpty) {
+      setState(() {
+        hasHealthPlan = true;
+      });
+    }
+    if (widget.emergencyParentescoController.text.isNotEmpty || widget.emergencyPhoneController.text.isNotEmpty || widget.emergencyNameController.text.isNotEmpty) {
+      setState(() {
+        allowsEmergencyActions = true;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +148,6 @@ class _HealthFormComponentState extends State<HealthFormComponent> {
             buildHealthQuestion("O aluno possui alguma alergia?", hasAllergy, widget.allergyController, (value) => setState(() => hasAllergy = value!)),
             buildHealthQuestion("O aluno tem problemas respiratórios?", hasRespiratoryProblems, widget.respiratoryController, (value) => setState(() => hasRespiratoryProblems = value!)),
             buildHealthQuestion("O aluno tem alguma restrição alimentar?", hasDietaryRestriction, widget.dietaryRestrictionController, (value) => setState(() => hasDietaryRestriction = value!)),
-            buildHealthQuestion("O aluno já sofreu alguma reação alérgica severa?", hasAllergicReaction, widget.allergicReactionController, (value) => setState(() => hasAllergicReaction = value!)),
             buildHealthQuestion("Vacinas em dia?", isVaccinated, widget.vaccineController, (value) => setState(() => isVaccinated = value!)),
             buildHealthQuestion("O aluno faz acompanhamento médico periódico?", hasMedicalMonitoring, widget.medicalMonitoringController, (value) => setState(() => hasMedicalMonitoring = value!)),
             buildHealthQuestion("O aluno faz uso de algum medicamento no dia a dia?", takesDailyMedication, widget.dailyMedicationController, (value) => setState(() => takesDailyMedication = value!)),
@@ -129,36 +181,30 @@ class _HealthFormComponentState extends State<HealthFormComponent> {
             ),
             CheckboxListTile(
               activeColor: ColorSchemeManagerClass.colorPrimary,
-              side: BorderSide(
-              color: ColorSchemeManagerClass.colorPrimary,
-              width: 2.0
-              ),
+              side: BorderSide(color: ColorSchemeManagerClass.colorPrimary, width: 2.0),
               title: Text(
                 "O aluno possui plano de saúde?",
                 style: TextStyle(
-                color: ColorSchemeManagerClass.colorPrimary,
-                fontWeight: FontWeight.w500,
+                  color: ColorSchemeManagerClass.colorPrimary,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
               value: hasHealthPlan,
               onChanged: (value) => setState(() => hasHealthPlan = value!),
             ),
-            if (hasHealthPlan) 
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: buildEmergencyInfoField("Se sim, qual o nome do plano?", widget.healthPlanController),
-            ),
+            if (hasHealthPlan)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: buildEmergencyInfoField("Se sim, qual o nome do plano?", widget.healthPlanController),
+              ),
             CheckboxListTile(
               activeColor: ColorSchemeManagerClass.colorPrimary,
-              side: BorderSide(
-              color: ColorSchemeManagerClass.colorPrimary,
-              width: 2.0
-              ),
+              side: BorderSide(color: ColorSchemeManagerClass.colorPrimary, width: 2.0),
               title: Text(
                 "Autoriza a escola a tomar providências médicas em caso de emergência?",
                 style: TextStyle(
-                color: ColorSchemeManagerClass.colorPrimary,
-                fontWeight: FontWeight.w500,
+                  color: ColorSchemeManagerClass.colorPrimary,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
               value: allowsEmergencyActions,
@@ -186,10 +232,7 @@ class _HealthFormComponentState extends State<HealthFormComponent> {
           value: checkboxValue,
           onChanged: onChanged,
           activeColor: ColorSchemeManagerClass.colorPrimary,
-          side: BorderSide(
-            color: ColorSchemeManagerClass.colorPrimary,
-            width: 2.0
-          ),
+          side: BorderSide(color: ColorSchemeManagerClass.colorPrimary, width: 2.0),
         ),
         if (checkboxValue)
           Padding(
