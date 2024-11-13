@@ -167,28 +167,24 @@ class _OptionsStudentState extends State<OptionsStudent> {
                           Expanded(
                             child: Container(
                               alignment: Alignment.center,
-                              color: Colors.purple,
                               child: const TextComponente(title: 'Registro do aluno'),
                             ),
                           ),
                           Expanded(
                             child: Container(
                               alignment: Alignment.center,
-                              color: Colors.red,
                               child: const TextComponente(title: 'Série'),
                             ),
                           ),
                           Expanded(
                             child: Container(
                               alignment: Alignment.center,
-                              color: Colors.green,
                               child: const TextComponente(title: 'Turma'),
                             ),
                           ),
                           Expanded(
                             child: Container(
                               alignment: Alignment.center,
-                              color: Colors.cyan,
                               child: const TextComponente(title: 'Escola'),
                             ),
                           ),
@@ -280,28 +276,24 @@ class _OptionsStudentState extends State<OptionsStudent> {
                                       Expanded(
                                         child: Container(
                                           alignment: Alignment.center,
-                                          color: Colors.amber,
                                           child: Text(student['id_aluno'].toString()),
                                         ),
                                       ),
                                       Expanded(
                                         child: Container(
                                           alignment: Alignment.center,
-                                          color: Colors.deepOrangeAccent,
                                           child: Text(student['serie'].toString()),
                                         ),
                                       ),
                                       Expanded(
                                         child: Container(
                                           alignment: Alignment.center,
-                                          color: Colors.indigo,
                                           child: Text(student['turma'].toString()),
                                         ),
                                       ),
                                       Expanded(
                                         child: Container(
                                           alignment: Alignment.center,
-                                          color: Colors.lime,
                                           child: Text(
                                             student['escola'].toString(),
                                             textAlign: TextAlign.center,

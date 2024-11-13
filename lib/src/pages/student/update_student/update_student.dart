@@ -56,13 +56,59 @@ class _UpdateStudentPageState extends State<UpdateStudentPage> with SingleTicker
   final TextEditingController escolaAnteriorController = TextEditingController();
   final TextEditingController sexoStudentController = TextEditingController();
 
+  //anamnese
+  final TextEditingController diseaseController = TextEditingController();
+  final TextEditingController seriousIllnessController = TextEditingController();
+  final TextEditingController surgeryController = TextEditingController();
+  final TextEditingController allergyController = TextEditingController();
+  final TextEditingController respiratoryController = TextEditingController();
+  final TextEditingController dietaryRestrictionController = TextEditingController();
+  final TextEditingController allergicReactionController = TextEditingController();
+  final TextEditingController vaccineController = TextEditingController();
+  final TextEditingController medicalMonitoringController = TextEditingController();
+  final TextEditingController dailyMedicationController = TextEditingController();
+  final TextEditingController emergencyMedicationController = TextEditingController();
+  final TextEditingController emergencyParentescoController = TextEditingController();
+  final TextEditingController emergencyPhoneController = TextEditingController();
+  final TextEditingController emergencyNameController = TextEditingController();
+  final TextEditingController healthPlanController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    // ignore: avoid_print
+    _tabController = TabController(length: 4, vsync: this);
+    _tabController.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    // Atrasando a execução da função para o fim do ciclo de construção do widget
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // ignore: avoid_print
+      print(widget.idAlunoUpdate);
+      carregarDadosAluno(widget.idAlunoUpdate);
+    });
+  }
+
   Future<void> carregarDadosAluno(int alunoId) async {
     try {
-      // Realiza a consulta para obter os dados do aluno com a ID fornecida
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      );
       final responseAluno = await Supabase.instance.client.from('aluno').select().eq('id_aluno', alunoId).single();
       final responseAnamnese = await Supabase.instance.client.from('Anamnese').select().eq('fk_id_aluno', alunoId).single();
       final responseResponsavel = await Supabase.instance.client.from('responsavel').select().eq('cpf_responsavel', responseAluno['fk_cpf_responsavel']).single();
-
       // Preenche os TextEditingControllers com os dados retornados do aluno
       nameStudentController.text = responseAluno['nome'] ?? '';
       emailStudentController.text = responseAluno['email'] ?? '';
@@ -113,36 +159,9 @@ class _UpdateStudentPageState extends State<UpdateStudentPage> with SingleTicker
     } catch (error) {
       // ignore: avoid_print
       print("Erro inesperado: $error");
+    } finally {
+      Navigator.of(context).pop();
     }
-  }
-
-  //anamnese
-  final TextEditingController diseaseController = TextEditingController();
-  final TextEditingController seriousIllnessController = TextEditingController();
-  final TextEditingController surgeryController = TextEditingController();
-  final TextEditingController allergyController = TextEditingController();
-  final TextEditingController respiratoryController = TextEditingController();
-  final TextEditingController dietaryRestrictionController = TextEditingController();
-  final TextEditingController allergicReactionController = TextEditingController();
-  final TextEditingController vaccineController = TextEditingController();
-  final TextEditingController medicalMonitoringController = TextEditingController();
-  final TextEditingController dailyMedicationController = TextEditingController();
-  final TextEditingController emergencyMedicationController = TextEditingController();
-  final TextEditingController emergencyParentescoController = TextEditingController();
-  final TextEditingController emergencyPhoneController = TextEditingController();
-  final TextEditingController emergencyNameController = TextEditingController();
-  final TextEditingController healthPlanController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    // ignore: avoid_print
-    print(widget.idAlunoUpdate);
-    carregarDadosAluno(widget.idAlunoUpdate);
-    _tabController = TabController(length: 4, vsync: this);
-    _tabController.addListener(() {
-      setState(() {});
-    });
   }
 
   void _nextTab() {
