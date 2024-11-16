@@ -1,6 +1,4 @@
 import 'package:acadia/src/theme/theme_colors.dart';
-import 'package:animate_do/animate_do.dart';
-import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 
 class ConfettiPage extends StatefulWidget {
@@ -12,23 +10,28 @@ class ConfettiPage extends StatefulWidget {
 }
 
 class _ConfettiPageState extends State<ConfettiPage> {
-  bool isPlaying = false;
-  final ConfettiController controller = ConfettiController();
+  bool _isLoading = true;
 
   @override
   void initState() {
-    final navigation = Navigator.of(context);
     super.initState();
-    Future.delayed(const Duration(seconds: 3), () {
-      navigation.pushReplacementNamed('/options_student');
-    });
-    controller.play();
+    _startLoading();
   }
 
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
+  // Função para simular o delay
+  void _startLoading() {
+    setState(() {
+      _isLoading = true; // Resetando para o início
+    });
+    final navigation = Navigator.of(context);
+    Future.delayed(const Duration(seconds: 3), () {
+      if (mounted) { // Verifica se a tela ainda está montada
+        setState(() {
+          _isLoading = false; // Quando o tempo expirar, desativa o gif
+        });
+        navigation.pushReplacementNamed('/options_student');
+      }
+    });
   }
 
   @override
@@ -40,32 +43,20 @@ class _ConfettiPageState extends State<ConfettiPage> {
           body: SizedBox(
             width: double.maxFinite,
             height: double.maxFinite,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                FadeInDown(
-                  child: const TextComponente(
-                    description: 'Cadastro do aluno',
-                  ),
-                ),
-                FadeInUp(
-                  child: const TextComponente(
-                    description: 'Realizada com sucesso!',
-                  ),
-                ),
-              ],
+            child: Center(
+              child: _isLoading
+                  ? Image.asset('assets/gifs/progress.gif') // Exibe o gif enquanto carrega
+                  : Container(), // Após o delay, o gif é substituído
             ),
           ),
         ),
-        ConfettiWidget(
-          confettiController: controller,
-          shouldLoop: true,
-          blastDirectionality: BlastDirectionality.explosive,
-          numberOfParticles: 80,
-        ),
       ],
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }
 
