@@ -8,11 +8,14 @@ import 'dart:io';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class StudentUpdateComponente extends StatefulWidget {
+  final String? imageUrl;
+  final String? userName;
+  final bool isLoading;
+  final void Function(String imageUrl) onUpload;
   final GlobalKey<FormState> formKey;
   final ValueNotifier<String?> turmaAlunoNotifier;
   final ValueNotifier<String?> serieAlunoNotifier;
   final ValueNotifier<String?> escolaAlunoNotifier;
-  final ValueNotifier<XFile?> imagemAlunoNotifier;
   final TextEditingController nameStudentController;
   final TextEditingController emailStudentController;
   final TextEditingController cpfStudentController;
@@ -53,10 +56,9 @@ class StudentUpdateComponente extends StatefulWidget {
     required this.sexoStudentController,
     required this.nomeResponsavelController,
     required this.cpfResponsavelController,
-    required this.imagemAlunoNotifier, 
     required this.turmaAlunoNotifier, 
     required this.escolaAlunoNotifier, 
-    required this.serieAlunoNotifier,
+    required this.serieAlunoNotifier, this.imageUrl, this.userName, required this.isLoading, required this.onUpload,
   });
 
   @override
@@ -68,6 +70,7 @@ class _StudentUpdateComponenteState extends State<StudentUpdateComponente> with 
   String? selectedSerie;
   String? selectedTurma;
   int? selectedTypeSerie;
+  bool isUploading = false;
   List<Map<String, dynamic>> schools = [];
   List<String> typeEnsino = [];
   List<String> turmas = [];
@@ -223,13 +226,36 @@ class _StudentUpdateComponenteState extends State<StudentUpdateComponente> with 
     }
   }
 
-  Future<void> _pickImage() async {
+  Future<void> _uploadImage() async {
+    final client = Supabase.instance.client;
+    final sm = ScaffoldMessenger.of(context);
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      setState(() {
-        widget.imagemAlunoNotifier.value = image;
-      });
+
+     if (image == null) {
+      return;
+    }
+
+    try {
+      final imageExtension = image.path.split('.').last.toLowerCase();
+      final imagesBytes = await image.readAsBytes();
+      final imagePath = '/${widget.cpfStudentController}/students-profile';
+
+      // Faz o upload da imagem
+      await client.storage.from('students-image').uploadBinary(
+            imagePath,
+            imagesBytes,
+            fileOptions: FileOptions(upsert: true, contentType: 'image/$imageExtension'),
+          );
+      String imageUrl = client.storage.from('students-image').getPublicUrl(imagePath);
+      imageUrl = Uri.parse(imageUrl).replace(queryParameters: {'t': DateTime.now().millisecondsSinceEpoch.toString()}).toString();
+      await client.from('aluno').update({'imageProfile': imageUrl}).eq('id_aluno', widget.raStudentController);
+    } catch (e) {
+      sm.showSnackBar(SnackBar(
+        backgroundColor: ColorSchemeManagerClass.colorDanger,
+        content: Text(e.toString()),
+        duration: const Duration(seconds: 3),
+      ));
     }
   }
 
@@ -298,30 +324,17 @@ class _StudentUpdateComponenteState extends State<StudentUpdateComponente> with 
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       InkWell(
-                        onTap: _pickImage,
-                        child: Container(
+                        onTap: _uploadImage,
+                        child: SizedBox(
                           width: 180,
                           height: 220,
-                          decoration: BoxDecoration(
-                            color: widget.imagemAlunoNotifier.value != null ? Colors.transparent : ColorSchemeManagerClass.colorPrimary,
-                            borderRadius: BorderRadius.circular(5.0),
-                            border: Border.all(width: 2.0, color: ColorSchemeManagerClass.colorPrimary),
-                          ),
                           child: Stack(
                             fit: StackFit.expand,
                             children: [
-                              ValueListenableBuilder<XFile?>(
-                                valueListenable: widget.imagemAlunoNotifier,
-                                builder: (context, image, child) {
-                                  return image != null
-                                      ? Image.file(
-                                          File(image.path),
-                                          fit: BoxFit.cover,
-                                        )
-                                      : const SizedBox.shrink();
-                                },
-                              ),
-                              if (widget.imagemAlunoNotifier.value == null)
+                               isUploading
+                                ? const CircularProgressIndicator()
+                                : const SizedBox.shrink(),
+                              if (widget.imageUrl == null)
                                 Align(
                                   alignment: Alignment.center,
                                   child: Column(

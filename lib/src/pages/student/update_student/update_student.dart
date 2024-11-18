@@ -237,10 +237,10 @@ class _UpdateStudentPageState extends State<UpdateStudentPage> with SingleTicker
                     complementoController: complementoController,
                   ),
                   StudentUpdateComponente(
+                    
                     serieAlunoNotifier: serieAlunoNotifier,
                     escolaAlunoNotifier: escolaAlunoNotifier,
                     turmaAlunoNotifier: turmaAlunoNotifier,
-                    imagemAlunoNotifier: imagemAlunoNotifier,
                     formKey: _formKeyS,
                     nameStudentController: nameStudentController,
                     emailStudentController: emailStudentController,
