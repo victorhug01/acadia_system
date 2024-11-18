@@ -4,12 +4,10 @@ import 'package:acadia/src/validations/mixin_validation.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class StudentUpdateComponente extends StatefulWidget {
   final String? imageUrl;
-  final String? userName;
   final bool isLoading;
   final void Function(String imageUrl) onUpload;
   final GlobalKey<FormState> formKey;
@@ -58,7 +56,7 @@ class StudentUpdateComponente extends StatefulWidget {
     required this.cpfResponsavelController,
     required this.turmaAlunoNotifier, 
     required this.escolaAlunoNotifier, 
-    required this.serieAlunoNotifier, this.imageUrl, this.userName, required this.isLoading, required this.onUpload,
+    required this.serieAlunoNotifier, this.imageUrl,required this.isLoading, required this.onUpload,
   });
 
   @override

@@ -176,6 +176,10 @@ class _UpdateStudentPageState extends State<UpdateStudentPage> with SingleTicker
     }
   }
 
+  String? _imageUrl;
+  String? userName;
+  bool isLoading = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -237,7 +241,15 @@ class _UpdateStudentPageState extends State<UpdateStudentPage> with SingleTicker
                     complementoController: complementoController,
                   ),
                   StudentUpdateComponente(
-                    
+                    isLoading: isLoading,
+                    imageUrl: _imageUrl,
+                    onUpload: (imageUrl) async {
+                      setState(() {
+                        _imageUrl = imageUrl; // Atualiza a URL da imagem no estado
+                      });
+                      Supabase.instance.client.from('aluno').update({'avatar': imageUrl}) // Atualiza o avatar no banco de dados
+                          .eq('id_aluno', cpfStudentController);
+                    },
                     serieAlunoNotifier: serieAlunoNotifier,
                     escolaAlunoNotifier: escolaAlunoNotifier,
                     turmaAlunoNotifier: turmaAlunoNotifier,
