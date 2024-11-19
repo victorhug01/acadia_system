@@ -18,36 +18,41 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    _loadUserData(); 
     super.initState();
-    _loadUserData(); // Atualizar o método para carregar os dados do usuário
+    // Atualizar o método para carregar os dados do usuário
   }
 
   Future<void> _loadUserData() async {
-    final client = Supabase.instance.client;
-    final userId = client.auth.currentUser?.id;
+  final client = Supabase.instance.client;
+  final userId = client.auth.currentUser?.id;
 
-    if (userId != null) {
-      try {
-        // Seleciona o nome e o avatar
-        final response = await client
-            .from('secretaria')
-            .select('nome, avatar')
-            .eq('id', userId)
-            .single();
+  if (userId != null) {
+    try {
+      final response = await client
+          .from('secretaria')
+          .select('nome, avatar')
+          .eq('id', userId)
+          .single();
 
-        setState(() {
-          userName = response['nome'] ?? 'Nome não encontrado';
-          _imageUrl = response['avatar']; // Carrega a URL do avatar
-          isLoading = false;
-        });
-      } catch (e) {
-        setState(() {
-          userName = 'Erro ao carregar os dados';
-          isLoading = false;
-        });
+      if (response['avatar'] != null) {
+        await precacheImage(NetworkImage(response['avatar']), context);
       }
+
+      setState(() {
+        _imageUrl = response['avatar'];
+        userName = response['nome'] ?? 'Nome não encontrado';
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        userName = 'Erro ao carregar os dados';
+        isLoading = false;
+      });
     }
   }
+}
+
 
   List<String> imagesCarousel = [
     'assets/images/slide1.png',
@@ -57,6 +62,14 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final client = Supabase.instance.client;
+    if (isLoading) {
+    // Exibe um indicador de carregamento enquanto os dados estão sendo carregados
+    return const Scaffold(
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
 
     return Scaffold(
       drawer: DrawerComponent(

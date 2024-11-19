@@ -93,12 +93,15 @@ class _DrawerComponentState extends State<DrawerComponent> {
                         backgroundImage: widget.imageUrl != null && !isUploading ? NetworkImage(widget.imageUrl!) : null,
                         child: widget.imageUrl == null && !isUploading
                             ? const Icon(
-                                Icons.image_not_supported,
+                                Icons.person,
                                 size: 50,
-                                color: Colors.grey,
-                              ) // Ícone exibido quando a imagem não é encontrada
+                                color: Colors.white, // Placeholder ícone de pessoa
+                              )
                             : isUploading
-                                ? const CircularProgressIndicator() // Mostra o progresso enquanto a imagem é enviada
+                                ? CircularProgressIndicator(
+                                    strokeWidth: 2.0,
+                                    color: ColorSchemeManagerClass.colorPrimary,
+                                  ) // Indicador de progresso durante o upload
                                 : null,
                       ),
                       Positioned(
@@ -201,11 +204,10 @@ class _DrawerComponentState extends State<DrawerComponent> {
                 );
                 try {
                   await client.auth.signOut();
-                  
                 } catch (e) {
                   // ignore: avoid_print
                   print(e);
-                }finally{
+                } finally {
                   await navigation.pushNamedAndRemoveUntil('/', (router) => false);
                   navigation.pop();
                 }
