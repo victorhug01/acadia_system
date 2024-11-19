@@ -256,13 +256,13 @@ class _UpdateStudentPageState extends State<UpdateStudentPage> with SingleTicker
                     complementoController: complementoController,
                   ),
                   StudentUpdateComponente(
-                    isLoading: isLoading,
                     imageUrl: _imageUrl,
+                    isLoading: isLoading,
                     onUpload: (imageUrl) async {
                       setState(() {
                         _imageUrl = imageUrl; // Atualiza a URL da imagem no estado
                       });
-                      Supabase.instance.client.from('aluno').update({'imageProfile': imageUrl}) // Atualiza o avatar no banco de dados
+                      await Supabase.instance.client.from('aluno').update({'imageProfile': imageUrl}) // Atualiza o avatar no banco de dados
                           .eq('id_aluno', raStudentController.text);
                     },
                     serieAlunoNotifier: serieAlunoNotifier,

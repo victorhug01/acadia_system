@@ -255,7 +255,7 @@ class _StudentUpdateComponenteState extends State<StudentUpdateComponente> with 
       String imageUrl = client.storage.from('students-image').getPublicUrl(imagePath);
       imageUrl = Uri.parse(imageUrl).replace(queryParameters: {'t': DateTime.now().millisecondsSinceEpoch.toString()}).toString();
       await client.from('aluno').update({'imageProfile': imageUrl}).eq('id_aluno', widget.raStudentController.text);
-      } catch (e) {
+    } catch (e) {
       sm.showSnackBar(SnackBar(
         backgroundColor: ColorSchemeManagerClass.colorDanger,
         content: Text(e.toString()),
@@ -337,26 +337,43 @@ class _StudentUpdateComponenteState extends State<StudentUpdateComponente> with 
                         child: Container(
                           width: 180,
                           height: 220,
+                          decoration: BoxDecoration(
+                            image: widget.imageUrl != null && !isUploading
+                                ? DecorationImage(
+                                    image: NetworkImage(widget.imageUrl!), // Use NetworkImage para URLs
+                                    fit: BoxFit.cover,
+                                  )
+                                : null,
+                            color: Colors.grey[300], // Background caso não haja imagem
+                          ),
                           child: Stack(
                             fit: StackFit.expand,
                             children: [
-                              isUploading ? const CircularProgressIndicator() : const SizedBox.shrink(),
-                              widget.imageUrl == null?
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(Icons.add_a_photo_outlined, size: 55, color: ColorSchemeManagerClass.colorWhite),
-                                      const SizedBox(height: 15.0),
-                                      Text(
-                                        'Adicionar uma foto',
-                                        style: TextStyle(color: ColorSchemeManagerClass.colorWhite),
+                              isUploading ? const Center(child:  CircularProgressIndicator()) : const SizedBox.shrink(),
+                              widget.imageUrl == null
+                                  ? Align(
+                                      alignment: Alignment.center,
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.add_a_photo_outlined, size: 55, color: ColorSchemeManagerClass.colorWhite),
+                                          const SizedBox(height: 15.0),
+                                          Text(
+                                            'Adicionar uma foto',
+                                            style: TextStyle(color: ColorSchemeManagerClass.colorWhite),
+                                          ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
-                                )
-                                : Image.network(widget.imageUrl!.toString(), fit: BoxFit.cover)
+                                    )
+                                  : widget.imageUrl == null && !isUploading
+                                      ? const Icon(
+                                          Icons.image_not_supported,
+                                          size: 50,
+                                          color: Colors.grey,
+                                        )
+                                      : isUploading
+                                          ? const Center(child:  CircularProgressIndicator())
+                                          : const SizedBox.shrink()
                             ],
                           ),
                         ),
