@@ -54,9 +54,12 @@ class StudentUpdateComponente extends StatefulWidget {
     required this.sexoStudentController,
     required this.nomeResponsavelController,
     required this.cpfResponsavelController,
-    required this.turmaAlunoNotifier, 
-    required this.escolaAlunoNotifier, 
-    required this.serieAlunoNotifier, this.imageUrl,required this.isLoading, required this.onUpload,
+    required this.turmaAlunoNotifier,
+    required this.escolaAlunoNotifier,
+    required this.serieAlunoNotifier,
+    this.imageUrl,
+    required this.isLoading,
+    required this.onUpload,
   });
 
   @override
@@ -230,14 +233,18 @@ class _StudentUpdateComponenteState extends State<StudentUpdateComponente> with 
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
-     if (image == null) {
+    if (image == null) {
       return;
     }
+
+    setState(() {
+      isUploading = true; // Inicia o estado de upload
+    });
 
     try {
       final imageExtension = image.path.split('.').last.toLowerCase();
       final imagesBytes = await image.readAsBytes();
-      final imagePath = '/${widget.cpfStudentController}/students-profile';
+      final imagePath = '/${widget.cpfStudentController.text}/students-profile';
 
       // Faz o upload da imagem
       await client.storage.from('students-image').uploadBinary(
@@ -247,13 +254,17 @@ class _StudentUpdateComponenteState extends State<StudentUpdateComponente> with 
           );
       String imageUrl = client.storage.from('students-image').getPublicUrl(imagePath);
       imageUrl = Uri.parse(imageUrl).replace(queryParameters: {'t': DateTime.now().millisecondsSinceEpoch.toString()}).toString();
-      await client.from('aluno').update({'imageProfile': imageUrl}).eq('id_aluno', widget.raStudentController);
-    } catch (e) {
+      await client.from('aluno').update({'imageProfile': imageUrl}).eq('id_aluno', widget.raStudentController.text);
+      } catch (e) {
       sm.showSnackBar(SnackBar(
         backgroundColor: ColorSchemeManagerClass.colorDanger,
         content: Text(e.toString()),
         duration: const Duration(seconds: 3),
       ));
+    } finally {
+      setState(() {
+        isUploading = false;
+      });
     }
   }
 
@@ -323,16 +334,14 @@ class _StudentUpdateComponenteState extends State<StudentUpdateComponente> with 
                     children: [
                       InkWell(
                         onTap: _uploadImage,
-                        child: SizedBox(
+                        child: Container(
                           width: 180,
                           height: 220,
                           child: Stack(
                             fit: StackFit.expand,
                             children: [
-                               isUploading
-                                ? const CircularProgressIndicator()
-                                : const SizedBox.shrink(),
-                              if (widget.imageUrl == null)
+                              isUploading ? const CircularProgressIndicator() : const SizedBox.shrink(),
+                              widget.imageUrl == null?
                                 Align(
                                   alignment: Alignment.center,
                                   child: Column(
@@ -346,7 +355,8 @@ class _StudentUpdateComponenteState extends State<StudentUpdateComponente> with 
                                       ),
                                     ],
                                   ),
-                                ),
+                                )
+                                : Image.network(widget.imageUrl!.toString(), fit: BoxFit.cover)
                             ],
                           ),
                         ),

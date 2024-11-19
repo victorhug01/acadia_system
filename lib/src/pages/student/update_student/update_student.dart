@@ -73,15 +73,34 @@ class _UpdateStudentPageState extends State<UpdateStudentPage> with SingleTicker
   final TextEditingController emergencyNameController = TextEditingController();
   final TextEditingController healthPlanController = TextEditingController();
 
+  String? _imageUrl;
+  String? userName;
+  bool isLoading = true;
+
   @override
   void initState() {
     super.initState();
     // ignore: avoid_print
+    _fetchImageUrl();
     _tabController = TabController(length: 4, vsync: this);
     _tabController.addListener(() {
       setState(() {});
     });
   }
+
+  Future<String?> _fetchImageUrl() async {
+  final response = await Supabase.instance.client
+      .from('aluno')
+      .select('imageProfile')
+      .eq('id_aluno', widget.idAlunoUpdate)
+      .single();
+      print(response);
+      print(response['imageProfile']);
+  
+  _imageUrl = response['imageProfile'] as String;
+
+  return response['imageProfile'] as String;
+}
 
   @override
   void didChangeDependencies() {
@@ -176,10 +195,6 @@ class _UpdateStudentPageState extends State<UpdateStudentPage> with SingleTicker
     }
   }
 
-  String? _imageUrl;
-  String? userName;
-  bool isLoading = true;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -247,8 +262,8 @@ class _UpdateStudentPageState extends State<UpdateStudentPage> with SingleTicker
                       setState(() {
                         _imageUrl = imageUrl; // Atualiza a URL da imagem no estado
                       });
-                      Supabase.instance.client.from('aluno').update({'avatar': imageUrl}) // Atualiza o avatar no banco de dados
-                          .eq('id_aluno', cpfStudentController);
+                      Supabase.instance.client.from('aluno').update({'imageProfile': imageUrl}) // Atualiza o avatar no banco de dados
+                          .eq('id_aluno', raStudentController.text);
                     },
                     serieAlunoNotifier: serieAlunoNotifier,
                     escolaAlunoNotifier: escolaAlunoNotifier,
@@ -501,35 +516,6 @@ class _UpdateStudentPageState extends State<UpdateStudentPage> with SingleTicker
     }
   }
 
-  Future<void> _uploadImage({required String cpfA, required int raAlunoImage}) async {
-    final client = Supabase.instance.client;
-    final sm = ScaffoldMessenger.of(context);
-
-    if (imagemAlunoNotifier.value == null) return;
-
-    try {
-      final imageExtension = imagemAlunoNotifier.value?.path.split('.').last.toLowerCase();
-      final imagesBytes = await imagemAlunoNotifier.value?.readAsBytes();
-      final imagePath = '/$cpfA/students-profile';
-
-      // Faz o upload da imagem
-      await client.storage.from('students-image').uploadBinary(
-            imagePath,
-            imagesBytes!,
-            fileOptions: FileOptions(upsert: true, contentType: 'image/$imageExtension'),
-          );
-      String imageUrl = client.storage.from('students-image').getPublicUrl(imagePath);
-      imageUrl = Uri.parse(imageUrl).replace(queryParameters: {'t': DateTime.now().millisecondsSinceEpoch.toString()}).toString();
-      await client.from('aluno').update({'imageProfile': imageUrl}).eq('id_aluno', raAlunoImage);
-    } catch (e) {
-      sm.showSnackBar(SnackBar(
-        backgroundColor: ColorSchemeManagerClass.colorDanger,
-        content: Text(e.toString()),
-        duration: const Duration(seconds: 3),
-      ));
-    }
-  }
-
   void _sendRegisterStudentSystem() async {
     final navigation = Navigator.of(context);
     final String doencaCronica = diseaseController.text == '' ? 'Não informado' : diseaseController.text;
@@ -622,7 +608,7 @@ class _UpdateStudentPageState extends State<UpdateStudentPage> with SingleTicker
         uf: uf,
         complemento: complemento,
       );
-      await _uploadImage(cpfA: cpfA, raAlunoImage: raAlunoA);
+      // await _uploadImage(cpfA: cpfA, raAlunoImage: raAlunoA);
       await createAnaminese(
         raAluno: raAlunoA,
         acompanhamentoMedico: acompanhamentoMedico,
