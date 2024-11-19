@@ -254,6 +254,7 @@ class _StudentUpdateComponenteState extends State<StudentUpdateComponente> with 
           );
       String imageUrl = client.storage.from('students-image').getPublicUrl(imagePath);
       imageUrl = Uri.parse(imageUrl).replace(queryParameters: {'t': DateTime.now().millisecondsSinceEpoch.toString()}).toString();
+      widget.onUpload(imageUrl);
       await client.from('aluno').update({'imageProfile': imageUrl}).eq('id_aluno', widget.raStudentController.text);
     } catch (e) {
       sm.showSnackBar(SnackBar(

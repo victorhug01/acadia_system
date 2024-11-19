@@ -88,18 +88,15 @@ class _UpdateStudentPageState extends State<UpdateStudentPage> with SingleTicker
     });
   }
 
-  Future<String?> _fetchImageUrl() async {
+  Future<void> _fetchImageUrl() async {
   final response = await Supabase.instance.client
       .from('aluno')
       .select('imageProfile')
       .eq('id_aluno', widget.idAlunoUpdate)
       .single();
-      print(response);
-      print(response['imageProfile']);
   
-  _imageUrl = response['imageProfile'] as String;
+  _imageUrl = response['imageProfile'] as String?;
 
-  return response['imageProfile'] as String;
 }
 
   @override
@@ -197,13 +194,16 @@ class _UpdateStudentPageState extends State<UpdateStudentPage> with SingleTicker
 
   @override
   Widget build(BuildContext context) {
+    final navigation = Navigator.of(context);
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
         child: AppBarComponent(
           leading: IconButton(
             onPressed: () {
-              Navigator.of(context).pop();
+              navigation.pop();
+              navigation.pop();
+              navigation.pushNamed('/options_student');
             },
             icon: Icon(Icons.adaptive.arrow_back),
           ),
@@ -262,7 +262,7 @@ class _UpdateStudentPageState extends State<UpdateStudentPage> with SingleTicker
                       setState(() {
                         _imageUrl = imageUrl; // Atualiza a URL da imagem no estado
                       });
-                      await Supabase.instance.client.from('aluno').update({'imageProfile': imageUrl}) // Atualiza o avatar no banco de dados
+                      Supabase.instance.client.from('aluno').update({'imageProfile': imageUrl}) // Atualiza o avatar no banco de dados
                           .eq('id_aluno', raStudentController.text);
                     },
                     serieAlunoNotifier: serieAlunoNotifier,

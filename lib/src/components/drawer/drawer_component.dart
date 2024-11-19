@@ -55,6 +55,7 @@ class _DrawerComponentState extends State<DrawerComponent> {
 
       String imageUrl = client.storage.from('profiles').getPublicUrl(imagePath);
       imageUrl = Uri.parse(imageUrl).replace(queryParameters: {'t': DateTime.now().millisecondsSinceEpoch.toString()}).toString();
+      widget.onUpload(imageUrl);
     } catch (e) {
       sm.showSnackBar(SnackBar(
         backgroundColor: ColorSchemeManagerClass.colorDanger,
