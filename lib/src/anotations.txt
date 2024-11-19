@@ -1,0 +1,3 @@
+apiKey: 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
+
+channel: https://www.youtube.com/watch?v=2Dea-jJ1SmA
