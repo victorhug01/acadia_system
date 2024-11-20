@@ -21,6 +21,7 @@ class _UpdateStudentPageState extends State<UpdateStudentPage> with SingleTicker
   final ValueNotifier<String?> turmaAlunoNotifier = ValueNotifier(null);
   final ValueNotifier<String?> serieAlunoNotifier = ValueNotifier(null);
   final ValueNotifier<String?> escolaAlunoNotifier = ValueNotifier(null);
+  final ValueNotifier<int?> tipoSerieAlunoNotifier = ValueNotifier(null);
   late TabController _tabController;
   final GlobalKey<FormState> _formKeyR = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeyS = GlobalKey<FormState>();
@@ -55,6 +56,10 @@ class _UpdateStudentPageState extends State<UpdateStudentPage> with SingleTicker
   final TextEditingController raStudentController = TextEditingController();
   final TextEditingController escolaAnteriorController = TextEditingController();
   final TextEditingController sexoStudentController = TextEditingController();
+  final TextEditingController selectedSchoolController = TextEditingController();
+  final TextEditingController selectedSerieController = TextEditingController();
+  final TextEditingController selectedTurmaController = TextEditingController();
+  final TextEditingController selectedTypeSerie = TextEditingController();
 
   //anamnese
   final TextEditingController diseaseController = TextEditingController();
@@ -142,6 +147,10 @@ class _UpdateStudentPageState extends State<UpdateStudentPage> with SingleTicker
       raStudentController.text = responseAluno['id_aluno'].toString();
       escolaAnteriorController.text = responseAluno['escola_anterior'] ?? '';
       sexoStudentController.text = responseAluno['sexo'] ?? '';
+      selectedSchoolController.text = responseAluno['escola'];
+      selectedSerieController.text = responseAluno['serie'];
+      selectedTurmaController.text = responseAluno['turma'];
+      selectedTypeSerie.text = responseAluno['tipo_serie'];
 
       nameController.text = responseResponsavel['nome'] ?? '';
       emailController.text = responseResponsavel['email'] ?? '';
@@ -256,6 +265,7 @@ class _UpdateStudentPageState extends State<UpdateStudentPage> with SingleTicker
                     complementoController: complementoController,
                   ),
                   StudentUpdateComponente(
+                    tipoSerieAlunoNotifier: tipoSerieAlunoNotifier,
                     imageUrl: _imageUrl,
                     isLoading: isLoading,
                     onUpload: (imageUrl) async {
@@ -265,6 +275,10 @@ class _UpdateStudentPageState extends State<UpdateStudentPage> with SingleTicker
                       Supabase.instance.client.from('aluno').update({'imageProfile': imageUrl}) // Atualiza o avatar no banco de dados
                           .eq('id_aluno', raStudentController.text);
                     },
+                    selectedSchoolController: selectedSchoolController,
+                    selectedSerieController: selectedSerieController,
+                    selectedTurmaController: selectedTurmaController,
+                    selectedTypeSerie: selectedTypeSerie,
                     serieAlunoNotifier: serieAlunoNotifier,
                     escolaAlunoNotifier: escolaAlunoNotifier,
                     turmaAlunoNotifier: turmaAlunoNotifier,
@@ -401,6 +415,7 @@ class _UpdateStudentPageState extends State<UpdateStudentPage> with SingleTicker
 //-----------------------------------------------------------------
 
   Future<void> createStudent({
+    required int tipoSerie,
     required String turma,
     required String serie,
     required String escola,
@@ -445,6 +460,7 @@ class _UpdateStudentPageState extends State<UpdateStudentPage> with SingleTicker
         'turma': turma,
         'serie': serie,
         'escola': escola,
+        'tipo_serie': tipoSerie
       }).eq('id_aluno', widget.idAlunoUpdate);
       if (newUser.error == null) {
         sm.showSnackBar(
@@ -590,6 +606,7 @@ class _UpdateStudentPageState extends State<UpdateStudentPage> with SingleTicker
         escolaAnterior: escolaAnteriorA,
         sexo: sexoA,
         cpfResponsavel: cpfResponsavelA,
+        tipoSerie: int.parse(tipoSerieAlunoNotifier.value.toString()),
         turma: turmaAlunoNotifier.value.toString(),
         escola: escolaAlunoNotifier.value.toString(),
         serie: serieAlunoNotifier.value.toString(),

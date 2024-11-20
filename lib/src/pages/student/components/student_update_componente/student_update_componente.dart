@@ -14,6 +14,7 @@ class StudentUpdateComponente extends StatefulWidget {
   final ValueNotifier<String?> turmaAlunoNotifier;
   final ValueNotifier<String?> serieAlunoNotifier;
   final ValueNotifier<String?> escolaAlunoNotifier;
+  final ValueNotifier<int?> tipoSerieAlunoNotifier;
   final TextEditingController nameStudentController;
   final TextEditingController emailStudentController;
   final TextEditingController cpfStudentController;
@@ -32,6 +33,10 @@ class StudentUpdateComponente extends StatefulWidget {
   final TextEditingController sexoStudentController;
   final TextEditingController nomeResponsavelController;
   final TextEditingController cpfResponsavelController;
+  final TextEditingController? selectedSchoolController;
+  final TextEditingController? selectedSerieController;
+  final TextEditingController? selectedTurmaController;
+  final TextEditingController? selectedTypeSerie;
 
   const StudentUpdateComponente({
     super.key,
@@ -59,7 +64,11 @@ class StudentUpdateComponente extends StatefulWidget {
     required this.serieAlunoNotifier,
     this.imageUrl,
     required this.isLoading,
-    required this.onUpload,
+    required this.onUpload, 
+    this.selectedSchoolController, 
+    this.selectedSerieController, 
+    this.selectedTurmaController, 
+    this.selectedTypeSerie, required this.tipoSerieAlunoNotifier,
   });
 
   @override
@@ -320,6 +329,7 @@ class _StudentUpdateComponenteState extends State<StudentUpdateComponente> with 
     widget.escolaAlunoNotifier.value = selectedSchool;
     widget.serieAlunoNotifier.value = selectedSerie;
     widget.turmaAlunoNotifier.value = selectedTurma;
+    widget.tipoSerieAlunoNotifier.value = selectedTypeSerie;
     return Padding(
       padding: const EdgeInsets.all(25.0),
       child: SingleChildScrollView(
@@ -350,7 +360,7 @@ class _StudentUpdateComponenteState extends State<StudentUpdateComponente> with 
                           child: Stack(
                             fit: StackFit.expand,
                             children: [
-                              isUploading ? const Center(child:  CircularProgressIndicator()) : const SizedBox.shrink(),
+                              isUploading ? const Center(child: CircularProgressIndicator()) : const SizedBox.shrink(),
                               widget.imageUrl == null
                                   ? Align(
                                       alignment: Alignment.center,
@@ -373,7 +383,7 @@ class _StudentUpdateComponenteState extends State<StudentUpdateComponente> with 
                                           color: Colors.grey,
                                         )
                                       : isUploading
-                                          ? const Center(child:  CircularProgressIndicator())
+                                          ? const Center(child: CircularProgressIndicator())
                                           : const SizedBox.shrink()
                             ],
                           ),
@@ -392,7 +402,7 @@ class _StudentUpdateComponenteState extends State<StudentUpdateComponente> with 
                           dropdownColor: ColorSchemeManagerClass.colorPrimary,
                           borderRadius: BorderRadius.circular(5.0),
                           hint: Text(
-                            'Selecionar escola',
+                            'Alterar escola',
                             style: TextStyle(
                               color: ColorSchemeManagerClass.colorWhite,
                             ),

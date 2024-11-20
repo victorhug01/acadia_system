@@ -21,6 +21,7 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
   final ValueNotifier<String?> turmaAlunoNotifier = ValueNotifier(null);
   final ValueNotifier<String?> serieAlunoNotifier = ValueNotifier(null);
   final ValueNotifier<String?> escolaAlunoNotifier = ValueNotifier(null);
+  final ValueNotifier<int?> tipoSerieAlunoNotifier = ValueNotifier(null);
   late TabController _tabController;
   final GlobalKey<FormState> _formKeyR = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeyS = GlobalKey<FormState>();
@@ -181,6 +182,7 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
                     complementoController: complementoController,
                   ),
                   StudentComponent(
+                    tipoSerieAlunoNotifier: tipoSerieAlunoNotifier,
                     serieAlunoNotifier: serieAlunoNotifier,
                     escolaAlunoNotifier: escolaAlunoNotifier,
                     turmaAlunoNotifier: turmaAlunoNotifier,
@@ -319,6 +321,7 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
 //-----------------------------------------------------------------
 
   Future<void> createStudent({
+    required int tipoSerie,
     required String turma,
     required String serie,
     required String escola,
@@ -363,6 +366,7 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
         'turma': turma,
         'serie': serie,
         'escola': escola,
+        'tipo_serie': tipoSerie
       });
       if (newUser.error == null) {
         sm.showSnackBar(
@@ -534,6 +538,7 @@ class _RegisterStudentPageState extends State<RegisterStudentPage> with SingleTi
         complemento: complemento,
       );
       await createStudent(
+        tipoSerie: int.parse(tipoSerieAlunoNotifier.value.toString()),
         raAluno: raAlunoA,
         nome: nomeA,
         email: emailA,

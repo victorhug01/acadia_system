@@ -13,6 +13,7 @@ class StudentComponent extends StatefulWidget {
   final ValueNotifier<String?> turmaAlunoNotifier;
   final ValueNotifier<String?> serieAlunoNotifier;
   final ValueNotifier<String?> escolaAlunoNotifier;
+  final ValueNotifier<int?> tipoSerieAlunoNotifier;
   final ValueNotifier<XFile?> imagemAlunoNotifier;
   final TextEditingController nameStudentController;
   final TextEditingController emailStudentController;
@@ -57,7 +58,7 @@ class StudentComponent extends StatefulWidget {
     required this.imagemAlunoNotifier, 
     required this.turmaAlunoNotifier, 
     required this.escolaAlunoNotifier, 
-    required this.serieAlunoNotifier,
+    required this.serieAlunoNotifier, required this.tipoSerieAlunoNotifier,
   });
 
   @override
@@ -285,6 +286,7 @@ class _StudentComponentState extends State<StudentComponent> with ValidationMixi
     widget.escolaAlunoNotifier.value = selectedSchool;
     widget.serieAlunoNotifier.value = selectedSerie;
     widget.turmaAlunoNotifier.value = selectedTurma;
+    widget.tipoSerieAlunoNotifier.value = selectedTypeSerie;
     return Padding(
       padding: const EdgeInsets.all(25.0),
       child: SingleChildScrollView(
