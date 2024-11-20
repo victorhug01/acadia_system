@@ -128,13 +128,15 @@ class _HomePageState extends State<HomePage> {
           showDialog(
             context: context,
             builder: (_) {
-              return const Dialog(
+              return  Dialog(
                 alignment: Alignment.centerRight,
-                insetPadding: EdgeInsets.all(0),
+                insetPadding: const EdgeInsets.all(0),
                 child: SizedBox(
                   height: double.maxFinite,
                   width: 450.0,
-                  child: ChatPage(),
+                  child: ChatPage(
+                    avatarUser: _imageUrl.toString(),
+                  ),
                 ),
               );
             },
