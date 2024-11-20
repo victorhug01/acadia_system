@@ -1,11 +1,15 @@
 import 'package:acadia/src/app/myapp.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:window_manager/window_manager.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();
+  Gemini.init(
+    apiKey: 'AIzaSyDwDPE34Z8spAke38owElvnwjAjqo4EkWQ',
+  );
   WindowOptions windowOptions = const WindowOptions(
     minimumSize: Size(950, 600),
     size: Size(950, 600),

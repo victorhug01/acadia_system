@@ -1,7 +1,9 @@
 import 'package:acadia/src/components/appbar/appbar_component.dart';
 import 'package:acadia/src/components/drawer/drawer_component.dart';
+import 'package:acadia/src/pages/chat/chat_page.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,41 +20,36 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    _loadUserData(); 
+    _loadUserData();
     super.initState();
     // Atualizar o método para carregar os dados do usuário
   }
 
   Future<void> _loadUserData() async {
-  final client = Supabase.instance.client;
-  final userId = client.auth.currentUser?.id;
+    final client = Supabase.instance.client;
+    final userId = client.auth.currentUser?.id;
 
-  if (userId != null) {
-    try {
-      final response = await client
-          .from('secretaria')
-          .select('nome, avatar')
-          .eq('id', userId)
-          .single();
+    if (userId != null) {
+      try {
+        final response = await client.from('secretaria').select('nome, avatar').eq('id', userId).single();
 
-      if (response['avatar'] != null) {
-        await precacheImage(NetworkImage(response['avatar']), context);
+        if (response['avatar'] != null) {
+          await precacheImage(NetworkImage(response['avatar']), context);
+        }
+
+        setState(() {
+          _imageUrl = response['avatar'];
+          userName = response['nome'] ?? 'Nome não encontrado';
+          isLoading = false;
+        });
+      } catch (e) {
+        setState(() {
+          userName = 'Erro ao carregar os dados';
+          isLoading = false;
+        });
       }
-
-      setState(() {
-        _imageUrl = response['avatar'];
-        userName = response['nome'] ?? 'Nome não encontrado';
-        isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        userName = 'Erro ao carregar os dados';
-        isLoading = false;
-      });
     }
   }
-}
-
 
   List<String> imagesCarousel = [
     'assets/images/slide1.png',
@@ -63,13 +60,13 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final client = Supabase.instance.client;
     if (isLoading) {
-    // Exibe um indicador de carregamento enquanto os dados estão sendo carregados
-    return const Scaffold(
-      body: Center(
-        child: CircularProgressIndicator(),
-      ),
-    );
-  }
+      // Exibe um indicador de carregamento enquanto os dados estão sendo carregados
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
 
     return Scaffold(
       drawer: DrawerComponent(
@@ -83,8 +80,7 @@ class _HomePageState extends State<HomePage> {
 
           final userId = client.auth.currentUser?.id;
           if (userId != null) {
-            await client.from('secretaria').update(
-                    {'avatar': imageUrl}) // Atualiza o avatar no banco de dados
+            await client.from('secretaria').update({'avatar': imageUrl}) // Atualiza o avatar no banco de dados
                 .eq('id', userId);
           }
         },
@@ -126,6 +122,25 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (_) {
+              return const Dialog(
+                alignment: Alignment.centerRight,
+                insetPadding: EdgeInsets.all(0),
+                child: SizedBox(
+                  height: double.maxFinite,
+                  width: 450.0,
+                  child: ChatPage(),
+                ),
+              );
+            },
+          );
+        },
+        child: const Icon(HugeIcons.strokeRoundedAiChat02),
       ),
     );
   }
