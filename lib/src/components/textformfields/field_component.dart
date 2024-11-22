@@ -17,6 +17,10 @@ class TextFormFieldComponent extends StatefulWidget {
   final double sizeInputBorder;
   final Color? colorBorderInput;
   final double? paddingLeftInput;
+  final bool? filled;
+  final Color? fillColor;
+  final int? maxLines;
+  final int? minLines;
 
   const TextFormFieldComponent({
     super.key,
@@ -33,8 +37,12 @@ class TextFormFieldComponent extends StatefulWidget {
     this.colorBorderInput,
     this.paddingLeftInput,
     this.enable,
-    this.onChanged, 
+    this.onChanged,
     this.hintText,
+    this.filled,
+    this.fillColor, 
+    this.maxLines, 
+    this.minLines,
   });
 
   @override
@@ -57,20 +65,25 @@ class _TextFormFieldComponentState extends State<TextFormFieldComponent> {
       keyboardType: widget.inputType,
       obscureText: widget.obscure,
       controller: widget.controller,
+      maxLines: widget.maxLines,
+      minLines: widget.minLines ?? 1,
       decoration: InputDecoration(
-          hintText: widget.hintText,
-          prefixIcon: widget.iconPrefix,
-          suffixIcon: widget.iconSuffix,
-          labelText: widget.labelText,
-          contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: widget.paddingLeftInput ?? 0.0),
-          labelStyle: const TextStyle(
-            fontWeight: FontWeight.w500,
-          ),
-          enabledBorder: borderSideStyle,
-          focusedBorder: borderSideStyle,
-          border: borderSideStyle,
-          errorStyle: const TextStyle(height: 1.1),
-          helperText: ' '),
+        fillColor: widget.fillColor,
+        filled: widget.filled ?? false,
+        hintText: widget.hintText,
+        prefixIcon: widget.iconPrefix,
+        suffixIcon: widget.iconSuffix,
+        labelText: widget.labelText,
+        contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: widget.paddingLeftInput ?? 0.0),
+        labelStyle: const TextStyle(
+          fontWeight: FontWeight.w500,
+        ),
+        enabledBorder: borderSideStyle,
+        focusedBorder: borderSideStyle,
+        border: borderSideStyle,
+        errorStyle: const TextStyle(height: 1.1),
+        helperText: ' ',
+      ),
       validator: widget.validator,
     );
   }

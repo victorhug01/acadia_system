@@ -1,5 +1,6 @@
 import 'package:acadia/src/pages/home/home.dart';
 import 'package:acadia/src/pages/login/login.dart';
+import 'package:acadia/src/pages/notes/notes_page.dart';
 import 'package:acadia/src/pages/student/components/success_register/success_register.dart';
 import 'package:acadia/src/pages/student/home_student/home_student.dart';
 import 'package:acadia/src/pages/student/options_student/options_student.dart';
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
         '/options_student': (context) => const OptionsStudent(),
         '/register_student': (context) => const RegisterStudentPage(),
         '/confetti': (context) => const ConfettiPage(),
+        '/notes': (context) => const NotesPage(),
       },
     );
   }

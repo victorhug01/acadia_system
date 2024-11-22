@@ -160,6 +160,21 @@ class _DrawerComponentState extends State<DrawerComponent> {
               Navigator.pop(context);
             },
           ),
+          ListTile(
+            splashColor: Colors.transparent,
+            hoverColor: Colors.transparent,
+            leading: const Icon(HugeIcons.strokeRoundedNote),
+            title: const Text(
+              'Notes',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            onTap: () {
+              navigation.pushNamed('/notes');
+            },
+          ),
           ExpansionTile(
             leading: const Icon(HugeIcons.strokeRoundedAssignments),
             childrenPadding: const EdgeInsets.only(left: 40.0, bottom: 20.0),
