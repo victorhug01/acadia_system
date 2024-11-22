@@ -4,6 +4,7 @@ import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
 
 class ChatPage extends StatefulWidget {
   final String? avatarUser;
@@ -18,13 +19,23 @@ class _ChatPageState extends State<ChatPage> {
   List<ChatMessage> messages = [];
   late ChatUser currentUser;
   late ChatUser geminiUser;
+
   @override
   void initState() {
     super.initState();
-    print(widget.avatarUser);
-    currentUser = ChatUser(id: '0', firstName: 'user', profileImage: widget.avatarUser.toString());
-    geminiUser = ChatUser(id: '1', firstName: 'Gemini', profileImage: 'https://static.vecteezy.com/system/resources/previews/046/861/646/non_2x/gemini-icon-on-a-transparent-background-free-png.png');
+    currentUser = ChatUser(
+      id: '0',
+      firstName: 'user',
+      profileImage: widget.avatarUser.toString(),
+    );
+    geminiUser = ChatUser(
+      id: '1',
+      firstName: 'Gemini',
+      profileImage:
+          'https://static.vecteezy.com/system/resources/previews/046/861/646/non_2x/gemini-icon-on-a-transparent-background-free-png.png',
+    );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +63,7 @@ class _ChatPageState extends State<ChatPage> {
         trailing: [
           IconButton(
             onPressed: _sendMediaMessage,
-            icon: const Icon(Icons.image),
+            icon: const Icon(Icons.attachment),
           ),
         ],
       ),
@@ -81,13 +92,17 @@ class _ChatPageState extends State<ChatPage> {
         ChatMessage? lastMessage = messages.firstOrNull;
         if (lastMessage != null && lastMessage.user == geminiUser) {
           lastMessage = messages.removeAt(0);
-          String response = event.content?.parts?.fold("", (previous, current) => '$previous ${current.text}') ?? "";
+          String response = event.content?.parts
+                  ?.fold("", (previous, current) => '$previous ${current.text}') ??
+              "";
           lastMessage.text += response;
           setState(() {
             messages = [lastMessage!, ...messages];
           });
         } else {
-          String response = event.content?.parts?.fold("", (previous, current) => '$previous ${current.text}') ?? "";
+          String response = event.content?.parts
+                  ?.fold("", (previous, current) => '$previous ${current.text}') ??
+              "";
           ChatMessage message = ChatMessage(
             user: geminiUser,
             createdAt: DateTime.now(),
@@ -105,15 +120,58 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void _sendMediaMessage() async {
-    ImagePicker picker = ImagePicker();
-    XFile? file = await picker.pickImage(source: ImageSource.gallery);
+    // Exibir um diálogo para selecionar entre enviar imagem ou documento
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.image),
+              title: const Text('Enviar Imagem'),
+              onTap: () async {
+                Navigator.pop(context);
+                await _pickAndSendMedia(MediaType.image);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.file_present),
+              title: const Text('Enviar Documento'),
+              onTap: () async {
+                Navigator.pop(context);
+                await _pickAndSendMedia(MediaType.file);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _pickAndSendMedia(MediaType mediaType) async {
+    XFile? file;
+
+    if (mediaType == MediaType.image) {
+      // Selecionar imagem
+      file = await ImagePicker().pickImage(source: ImageSource.gallery);
+    } else if (mediaType == MediaType.file) {
+      // Selecionar documento
+      FilePickerResult? result = await FilePicker.platform.pickFiles();
+      if (result != null && result.files.single.path != null) {
+        file = XFile(result.files.single.path!);
+      }
+    }
+
     if (file != null) {
       ChatMessage chatMessage = ChatMessage(
         user: currentUser,
         createdAt: DateTime.now(),
-        text: "Describe this picture?",
+        text: mediaType == MediaType.image
+            ? "descreva essa imagem?"
+            : "descreva esse documento?",
         medias: [
-          ChatMedia(url: file.path, fileName: "", type: MediaType.image),
+          ChatMedia(url: file.path, fileName: file.name, type: mediaType),
         ],
       );
       _sendMessages(chatMessage);
