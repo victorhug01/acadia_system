@@ -19,8 +19,6 @@ class TextFormFieldComponent extends StatefulWidget {
   final double? paddingLeftInput;
   final bool? filled;
   final Color? fillColor;
-  final int? maxLines;
-  final int? minLines;
 
   const TextFormFieldComponent({
     super.key,
@@ -41,8 +39,6 @@ class TextFormFieldComponent extends StatefulWidget {
     this.hintText,
     this.filled,
     this.fillColor, 
-    this.maxLines, 
-    this.minLines,
   });
 
   @override
@@ -65,8 +61,6 @@ class _TextFormFieldComponentState extends State<TextFormFieldComponent> {
       keyboardType: widget.inputType,
       obscureText: widget.obscure,
       controller: widget.controller,
-      maxLines: widget.maxLines,
-      minLines: widget.minLines ?? 1,
       decoration: InputDecoration(
         fillColor: widget.fillColor,
         filled: widget.filled ?? false,
