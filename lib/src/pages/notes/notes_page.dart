@@ -183,41 +183,46 @@ class _NotesPageState extends State<NotesPage> with ValidationMixinClass {
 
                     try {
                       final quillDocument = quill.Document.fromJson(jsonDecode(note['descricao']));
-                      return GestureDetector(
-                        onTap: () {
-                          _editNote(note);
-                        },
-                        onLongPress: () {
-                          final noteId = note['id_agenda'];
-                          if (noteId != null) {
-                            _showDeleteDialog(noteId);
-                          } else {
-                            debugPrint('ID da nota não encontrado');
-                          }
-                        },
-                        child: Card(
-                          color: cardColor,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  note['titulo'],
-                                  style: const TextStyle(fontSize: 22),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                const SizedBox(height: 15),
-                                Expanded(
-                                  child: quill.QuillEditor.basic(
-                                    controller: quill.QuillController(
-                                      document: quillDocument,
-                                      selection: const TextSelection.collapsed(offset: 0),
-                                    ),
-                                    configurations: const quill.QuillEditorConfigurations(enableInteractiveSelection: false),
+                      return MouseRegion(
+                        cursor: SystemMouseCursors.click,
+                        child: GestureDetector(
+                          onTap: () {
+                            _editNote(note);
+                          },
+                          onLongPress: () {
+                            final noteId = note['id_agenda'];
+                            if (noteId != null) {
+                              _showDeleteDialog(noteId);
+                            } else {
+                              debugPrint('ID da nota não encontrado');
+                            }
+                          },
+                          child: Card(
+                            color: cardColor,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    note['titulo'],
+                                    style: const TextStyle(fontSize: 22),
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                ),
-                              ],
+                                  const SizedBox(height: 15),
+                                  Expanded(
+                                    child: quill.QuillEditor.basic(
+                                      controller: quill.QuillController(
+                                        document: quillDocument,
+                                        selection: const TextSelection.collapsed(offset: 0),
+                                      ),
+                                      configurations: const quill.QuillEditorConfigurations(
+                                        enableInteractiveSelection: false,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -335,8 +340,15 @@ class _NotesPageState extends State<NotesPage> with ValidationMixinClass {
                                           controller: quillController,
                                           configurations: const quill.QuillSimpleToolbarConfigurations(
                                             axis: Axis.horizontal,
-                                            toolbarIconAlignment: WrapAlignment.start,
+                                            toolbarIconCrossAlignment: WrapCrossAlignment.center,
                                             toolbarSectionSpacing: 1.0,
+                                            showInlineCode: false,
+                                            showClipboardCut: false,
+                                            showClipboardPaste: false,
+                                            showClipboardCopy: false,
+                                            showStrikeThrough: false,
+                                            showHeaderStyle: false,
+                                            showCodeBlock: false,
                                           ),
                                         ),
                                       ],
@@ -415,11 +427,11 @@ class _NotesPageState extends State<NotesPage> with ValidationMixinClass {
   void _showDeleteDialog(int noteId) {
     final navigation = Navigator.of(context);
     showDialog(
-      barrierColor: Colors.black.withOpacity(0.7), 
+      barrierColor: Colors.black.withOpacity(0.7),
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          shape:  RoundedRectangleBorder(
+          shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
           title: const Text('Excluir anotação'),
@@ -460,69 +472,104 @@ class _NotesPageState extends State<NotesPage> with ValidationMixinClass {
           backgroundColor: ColorSchemeManagerClass.colorWhite,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           child: SizedBox(
-            width: MediaQuery.sizeOf(context).width / 2,
+            width: MediaQuery.sizeOf(context).width / 1.3,
             height: 700,
             child: Form(
               key: _keyForm,
               child: Stack(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: ListView(
-                      shrinkWrap: true,
-                      children: [
-                        const SizedBox(height: 20),
-                        Container(
-                          padding: const EdgeInsets.all(4.0),
-                          width: double.maxFinite,
-                          child: Text(
-                            'Editar anotação',
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700,
-                              color: ColorSchemeManagerClass.colorBlack,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 30),
-                        TextFormFieldComponent(
-                          validator: isNotEmpyt,
-                          hintText: 'Título da anotação',
-                          filled: true,
-                          paddingLeftInput: 5.0,
-                          fillColor: const Color(0xffF5F4F4),
-                          autofocus: true,
-                          controller: titleController,
-                          colorBorderInput: Colors.transparent,
-                          inputBorderType: const OutlineInputBorder(),
-                          inputType: TextInputType.text,
-                          obscure: false,
-                          sizeInputBorder: 2.0,
-                        ),
-                        const SizedBox(height: 20),
-                        Container(
-                          padding: const EdgeInsets.all(8.0),
-                          decoration: BoxDecoration(
-                            color: const Color(0xffF5F4F4),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Column(
-                            children: [
-                              quill.QuillToolbar.simple(controller: quillController),
-                              const SizedBox(height: 10),
-                              SizedBox(
-                                height: 300,
-                                child: quill.QuillEditor.basic(
-                                  controller: quillController,
-                                  configurations: const quill.QuillEditorConfigurations(enableInteractiveSelection: true),
+                  ListView(
+                    shrinkWrap: true,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 20),
+                            Container(
+                              padding: const EdgeInsets.all(4.0),
+                              width: double.maxFinite,
+                              child: Text(
+                                'Editar anotação',
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700,
+                                  color: ColorSchemeManagerClass.colorBlack,
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                            const SizedBox(height: 30),
+                            TextFormFieldComponent(
+                              validator: isNotEmpyt,
+                              hintText: 'Título da anotação',
+                              filled: true,
+                              paddingLeftInput: 5.0,
+                              fillColor: const Color(0xffF5F4F4),
+                              autofocus: true,
+                              controller: titleController,
+                              colorBorderInput: Colors.transparent,
+                              inputBorderType: const OutlineInputBorder(),
+                              inputType: TextInputType.text,
+                              obscure: false,
+                              sizeInputBorder: 2.0,
+                            ),
+                            const SizedBox(height: 20),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 181, 179, 179),
+                                borderRadius: BorderRadius.circular(5),
+                                border: Border.all(
+                                  width: 1.5,
+                                  color: ColorSchemeManagerClass.colorGrey,
+                                ),
+                              ),
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    height: 40,
+                                    child: ListView(
+                                      scrollDirection: Axis.horizontal,
+                                      children: [
+                                        quill.QuillToolbar.simple(
+                                          controller: quillController,
+                                          configurations: const quill.QuillSimpleToolbarConfigurations(
+                                            axis: Axis.horizontal,
+                                            toolbarIconCrossAlignment: WrapCrossAlignment.center,
+                                            toolbarSectionSpacing: 1.0,
+                                            showInlineCode: false,
+                                            showClipboardCut: false,
+                                            showClipboardPaste: false,
+                                            showClipboardCopy: false,
+                                            showStrikeThrough: false,
+                                            showHeaderStyle: false,
+                                            showCodeBlock: false,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Container(
+                                    color: ColorSchemeManagerClass.colorWhite,
+                                    height: 300,
+                                    child: quill.QuillEditor.basic(
+                                      controller: quillController,
+                                      configurations: const quill.QuillEditorConfigurations(
+                                        enableInteractiveSelection: true,
+                                        autoFocus: true,
+                                        padding: EdgeInsets.all(15.0),
+                                        placeholder: 'Escreva aqui',
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      )
+                    ],
                   ),
                   Positioned(
                     bottom: 20,
