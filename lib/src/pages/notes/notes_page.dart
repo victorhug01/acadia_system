@@ -19,10 +19,7 @@ class _NotesPageState extends State<NotesPage> with ValidationMixinClass {
   final GlobalKey<FormState> _keyForm = GlobalKey();
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
-  final _future = Supabase.instance.client
-      .from('agenda')
-      .select('id_agenda, titulo, descricao') // Especifique as colunas desejadas
-      .eq('fk_id_secretario', Supabase.instance.client.auth.currentUser!.id); // Filtra pelo usuário atual
+  final _future = Supabase.instance.client.from('agenda').select('id_agenda, titulo, descricao').eq('fk_id_secretario', Supabase.instance.client.auth.currentUser!.id);
 
   Future<void> _sendNote({required String title, required String description}) async {
     final navigation = Navigator.of(context);
@@ -38,8 +35,7 @@ class _NotesPageState extends State<NotesPage> with ValidationMixinClass {
     try {
       final user = Supabase.instance.client.auth.currentUser;
       if (user == null) {
-        // ignore: avoid_print
-        print('Nenhum usuário autenticado.');
+        debugPrint('Nenhum usuário autenticado.');
         return;
       }
       final userId = user.id;
@@ -49,15 +45,12 @@ class _NotesPageState extends State<NotesPage> with ValidationMixinClass {
       ]);
 
       if (response.error != null) {
-        // ignore: avoid_print
-        print('Erro ao inserir na agenda: ${response.error!.message}');
+        debugPrint('Erro ao inserir na agenda: ${response.error!.message}');
       } else {
-        // ignore: avoid_print
-        print('Nota inserida com sucesso!');
+        debugPrint('Nota inserida com sucesso!');
       }
     } catch (e) {
-      // ignore: avoid_print
-      print('Erro ao acessar o usuário: $e');
+      debugPrint('Erro ao acessar o usuário: $e');
     } finally {
       navigation.pop();
     }
@@ -78,18 +71,15 @@ class _NotesPageState extends State<NotesPage> with ValidationMixinClass {
       final response = await Supabase.instance.client.from('agenda').update({
         'titulo': title,
         'descricao': description,
-      }).eq('id_agenda', noteId); // Atualiza a nota com o ID correspondente
+      }).eq('id_agenda', noteId);
 
       if (response.error != null) {
-        // ignore: avoid_print
-        print('Erro ao atualizar a agenda: ${response.error!.message}');
+        debugPrint('Erro ao atualizar a agenda: ${response.error!.message}');
       } else {
-        // ignore: avoid_print
-        print('Nota atualizada com sucesso!');
+        debugPrint('Nota atualizada com sucesso!');
       }
     } catch (e) {
-      // ignore: avoid_print
-      print('Erro ao acessar o usuário: $e');
+      debugPrint('Erro ao acessar o usuário: $e');
     } finally {
       navigation.pop();
     }
@@ -97,18 +87,16 @@ class _NotesPageState extends State<NotesPage> with ValidationMixinClass {
 
   Future<void> _deleteNote(int noteId) async {
     try {
-      final response = await Supabase.instance.client.from('agenda').delete().eq('id_agenda', noteId); // 'id' é o campo da tabela que identifica a anotação
+      final response = await Supabase.instance.client.from('agenda').delete().eq('id_agenda', noteId);
 
       if (response.error != null) {
-        print('Erro ao excluir a anotação: ${response.error!.message}');
+        debugPrint('Erro ao excluir a anotação: ${response.error!.message}');
       } else {
-        print('Anotação excluída com sucesso!');
-        setState(() {
-          // Recarregar a lista de notas após a exclusão
-        });
+        debugPrint('Anotação excluída com sucesso!');
+        setState(() {});
       }
     } catch (e) {
-      print('Erro ao excluir a anotação: $e');
+      debugPrint('Erro ao excluir a anotação: $e');
     }
   }
 
@@ -190,23 +178,21 @@ class _NotesPageState extends State<NotesPage> with ValidationMixinClass {
                         ),
                       );
                     }
-                    final note = notes[index - 1]; // Acessando o item da lista corretamente
+                    final note = notes[index - 1];
                     Color cardColor = colors[(index - 1) % colors.length];
-                    // Convertendo o JSON para documento Quill
+
                     try {
                       final quillDocument = quill.Document.fromJson(jsonDecode(note['descricao']));
                       return GestureDetector(
                         onTap: () {
-                          // Adicionando o onTap para editar a nota
-                          _editNote(note); // Chama o método para editar a nota
+                          _editNote(note);
                         },
                         onLongPress: () {
                           final noteId = note['id_agenda'];
                           if (noteId != null) {
                             _showDeleteDialog(noteId);
                           } else {
-                            // Tratar caso onde o ID não é válido
-                            print('ID da nota não encontrado');
+                            debugPrint('ID da nota não encontrado');
                           }
                         },
                         child: Card(
@@ -218,9 +204,7 @@ class _NotesPageState extends State<NotesPage> with ValidationMixinClass {
                               children: [
                                 Text(
                                   note['titulo'],
-                                  style: const TextStyle(
-                                    fontSize: 22
-                                  ),
+                                  style: const TextStyle(fontSize: 22),
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 const SizedBox(height: 15),
@@ -239,20 +223,17 @@ class _NotesPageState extends State<NotesPage> with ValidationMixinClass {
                         ),
                       );
                     } catch (e) {
-                      // ignore: avoid_print
-                      print('Erro ao decodificar JSON: $e');
+                      debugPrint('Erro ao decodificar JSON: $e');
                       return GestureDetector(
                         onTap: () {
-                          // Adicionando o onTap para editar a nota
-                          _editNote(note); // Chama o método para editar a nota
+                          _editNote(note);
                         },
                         onLongPress: () {
                           final noteId = note['id_agenda'];
                           if (noteId != null) {
                             _showDeleteDialog(noteId);
                           } else {
-                            // Tratar caso onde o ID não é válido
-                            print('ID da nota não encontrado');
+                            debugPrint('ID da nota não encontrado');
                           }
                         },
                         child: Card(
@@ -291,69 +272,97 @@ class _NotesPageState extends State<NotesPage> with ValidationMixinClass {
           backgroundColor: ColorSchemeManagerClass.colorWhite,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           child: SizedBox(
-            width: MediaQuery.sizeOf(context).width / 2,
+            width: MediaQuery.sizeOf(context).width / 1.3,
             height: 700,
             child: Form(
               key: _keyForm,
               child: Stack(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: ListView(
-                      shrinkWrap: true,
-                      children: [
-                        const SizedBox(height: 20),
-                        Container(
-                          padding: const EdgeInsets.all(4.0),
-                          width: double.maxFinite,
-                          child: Text(
-                            'Nova anotação',
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700,
-                              color: ColorSchemeManagerClass.colorBlack,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 30),
-                        TextFormFieldComponent(
-                          validator: isNotEmpyt,
-                          hintText: 'Título da anotação',
-                          filled: true,
-                          paddingLeftInput: 5.0,
-                          fillColor: const Color(0xffF5F4F4),
-                          autofocus: true,
-                          controller: titleController,
-                          colorBorderInput: Colors.transparent,
-                          inputBorderType: const OutlineInputBorder(),
-                          inputType: TextInputType.text,
-                          obscure: false,
-                          sizeInputBorder: 2.0,
-                        ),
-                        const SizedBox(height: 20),
-                        Container(
-                          padding: const EdgeInsets.all(8.0),
-                          decoration: BoxDecoration(
-                            color: const Color(0xffF5F4F4),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Column(
-                            children: [
-                              quill.QuillToolbar.simple(controller: quillController),
-                              const SizedBox(height: 10),
-                              SizedBox(
-                                height: 300,
-                                child: quill.QuillEditor.basic(
-                                  controller: quillController,
-                                  configurations: const quill.QuillEditorConfigurations(enableInteractiveSelection: false), // Permite edição
+                  ListView(
+                    shrinkWrap: true,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 20),
+                            Container(
+                              padding: const EdgeInsets.all(4.0),
+                              width: double.maxFinite,
+                              child: Text(
+                                'Nova anotação',
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700,
+                                  color: ColorSchemeManagerClass.colorBlack,
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                            const SizedBox(height: 30),
+                            TextFormFieldComponent(
+                              validator: isNotEmpyt,
+                              hintText: 'Título da anotação',
+                              filled: true,
+                              paddingLeftInput: 5.0,
+                              fillColor: const Color(0xffF5F4F4),
+                              autofocus: true,
+                              controller: titleController,
+                              colorBorderInput: Colors.transparent,
+                              inputBorderType: const OutlineInputBorder(),
+                              inputType: TextInputType.text,
+                              obscure: false,
+                              sizeInputBorder: 2.0,
+                            ),
+                            const SizedBox(height: 20),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 181, 179, 179),
+                                borderRadius: BorderRadius.circular(5),
+                                border: Border.all(
+                                  width: 1.5,
+                                  color: ColorSchemeManagerClass.colorGrey,
+                                ),
+                              ),
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    height: 40,
+                                    child: ListView(
+                                      scrollDirection: Axis.horizontal,
+                                      children: [
+                                        quill.QuillToolbar.simple(
+                                          controller: quillController,
+                                          configurations: const quill.QuillSimpleToolbarConfigurations(
+                                            axis: Axis.horizontal,
+                                            toolbarIconAlignment: WrapAlignment.start,
+                                            toolbarSectionSpacing: 1.0,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Container(
+                                    color: ColorSchemeManagerClass.colorWhite,
+                                    height: 300,
+                                    child: quill.QuillEditor.basic(
+                                      controller: quillController,
+                                      configurations: const quill.QuillEditorConfigurations(
+                                        enableInteractiveSelection: true,
+                                        autoFocus: true,
+                                        padding: EdgeInsets.all(15.0),
+                                        placeholder: 'Escreva aqui',
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      )
+                    ],
                   ),
                   Positioned(
                     bottom: 20,
@@ -379,7 +388,7 @@ class _NotesPageState extends State<NotesPage> with ValidationMixinClass {
                               title: title,
                             );
                             titleController.clear();
-                            quillController.clear(); // Reseta o editor
+                            quillController.clear();
                             navigation.pushReplacementNamed('/notes');
                           }
                         },
@@ -406,22 +415,26 @@ class _NotesPageState extends State<NotesPage> with ValidationMixinClass {
   void _showDeleteDialog(int noteId) {
     final navigation = Navigator.of(context);
     showDialog(
+      barrierColor: Colors.black.withOpacity(0.7), 
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Excluir Anotação'),
+          shape:  RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          title: const Text('Excluir anotação'),
           content: const Text('Tem certeza que deseja excluir esta anotação?'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Fechar o diálogo
+                Navigator.of(context).pop();
               },
               child: const Text('Cancelar'),
             ),
             TextButton(
               onPressed: () async {
-                Navigator.of(context).pop(); // Fechar o diálogo
-                await _deleteNote(noteId); // Excluir a anotação
+                Navigator.of(context).pop();
+                await _deleteNote(noteId);
                 navigation.pushReplacementNamed('/notes');
               },
               child: const Text('Excluir'),
@@ -438,7 +451,7 @@ class _NotesPageState extends State<NotesPage> with ValidationMixinClass {
       document: quill.Document.fromJson(jsonDecode(note['descricao'])),
       selection: const TextSelection.collapsed(offset: 0),
     );
-    titleController.text = note['titulo']; // Preenche o título da nota
+    titleController.text = note['titulo'];
 
     showDialog(
       context: context,
@@ -533,10 +546,10 @@ class _NotesPageState extends State<NotesPage> with ValidationMixinClass {
                             await _updateNote(
                               description: description,
                               title: title,
-                              noteId: note['id_agenda'], // Passa o ID da nota para atualização
+                              noteId: note['id_agenda'],
                             );
                             titleController.clear();
-                            quillController.clear(); // Reseta o editor
+                            quillController.clear();
                             navigation.pushReplacementNamed('/notes');
                           }
                         },
