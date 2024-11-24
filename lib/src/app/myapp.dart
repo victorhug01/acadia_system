@@ -2,6 +2,7 @@ import 'package:acadia/src/pages/home/home.dart';
 import 'package:acadia/src/pages/login/login.dart';
 import 'package:acadia/src/pages/notes/notes_page.dart';
 import 'package:acadia/src/pages/secretaries/register_secretaries.dart';
+import 'package:acadia/src/pages/secretaries/view_secretaries.dart';
 import 'package:acadia/src/pages/student/components/success_register/success_register.dart';
 import 'package:acadia/src/pages/student/home_student/home_student.dart';
 import 'package:acadia/src/pages/student/options_student/options_student.dart';
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
         '/confetti': (context) => const ConfettiPage(),
         '/notes': (context) => const NotesPage(),
         '/secretaries_register': (context) => const SecretariesPage(),
+        '/view_secretaries': (context) => const ViewSecretariesPage(),
       },
     );
   }

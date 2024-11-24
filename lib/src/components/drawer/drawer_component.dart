@@ -165,7 +165,7 @@ class _DrawerComponentState extends State<DrawerComponent> {
             hoverColor: Colors.transparent,
             leading: const Icon(HugeIcons.strokeRoundedNote),
             title: const Text(
-              'Notes',
+              'Anotações',
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
@@ -192,11 +192,11 @@ class _DrawerComponentState extends State<DrawerComponent> {
                   navigation.pushNamed('/options_student');
                 },
               ),
-              userClient!.id == 'cb7fd182-9255-402c-a601-c41f824c9df1'
+              userClient!.id == 'cb7fd182-9255-402c-a601-c41f824c9df1' || userClient!.id == '4483096e-367a-4b04-9273-4ae2bd407c9c'
                   ? ListTileComponent(
                       title: 'Secratário(a)',
                       onTap: () {
-                        navigation.pushNamed('/secretaries_register');
+                        navigation.pushNamed('/view_secretaries');
                       },
                     )
                   : const SizedBox.shrink()
