@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:acadia/src/components/appbar/appbar_component.dart';
 import 'package:acadia/src/components/textformfields/field_component.dart';
 import 'package:acadia/src/responsive/display_responsive.dart';

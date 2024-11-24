@@ -196,7 +196,7 @@ class _DrawerComponentState extends State<DrawerComponent> {
                   ? ListTileComponent(
                       title: 'Secratário(a)',
                       onTap: () {
-                        navigation.pushNamed('/confetti');
+                        navigation.pushNamed('/secretaries_register');
                       },
                     )
                   : const SizedBox.shrink()
