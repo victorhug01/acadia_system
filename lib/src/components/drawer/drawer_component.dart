@@ -172,7 +172,8 @@ class _DrawerComponentState extends State<DrawerComponent> {
               ),
             ),
             onTap: () {
-              navigation.pushNamed('/notes');
+              // navigation.pushNamed('/notes');
+              navigation.pushNamed('/verifyotp');
             },
           ),
           ExpansionTile(

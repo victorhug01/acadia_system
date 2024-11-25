@@ -1,3 +1,4 @@
+import 'package:acadia/src/pages/alter_password/alter_password.dart';
 import 'package:acadia/src/pages/home/home.dart';
 import 'package:acadia/src/pages/login/login.dart';
 import 'package:acadia/src/pages/notes/notes_page.dart';
@@ -7,6 +8,7 @@ import 'package:acadia/src/pages/student/components/success_register/success_reg
 import 'package:acadia/src/pages/student/home_student/home_student.dart';
 import 'package:acadia/src/pages/student/options_student/options_student.dart';
 import 'package:acadia/src/pages/student/register_student/register_student.dart';
+import 'package:acadia/src/pages/verify_otp/verify_otp.dart';
 import 'package:acadia/src/theme/theme_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -46,6 +48,8 @@ class MyApp extends StatelessWidget {
         '/notes': (context) => const NotesPage(),
         '/secretaries_register': (context) => const SecretariesPage(),
         '/view_secretaries': (context) => const ViewSecretariesPage(),
+        '/verifyotp': (context) => const VerifyOTPPage(),
+        '/alter_password': (context) => const AlterPassword(),
       },
     );
   }

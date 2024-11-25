@@ -1,4 +1,5 @@
 import 'package:acadia/src/components/textformfields/field_component.dart';
+import 'package:acadia/src/pages/verify_otp/verify_otp.dart';
 import 'package:acadia/src/responsive/display_responsive.dart';
 import 'package:acadia/src/theme/theme_colors.dart';
 import 'package:acadia/src/validations/mixin_validation.dart';
@@ -27,6 +28,7 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
   @override
   Widget build(BuildContext context) {
     final responsive = Responsive(context);
+    final navigation = Navigator.of(context);
     return Scaffold(
       body: KeyboardListener(
         focusNode: FocusNode(),
@@ -139,6 +141,11 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
                                                   ),
                                                 ),
                                                 const SizedBox(height: 15),
+                                                ElevatedButton(
+                                                    onPressed: () {
+                                                      navigation.pushNamed('/verifyotp');
+                                                    },
+                                                    child: const Text('kjhfku')),
                                                 FadeInUp(
                                                   duration: const Duration(milliseconds: 600),
                                                   child: TextFormFieldComponent(
@@ -181,9 +188,40 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
                                                           showCancelBtn: true,
                                                           confirmBtnText: 'Confirmar',
                                                           onConfirmBtnTap: () async {
-                                                            await client.auth.resetPasswordForEmail(
-                                                              emailRecoveryController.text,
-                                                            );
+                                                            debugPrint(emailRecoveryController.text.trim());
+                                                            try {
+                                                              await client.auth.resetPasswordForEmail(
+                                                                emailRecoveryController.text.trim(),
+                                                              );
+                                                              navigation.pop(); // Fecha o diálogo após a solicitação
+                                                              Builder(builder: (context) {
+                                                                return Container();
+                                                              });
+                                                              QuickAlert.show(
+                                                                context: context,
+                                                                type: QuickAlertType.success,
+                                                                title: 'Sucesso!',
+                                                                text: 'Instruções de recuperação de senha enviadas!',
+                                                                onConfirmBtnTap: () {
+                                                                  navigation.push(
+                                                                    MaterialPageRoute(
+                                                                      builder: (_) => VerifyOTPPage(emailRecoveryController: emailRecoveryController),
+                                                                    ),
+                                                                  );
+                                                                },
+                                                              );
+                                                            } catch (e) {
+                                                              navigation.pop(); // Fecha o diálogo
+                                                              debugPrint("Erro ao enviar o email: $e"); // Log do erro
+
+                                                              // Exibindo o erro para o usuário
+                                                              QuickAlert.show(
+                                                                context: context,
+                                                                type: QuickAlertType.error,
+                                                                title: 'Erro!',
+                                                                text: 'Falha ao enviar o email de recuperação. Verifique se o email está correto ou tente novamente.',
+                                                              );
+                                                            }
                                                           },
                                                           confirmBtnColor: ColorSchemeManagerClass.colorPrimary,
                                                           widget: Padding(
