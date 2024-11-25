@@ -44,9 +44,19 @@ class _AlterPasswordState extends State<AlterPassword> with ValidationMixinClass
     final navigation = Navigator.of(context);
     final responsive = Responsive(context);
     return Scaffold(
-      appBar: const PreferredSize(
-        preferredSize: Size.fromHeight(60.0),
-        child: AppBarComponent(),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(60.0),
+        child: AppBarComponent(
+          leading: IconButton(
+            onPressed: () async {
+              final navigation = Navigator.of(context);
+              final client = Supabase.instance.client;
+              await client.auth.signOut();
+              navigation.pop();
+            },
+            icon: Icon(Icons.adaptive.arrow_back),
+          ),
+        ),
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
@@ -146,18 +156,31 @@ class _AlterPasswordState extends State<AlterPassword> with ValidationMixinClass
                                   width: double.infinity,
                                   child: ElevatedButton(
                                     onPressed: () async {
+                                      final sm = ScaffoldMessenger.of(context);
                                       if (_keyForm.currentState?.validate() ?? false) {
+                                        showDialog(
+                                          context: context,
+                                          barrierDismissible: false,
+                                          builder: (BuildContext context) {
+                                            return const Center(
+                                              child: CircularProgressIndicator(),
+                                            );
+                                          },
+                                        );
                                         try {
                                           await client.auth.updateUser(
                                             UserAttributes(password: passwordController.text.trim()),
                                           );
-                                          navigation.pushReplacementNamed('/login');
+                                          await client.auth.signOut();
+                                          await navigation.pushReplacementNamed('/login');
                                         } catch (e) {
                                           debugPrint(e.toString());
                                           // Display some error to the user, maybe a snackbar
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                            const SnackBar(content: Text('Erro ao atualizar a senha')),
+                                          sm.showSnackBar(
+                                            const SnackBar(content: Text('Erro ao atualizar a senha (A senha deve ser diferente da antiga)')),
                                           );
+                                        } finally {
+                                          navigation.pop();
                                         }
                                       }
                                     },

@@ -34,6 +34,7 @@ class _HomePageState extends State<HomePage> {
         final response = await client.from('secretaria').select('nome, avatar').eq('id', userId).single();
 
         if (response['avatar'] != null) {
+          // ignore: use_build_context_synchronously
           await precacheImage(NetworkImage(response['avatar']), context);
         }
 

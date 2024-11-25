@@ -94,15 +94,10 @@ class _UpdateStudentPageState extends State<UpdateStudentPage> with SingleTicker
   }
 
   Future<void> _fetchImageUrl() async {
-  final response = await Supabase.instance.client
-      .from('aluno')
-      .select('imageProfile')
-      .eq('id_aluno', widget.idAlunoUpdate)
-      .single();
-  
-  _imageUrl = response['imageProfile'] as String?;
+    final response = await Supabase.instance.client.from('aluno').select('imageProfile').eq('id_aluno', widget.idAlunoUpdate).single();
 
-}
+    _imageUrl = response['imageProfile'] as String?;
+  }
 
   @override
   void didChangeDependencies() {
@@ -117,6 +112,7 @@ class _UpdateStudentPageState extends State<UpdateStudentPage> with SingleTicker
   }
 
   Future<void> carregarDadosAluno(int alunoId) async {
+    final navigation = Navigator.of(context);
     try {
       showDialog(
         context: context,
@@ -185,7 +181,7 @@ class _UpdateStudentPageState extends State<UpdateStudentPage> with SingleTicker
       // ignore: avoid_print
       print("Erro inesperado: $error");
     } finally {
-      Navigator.of(context).pop();
+      navigation.pop();
     }
   }
 

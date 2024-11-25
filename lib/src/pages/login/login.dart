@@ -141,11 +141,6 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
                                                   ),
                                                 ),
                                                 const SizedBox(height: 15),
-                                                ElevatedButton(
-                                                    onPressed: () {
-                                                      navigation.pushNamed('/verifyotp');
-                                                    },
-                                                    child: const Text('kjhfku')),
                                                 FadeInUp(
                                                   duration: const Duration(milliseconds: 600),
                                                   child: TextFormFieldComponent(
@@ -194,14 +189,14 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
                                                                 emailRecoveryController.text.trim(),
                                                               );
                                                               navigation.pop(); // Fecha o diálogo após a solicitação
-                                                              Builder(builder: (context) {
-                                                                return Container();
-                                                              });
                                                               QuickAlert.show(
+                                                                // ignore: use_build_context_synchronously
                                                                 context: context,
                                                                 type: QuickAlertType.success,
                                                                 title: 'Sucesso!',
                                                                 text: 'Instruções de recuperação de senha enviadas!',
+                                                                barrierDismissible: false,
+                                                                confirmBtnText: 'Avançar',
                                                                 onConfirmBtnTap: () {
                                                                   navigation.push(
                                                                     MaterialPageRoute(
@@ -213,14 +208,15 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
                                                             } catch (e) {
                                                               navigation.pop(); // Fecha o diálogo
                                                               debugPrint("Erro ao enviar o email: $e"); // Log do erro
-
-                                                              // Exibindo o erro para o usuário
                                                               QuickAlert.show(
+                                                                // ignore: use_build_context_synchronously
                                                                 context: context,
+                                                                barrierDismissible: false,
                                                                 type: QuickAlertType.error,
                                                                 title: 'Erro!',
                                                                 text: 'Falha ao enviar o email de recuperação. Verifique se o email está correto ou tente novamente.',
                                                               );
+                                                              emailRecoveryController.clear();
                                                             }
                                                           },
                                                           confirmBtnColor: ColorSchemeManagerClass.colorPrimary,
