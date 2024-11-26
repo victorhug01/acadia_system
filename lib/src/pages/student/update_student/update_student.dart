@@ -392,7 +392,7 @@ class _UpdateStudentPageState extends State<UpdateStudentPage> with SingleTicker
         'cidade': cidade,
         'uf_estado': uf,
         'complemento': complemento,
-      }).eq('cpf_responsavel', cpfController);
+      }).eq('cpf_responsavel', cpfController.text);
       if (newUser.error == null) {
         sm.showSnackBar(
           const SnackBar(content: Text('Postagem criada com sucesso!')),

@@ -321,8 +321,12 @@ class _LoginPageState extends State<LoginPage> with ValidationMixinClass {
       } finally {
         navigation.pop();
         _keyForm.currentState!.reset();
+        passwordController.clear();
+        emailController.clear();
       }
       _keyForm.currentState!.reset();
+      emailController.clear();
+      passwordController.clear();
     }
   }
 }
